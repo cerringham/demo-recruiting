@@ -1,13 +1,10 @@
 package it.proactivity.recruiting.service;
 
 import it.proactivity.recruiting.builder.ExpertiseDtoBuilder;
-import it.proactivity.recruiting.model.CompanyRole;
 import it.proactivity.recruiting.model.Expertise;
-import it.proactivity.recruiting.model.dto.CompanyRoleDto;
 import it.proactivity.recruiting.model.dto.ExpertiseDto;
-import it.proactivity.recruiting.repository.EmployeeRepository;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
-import it.proactivity.recruiting.utility.ExpertiseValidator;
+import it.proactivity.recruiting.utility.GlobalValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +21,7 @@ public class ExpertiseService {
     ExpertiseRepository expertiseRepository;
 
     @Autowired
-    ExpertiseValidator expertiseValidator;
+    GlobalValidator globalValidator;
 
 
     public ResponseEntity<List<ExpertiseDto>> getAll() {
@@ -40,7 +37,7 @@ public class ExpertiseService {
 
     public ResponseEntity<ExpertiseDto> getById(Long id) {
 
-        expertiseValidator.validateId(id);
+        globalValidator.validateId(id);
 
         Optional<Expertise> expertise = expertiseRepository.findById(id);
 

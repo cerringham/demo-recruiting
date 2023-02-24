@@ -4,7 +4,7 @@ import it.proactivity.recruiting.builder.JobInterviewBuilder;
 import it.proactivity.recruiting.model.JobInterview;
 import it.proactivity.recruiting.model.dto.JobInterviewDto;
 import it.proactivity.recruiting.repository.JobInterviewRepository;
-import it.proactivity.recruiting.utility.JobInterviewValidator;
+import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.ParsingUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class JobInterviewService {
     JobInterviewRepository jobInterviewRepository;
 
     @Autowired
-    JobInterviewValidator jobInterviewValidator;
+    GlobalValidator globalValidator;
 
     @Autowired
     ParsingUtility parsingUtility;
@@ -39,7 +39,7 @@ public class JobInterviewService {
     }
 
     public ResponseEntity<JobInterviewDto> getById(Long id) {
-        jobInterviewValidator.validateId(id);
+        globalValidator.validateId(id);
         Optional<JobInterview> jobInterview = jobInterviewRepository.findById(id);
 
         if (jobInterview.isEmpty()) {

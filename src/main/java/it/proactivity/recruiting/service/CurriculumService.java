@@ -1,12 +1,10 @@
 package it.proactivity.recruiting.service;
 
-import it.proactivity.recruiting.builder.CandidateDtoBuilder;
 import it.proactivity.recruiting.builder.CurriculumDtoBuilder;
 import it.proactivity.recruiting.model.Curriculum;
 import it.proactivity.recruiting.model.dto.CurriculumDto;
-import it.proactivity.recruiting.myEnum.Level;
 import it.proactivity.recruiting.repository.CurriculumRepository;
-import it.proactivity.recruiting.utility.CurriculumValidator;
+import it.proactivity.recruiting.utility.GlobalValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +21,7 @@ public class CurriculumService {
     CurriculumRepository curriculumRepository;
 
     @Autowired
-    CurriculumValidator curriculumValidator;
+    GlobalValidator globalValidator;
 
     public ResponseEntity<List<CurriculumDto>> getAll() {
 
@@ -37,7 +35,7 @@ public class CurriculumService {
     }
 
     public ResponseEntity<CurriculumDto> getById(Long id) {
-        curriculumValidator.validateId(id);
+        globalValidator.validateId(id);
 
         Optional<Curriculum> curriculum = curriculumRepository.findById(id);
 

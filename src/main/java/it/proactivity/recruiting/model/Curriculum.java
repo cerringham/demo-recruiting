@@ -24,7 +24,7 @@ public class Curriculum {
     private Skill skill;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "skill_level")
+    @Column(name = "level")
     private Level level;
 
     @Column(name = "is_active")

@@ -4,7 +4,7 @@ import it.proactivity.recruiting.builder.CompanyDtoBuilder;
 import it.proactivity.recruiting.model.Company;
 import it.proactivity.recruiting.model.dto.CompanyDto;
 import it.proactivity.recruiting.repository.CompanyRepository;
-import it.proactivity.recruiting.utility.CompanyValidator;
+import it.proactivity.recruiting.utility.GlobalValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class CompanyService {
     CompanyRepository companyRepository;
 
     @Autowired
-    CompanyValidator companyValidator;
+    GlobalValidator globalValidator;
 
     public ResponseEntity<List<CompanyDto>> getdAll() {
 
@@ -36,7 +36,7 @@ public class CompanyService {
 
     public ResponseEntity<CompanyDto> getById(Long id) {
 
-        companyValidator.validateId(id);
+        globalValidator.validateId(id);
 
         Optional<Company> company = companyRepository.findById(id);
 

@@ -11,7 +11,6 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class CandidateDto {
 
-
     private String fiscalCode;
 
     private String name;

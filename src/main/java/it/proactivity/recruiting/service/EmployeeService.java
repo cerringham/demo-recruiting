@@ -1,11 +1,10 @@
 package it.proactivity.recruiting.service;
 
-import it.proactivity.recruiting.builder.CandidateDtoBuilder;
 import it.proactivity.recruiting.builder.EmployeeDtoBuilder;
 import it.proactivity.recruiting.model.Employee;
 import it.proactivity.recruiting.model.dto.EmployeeDto;
 import it.proactivity.recruiting.repository.EmployeeRepository;
-import it.proactivity.recruiting.utility.EmployeeValidator;
+import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.ParsingUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,8 @@ public class EmployeeService {
     ParsingUtility parsingUtility;
 
     @Autowired
-    EmployeeValidator employeeValidator;
+    GlobalValidator globalValidator;
+
     public ResponseEntity<Set<EmployeeDto>> getAll() {
         List<Employee> employeeList = employeeRepository.findAll();
 
@@ -43,7 +43,7 @@ public class EmployeeService {
     }
 
     public ResponseEntity<EmployeeDto> getById(Long id) {
-        employeeValidator.validateId(id);
+        globalValidator.validateId(id);
 
         Optional<Employee> employee = employeeRepository.findById(id);
 

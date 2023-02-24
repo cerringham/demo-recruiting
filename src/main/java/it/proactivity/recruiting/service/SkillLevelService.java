@@ -4,7 +4,7 @@ import it.proactivity.recruiting.builder.SkillLevelDtoBuilder;
 import it.proactivity.recruiting.model.SkillLevel;
 import it.proactivity.recruiting.model.dto.SkillLevelDto;
 import it.proactivity.recruiting.repository.SkillLevelRepository;
-import it.proactivity.recruiting.utility.SkillLevelValidator;
+import it.proactivity.recruiting.utility.GlobalValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,8 @@ public class SkillLevelService {
     SkillLevelRepository skillLevelRepository;
 
     @Autowired
-    SkillLevelValidator skillLevelValidator;
+    GlobalValidator globalValidator;
+
     public ResponseEntity<List<SkillLevelDto>> getAll() {
         List<SkillLevel> skillLevelList = skillLevelRepository.findAll();
         List<SkillLevelDto> dtoList = skillLevelList.stream()
@@ -31,7 +32,7 @@ public class SkillLevelService {
     }
 
     public ResponseEntity<SkillLevelDto> getById(Long id) {
-        skillLevelValidator.validateId(id);
+        globalValidator.validateId(id);
         Optional<SkillLevel> skillLevel = skillLevelRepository.findById(id);
         if (skillLevel.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

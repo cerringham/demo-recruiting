@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 public class JobInterviewStatusController {
+
     @Autowired
     JobInterviewStatusService jobInterviewStatusService;
 

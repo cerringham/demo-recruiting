@@ -16,12 +16,10 @@ public class CompanyRoleController {
     @Autowired
     CompanyRoleService companyRoleService;
 
-
     @GetMapping("/get-all-companyRoles")
     public ResponseEntity<List<CompanyRoleDto>> getAll() {
         return companyRoleService.getAll();
     }
-
 
     @GetMapping("/get-companyRole/{id}")
     public ResponseEntity<CompanyRoleDto> getById(@PathVariable Long id) {

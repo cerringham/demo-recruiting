@@ -4,8 +4,7 @@ import it.proactivity.recruiting.builder.CompanyRoleDtoBuilder;
 import it.proactivity.recruiting.model.CompanyRole;
 import it.proactivity.recruiting.model.dto.CompanyRoleDto;
 import it.proactivity.recruiting.repository.CompanyRoleRepository;
-import it.proactivity.recruiting.utility.CompanyRoleValidator;
-import it.proactivity.recruiting.utility.CompanyValidator;
+import it.proactivity.recruiting.utility.GlobalValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,7 @@ public class CompanyRoleService {
     CompanyRoleRepository companyRoleRepository;
 
     @Autowired
-    CompanyRoleValidator companyRoleValidator;
+    GlobalValidator globalValidator;
 
     public ResponseEntity<List<CompanyRoleDto>> getAll() {
         List<CompanyRole> companyRoleList = companyRoleRepository.findAll();
@@ -35,7 +34,7 @@ public class CompanyRoleService {
     }
 
     public ResponseEntity<CompanyRoleDto> getById(Long id) {
-        companyRoleValidator.validateId(id);
+        globalValidator.validateId(id);
 
         Optional<CompanyRole> companyRole = companyRoleRepository.findById(id);
 

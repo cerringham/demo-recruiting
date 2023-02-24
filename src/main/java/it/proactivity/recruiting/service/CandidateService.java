@@ -4,7 +4,7 @@ import it.proactivity.recruiting.builder.CandidateDtoBuilder;
 import it.proactivity.recruiting.model.Candidate;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.repository.CandidateRepository;
-import it.proactivity.recruiting.utility.CandidateValidator;
+import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.ParsingUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class CandidateService {
     ParsingUtility parsingUtility;
 
     @Autowired
-    CandidateValidator candidateValidator;
+    GlobalValidator globalValidator;
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
@@ -44,7 +44,7 @@ public class CandidateService {
     }
 
     public ResponseEntity<CandidateDto> findById(Long id) {
-        candidateValidator.validateId(id);
+        globalValidator.validateId(id);
 
         Optional<Candidate> candidate = candidateRepository.findById(id);
 

@@ -4,7 +4,7 @@ import it.proactivity.recruiting.builder.JobPositionDtoBuilder;
 import it.proactivity.recruiting.model.JobPosition;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.repository.JobPositionRepository;
-import it.proactivity.recruiting.utility.JobPositionValidator;
+import it.proactivity.recruiting.utility.GlobalValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,8 @@ public class JobPositionService {
     JobPositionRepository jobPositionRepository;
 
     @Autowired
-    JobPositionValidator jobPositionValidator;
+    GlobalValidator globalValidator;
+
     public ResponseEntity<List<JobPositionDto>> getAll() {
         List<JobPosition> jobPositionList = jobPositionRepository.findAll();
 
@@ -33,7 +34,7 @@ public class JobPositionService {
     }
 
     public ResponseEntity<JobPositionDto> getById(Long id) {
-        jobPositionValidator.validateId(id);
+        globalValidator.validateId(id);
         Optional<JobPosition> jobPosition = jobPositionRepository.findById(id);
 
         if (jobPosition.isEmpty()) {

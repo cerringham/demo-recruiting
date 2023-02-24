@@ -4,7 +4,7 @@ import it.proactivity.recruiting.builder.JobInterviewStatusDtoBuilder;
 import it.proactivity.recruiting.model.JobInterviewStatus;
 import it.proactivity.recruiting.model.dto.JobInterviewStatusDto;
 import it.proactivity.recruiting.repository.JobInterviewStatusRepository;
-import it.proactivity.recruiting.utility.JobInterviewStatusValidator;
+import it.proactivity.recruiting.utility.GlobalValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class JobInterviewStatusService {
     JobInterviewStatusRepository jobInterviewStatusRepository;
 
     @Autowired
-    JobInterviewStatusValidator jobInterviewStatusValidator;
+    GlobalValidator globalValidator;
 
     public ResponseEntity<List<JobInterviewStatusDto>> getAll() {
 
@@ -35,7 +35,7 @@ public class JobInterviewStatusService {
     }
 
     public ResponseEntity<JobInterviewStatusDto> getById(Long id) {
-        jobInterviewStatusValidator.validateId(id);
+        globalValidator.validateId(id);
 
         Optional<JobInterviewStatus> jobInterviewStatus = jobInterviewStatusRepository.findById(id);
         if (jobInterviewStatus.isEmpty()) {

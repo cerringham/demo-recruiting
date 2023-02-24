@@ -4,7 +4,7 @@ import it.proactivity.recruiting.builder.SkillDtoBuilder;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.SkillRepository;
-import it.proactivity.recruiting.utility.SkillValidator;
+import it.proactivity.recruiting.utility.GlobalValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class SkillService {
     SkillRepository skillRepository;
 
     @Autowired
-    SkillValidator skillValidator;
+    GlobalValidator globalValidator;
 
     public ResponseEntity<List<SkillDto>> getAll() {
         List<Skill> skillList = skillRepository.findAll();
@@ -33,7 +33,7 @@ public class SkillService {
     }
 
     public ResponseEntity<SkillDto> getById(Long id) {
-        skillValidator.validateId(id);
+        globalValidator.validateId(id);
 
         Optional<Skill> skill = skillRepository.findById(id);
 
