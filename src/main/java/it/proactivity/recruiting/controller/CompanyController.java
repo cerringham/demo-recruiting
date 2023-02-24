@@ -16,13 +16,13 @@ public class CompanyController {
     @Autowired
     CompanyService companyService;
 
-    @GetMapping("/find-all-companies")
-    public ResponseEntity<List<CompanyDto>> findAll() {
-        return companyService.findAll();
+    @GetMapping("/get-all-companies")
+    public ResponseEntity<List<CompanyDto>> getAll() {
+        return companyService.getdAll();
     }
 
-    @GetMapping("/find-company/{id}")
-    public ResponseEntity<CompanyDto> findById(@PathVariable Long id) {
-        return companyService.findById(id);
+    @GetMapping("/get-company/{id}")
+    public ResponseEntity<CompanyDto> getById(@PathVariable Long id) {
+        return companyService.getById(id);
     }
 }

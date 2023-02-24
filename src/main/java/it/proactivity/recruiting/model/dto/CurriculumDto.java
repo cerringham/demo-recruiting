@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-public class CandidateSkillDto {
+public class CurriculumDto {
 
     private Long candidateId;
 
@@ -20,15 +20,19 @@ public class CandidateSkillDto {
 
     private String skillName;
 
-    public CandidateSkillDto(Long candidateId, String candidateName, String candidateSurname, String skillName) {
+    private String level;
+
+    public CurriculumDto(Long candidateId, String candidateName, String candidateSurname, String skillName, String level) {
         this.candidateId = candidateId;
         this.candidateName = candidateName;
         this.candidateSurname = candidateSurname;
         this.skillName = skillName;
+        this.level = level.toString();
     }
 
     @Override
     public String toString() {
-        return candidateId + " " + candidateName + " " + candidateSurname + " " + skillName;
+        return candidateId + " " + candidateName + " " + candidateSurname + " " + skillName +
+                " " + level;
     }
 }

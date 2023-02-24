@@ -1,27 +1,32 @@
 package it.proactivity.recruiting.model;
 
+import it.proactivity.recruiting.myEnum.Level;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "candidate_skill")
+@Table(name = "skill_level")
 @Getter
 @Setter
 @NoArgsConstructor
-public class CandidateSkill {
+public class SkillLevel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Candidate candidate;
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "level")
+    private Level level;
 
     @ManyToOne
     private Skill skill;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @ManyToOne
+    private JobPosition jobPosition;
 }

@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+
+import java.util.Set;
 
 
 @Entity
@@ -27,11 +28,9 @@ public class Expertise {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "expertise_id")
-    private List<Candidate> candidateList;
+    private Set<Candidate> candidateList;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "expertise_id")
-    private List<Employee> employeeList;
-
-
+    private Set<Employee> employeeList;
 }

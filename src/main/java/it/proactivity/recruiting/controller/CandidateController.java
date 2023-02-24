@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 public class CandidateController {
@@ -16,13 +16,13 @@ public class CandidateController {
     @Autowired
     CandidateService candidateService;
 
-    @GetMapping("/find-all-candidates")
-    public ResponseEntity<List<CandidateDto>> findAll() {
-        return candidateService.findAll();
+    @GetMapping("/get-all-candidates")
+    public ResponseEntity<Set<CandidateDto>> getAll() {
+        return candidateService.getAll();
     }
 
-    @GetMapping("/find-candidate/{id}")
-    public ResponseEntity<CandidateDto> findById(@PathVariable Long id) {
+    @GetMapping("/get-candidate/{id}")
+    public ResponseEntity<CandidateDto> getById(@PathVariable Long id) {
         return candidateService.findById(id);
     }
 }

@@ -26,9 +26,9 @@ public class Skill {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "skill_id")
-    private List<CandidateSkill> candidateSkillList;
+    private List<Curriculum> candidateSkillList;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "skill_id")
-    private List<SkillList> skillList;
+    private List<SkillLevel> skillList;
 }

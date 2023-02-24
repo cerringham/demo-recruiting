@@ -51,5 +51,5 @@ public class JobPosition {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "job_position_id")
-    private List<SkillList> skillList;
+    private List<SkillLevel> skillList;
 }

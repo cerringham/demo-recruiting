@@ -68,7 +68,7 @@ public class Candidate {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id")
-    private List<CandidateSkill> candidateSkillList;
+    private List<Curriculum> candidateSkillList;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id")

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "company")
@@ -29,7 +30,7 @@ public class Company {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id")
-    private List<Employee> employeeList;
+    private Set<Employee> employeeList;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id")

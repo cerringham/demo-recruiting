@@ -3,7 +3,7 @@ package it.proactivity.recruiting.utility;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CandidateSkillValidator {
+public class CurriculumValidator {
 
     public Boolean validateId(Long id) {
         if (id == null) {
