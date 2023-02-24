@@ -32,7 +32,7 @@ public class SkillService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<SkillDto> getById(Long id) {
+    public ResponseEntity<SkillDto> findById(Long id) {
         globalValidator.validateId(id);
 
         Optional<Skill> skill = skillRepository.findById(id);

@@ -33,7 +33,7 @@ public class CompanyRoleService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CompanyRoleDto> getById(Long id) {
+    public ResponseEntity<CompanyRoleDto> findById(Long id) {
         globalValidator.validateId(id);
 
         Optional<CompanyRole> companyRole = companyRoleRepository.findById(id);

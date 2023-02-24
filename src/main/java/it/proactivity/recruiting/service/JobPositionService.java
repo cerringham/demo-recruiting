@@ -33,7 +33,7 @@ public class JobPositionService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<JobPositionDto> getById(Long id) {
+    public ResponseEntity<JobPositionDto> findById(Long id) {
         globalValidator.validateId(id);
         Optional<JobPosition> jobPosition = jobPositionRepository.findById(id);
 

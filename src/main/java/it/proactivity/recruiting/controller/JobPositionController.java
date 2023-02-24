@@ -23,7 +23,7 @@ public class JobPositionController {
     }
 
     @GetMapping("/get-JobPosition/{id}")
-    public ResponseEntity<JobPositionDto> getById(@PathVariable Long id) {
-        return jobPositionService.getById(id);
+    public ResponseEntity<JobPositionDto> findById(@PathVariable Long id) {
+        return jobPositionService.findById(id);
     }
 }

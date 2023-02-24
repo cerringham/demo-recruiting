@@ -42,7 +42,7 @@ public class EmployeeService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<EmployeeDto> getById(Long id) {
+    public ResponseEntity<EmployeeDto> findById(Long id) {
         globalValidator.validateId(id);
 
         Optional<Employee> employee = employeeRepository.findById(id);

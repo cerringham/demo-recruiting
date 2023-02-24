@@ -22,7 +22,7 @@ public class JobInterviewStatusController {
     }
 
     @GetMapping("/get-JobInterviewStatus/{id}")
-    public ResponseEntity<JobInterviewStatusDto> getById(@PathVariable Long id) {
-        return jobInterviewStatusService.getById(id);
+    public ResponseEntity<JobInterviewStatusDto> findById(@PathVariable Long id) {
+        return jobInterviewStatusService.findById(id);
     }
 }

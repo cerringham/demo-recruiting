@@ -35,7 +35,7 @@ public class ExpertiseService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<ExpertiseDto> getById(Long id) {
+    public ResponseEntity<ExpertiseDto> findById(Long id) {
 
         globalValidator.validateId(id);
 

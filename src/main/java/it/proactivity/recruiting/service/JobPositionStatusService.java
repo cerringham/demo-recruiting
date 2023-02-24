@@ -35,7 +35,7 @@ public class JobPositionStatusService {
 
     }
 
-    public ResponseEntity<JobPositionStatusDto> getById(Long id) {
+    public ResponseEntity<JobPositionStatusDto> findById(Long id) {
         globalValidator.validateId(id);
 
         Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository.findById(id);

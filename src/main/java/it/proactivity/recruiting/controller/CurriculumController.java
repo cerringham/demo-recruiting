@@ -22,7 +22,7 @@ public class CurriculumController {
     }
 
     @GetMapping("/get-candidateSkill/{id}")
-    public ResponseEntity<CurriculumDto> getById(@PathVariable Long id) {
-        return curriculumService.getById(id);
+    public ResponseEntity<CurriculumDto> findById(@PathVariable Long id) {
+        return curriculumService.findById(id);
     }
 }

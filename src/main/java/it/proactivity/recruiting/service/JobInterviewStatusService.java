@@ -34,7 +34,7 @@ public class JobInterviewStatusService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<JobInterviewStatusDto> getById(Long id) {
+    public ResponseEntity<JobInterviewStatusDto> findById(Long id) {
         globalValidator.validateId(id);
 
         Optional<JobInterviewStatus> jobInterviewStatus = jobInterviewStatusRepository.findById(id);

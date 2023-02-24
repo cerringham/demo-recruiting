@@ -20,7 +20,7 @@ public class ExpertiseController {
     }
 
     @GetMapping("/get-expertise/{id}")
-    public ResponseEntity<ExpertiseDto> getById(@PathVariable Long id) {
-        return expertiseService.getById(id);
+    public ResponseEntity<ExpertiseDto> findById(@PathVariable Long id) {
+        return expertiseService.findById(id);
     }
 }

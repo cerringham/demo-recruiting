@@ -1,6 +1,5 @@
 package it.proactivity.recruiting.controller;
 
-import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.model.dto.SkillLevelDto;
 import it.proactivity.recruiting.service.SkillLevelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,8 @@ public class SkillLevelController {
     }
 
     @GetMapping("/get-SkillLevel/{id}")
-    public ResponseEntity<SkillLevelDto> getById(@PathVariable Long id) {
-        return skillLevelService.getById(id);
+    public ResponseEntity<SkillLevelDto> findById(@PathVariable Long id) {
+        return skillLevelService.findById(id);
     }
 
 

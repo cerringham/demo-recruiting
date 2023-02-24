@@ -31,7 +31,7 @@ public class SkillLevelService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<SkillLevelDto> getById(Long id) {
+    public ResponseEntity<SkillLevelDto> findById(Long id) {
         globalValidator.validateId(id);
         Optional<SkillLevel> skillLevel = skillLevelRepository.findById(id);
         if (skillLevel.isEmpty()) {

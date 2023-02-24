@@ -34,7 +34,7 @@ public class CurriculumService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CurriculumDto> getById(Long id) {
+    public ResponseEntity<CurriculumDto> findById(Long id) {
         globalValidator.validateId(id);
 
         Optional<Curriculum> curriculum = curriculumRepository.findById(id);

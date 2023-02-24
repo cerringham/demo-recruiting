@@ -23,8 +23,8 @@ public class SkillController {
     }
 
     @GetMapping("/get-Skill/{id}")
-    public ResponseEntity<SkillDto> getById(@PathVariable Long id) {
-        return skillService.getById(id);
+    public ResponseEntity<SkillDto> findById(@PathVariable Long id) {
+        return skillService.findById(id);
     }
 
 

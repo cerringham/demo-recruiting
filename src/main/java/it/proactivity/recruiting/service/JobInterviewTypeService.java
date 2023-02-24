@@ -33,7 +33,7 @@ public class JobInterviewTypeService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<JobInterviewTypeDto> getById(Long id) {
+    public ResponseEntity<JobInterviewTypeDto> findById(Long id) {
         globalValidator.validateId(id);
 
         Optional<JobInterviewType> jobInterviewType = jobInterviewTypeRepository.findById(id);

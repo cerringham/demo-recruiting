@@ -34,7 +34,7 @@ public class CompanyService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CompanyDto> getById(Long id) {
+    public ResponseEntity<CompanyDto> findById(Long id) {
 
         globalValidator.validateId(id);
 
