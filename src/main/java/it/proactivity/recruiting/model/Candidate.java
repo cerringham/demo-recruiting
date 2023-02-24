@@ -62,7 +62,7 @@ public class Candidate {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id")
-    private List<CandidateSkill> candidateSkillList;
+    private List<Curriculum> curriculumList;
 
     @Column(name = "is_active")
     private Boolean isActive;
@@ -84,7 +84,7 @@ public class Candidate {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", gender='" + gender + '\'' +
                 ", expertise=" + expertise +
-                ", candidateSkillList=" + candidateSkillList +
+                ", curriculumList=" + curriculumList +
                 ", isActive=" + isActive +
                 '}';
     }

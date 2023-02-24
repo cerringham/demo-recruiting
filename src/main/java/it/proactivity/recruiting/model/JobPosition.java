@@ -50,7 +50,7 @@ public class JobPosition {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "job_position_id")
-    private List<SkillForJobPosition> skillForJobPositionList;
+    private List<Requirement> requirementList;
 
     @Column(name = "is_active")
     private Boolean isActive;
@@ -68,7 +68,7 @@ public class JobPosition {
                 ", company=" + company +
                 ", jobPositionStatus=" + jobPositionStatus +
                 ", jobInterviewList=" + jobInterviewList +
-                ", skillForJobPositionList=" + skillForJobPositionList +
+                ", requirementList=" + requirementList +
                 ", isActive=" + isActive +
                 '}';
     }

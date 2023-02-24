@@ -21,7 +21,10 @@ public class JobInterview {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "date")
     private LocalDate date;
+
+    @Column(name = "hour")
     private LocalTime hour;
 
     @Column(name = "place")

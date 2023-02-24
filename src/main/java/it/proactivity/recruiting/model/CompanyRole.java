@@ -30,10 +30,6 @@ public class CompanyRole {
     @JoinColumn(name = "company_role_id")
     private List<Employee> employeeList;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "company_role_id")
-    private List<Company> companyList;
-
     @Override
     public String toString() {
         return "CompanyRole{" +
@@ -41,7 +37,6 @@ public class CompanyRole {
                 ", name='" + name + '\'' +
                 ", isActive=" + isActive +
                 ", employeeList=" + employeeList +
-                ", companyList=" + companyList +
                 '}';
     }
 }

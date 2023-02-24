@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "skill_for_job_position")
+@Table(name = "requirement")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class SkillForJobPosition {
+public class Requirement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class SkillForJobPosition {
 
     @Override
     public String toString() {
-        return "SkillForJobPosition{" +
+        return "Requirement{" +
                 "id=" + id +
                 ", skill=" + skill +
                 ", jobPosition=" + jobPosition +

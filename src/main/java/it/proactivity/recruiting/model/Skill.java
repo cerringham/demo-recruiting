@@ -28,11 +28,11 @@ public class Skill {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "skill_id")
-    private List<CandidateSkill> candidateSkillList;
+    private List<Curriculum> curriculumList;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "skill_id")
-    private List<SkillForJobPosition> skillForJobPositionList;
+    private List<Requirement> requirementList;
 
     @Override
     public String toString() {
@@ -40,8 +40,8 @@ public class Skill {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", isActive=" + isActive +
-                ", candidateSkillList=" + candidateSkillList +
-                ", skillForJobPositionList=" + skillForJobPositionList +
+                ", curriculumList=" + curriculumList +
+                ", requirementList=" + requirementList +
                 '}';
     }
 }

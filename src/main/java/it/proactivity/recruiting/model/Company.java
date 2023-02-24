@@ -37,9 +37,6 @@ public class Company {
     @JoinColumn(name = "company_id")
     private List<JobPosition> jobPositionList;
 
-    @ManyToOne
-    private CompanyRole companyRole;
-
     @Override
     public String toString() {
         return "Company{" +
@@ -49,7 +46,6 @@ public class Company {
                 ", isActive=" + isActive +
                 ", employeeList=" + employeeList +
                 ", jobPositionList=" + jobPositionList +
-                ", companyRole=" + companyRole +
                 '}';
     }
 }
