@@ -28,7 +28,7 @@ public class JobInterviewService {
     ParsingUtility parsingUtility;
 
     public ResponseEntity<List<JobInterviewDto>> getAll() {
-        List<JobInterview> jobInterviewList = jobInterviewRepository.findAll();
+        List<JobInterview> jobInterviewList = jobInterviewRepository.findByIsActive(true);
 
         List<JobInterviewDto> dtoList = jobInterviewList.stream()
                 .map(j -> createJobInterviewDto(parsingUtility.parseDateToString(j.getDate()),
@@ -40,7 +40,7 @@ public class JobInterviewService {
 
     public ResponseEntity<JobInterviewDto> findById(Long id) {
         globalValidator.validateId(id);
-        Optional<JobInterview> jobInterview = jobInterviewRepository.findById(id);
+        Optional<JobInterview> jobInterview = jobInterviewRepository.findByIdAndIsActive(id, true);
 
         if (jobInterview.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

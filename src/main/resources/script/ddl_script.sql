@@ -133,3 +133,54 @@ FOREIGN KEY (employee_id) REFERENCES employee(id),
 FOREIGN KEY (job_interview_type_id) REFERENCES job_interview_type(id),
 FOREIGN KEY (job_position_id) REFERENCES job_position(id),
 FOREIGN KEY (job_interview_status_id) REFERENCES job_interview_status(id));
+
+--Formattazione delle date su Employee
+
+ALTER TABLE employee
+ADD COLUMN birth_date_formatted VARCHAR(10);
+
+UPDATE employee
+SET birth_date_formatted = to_char(birth_date, 'YYYY-MM-DD');
+
+ALTER TABLE employee
+DROP COLUMN birth_date;
+
+ALTER TABLE employee
+RENAME COLUMN birth_date_formatted TO birth_date;
+
+ALTER TABLE employee
+ALTER COLUMN birth_date TYPE DATE USING birth_date::DATE;
+
+--Formattazione delle date su Candidate
+
+ALTER TABLE candidate
+ADD COLUMN birth_date_formatted VARCHAR(10);
+
+UPDATE candidate
+SET birth_date_formatted = to_char(birth_date, 'YYYY-MM-DD');
+
+ALTER TABLE candidate
+DROP COLUMN birth_date;
+
+ALTER TABLE candidate
+RENAME COLUMN birth_date_formatted TO birth_date;
+
+ALTER TABLE candidate
+ALTER COLUMN birth_date TYPE DATE USING birth_date::DATE;
+
+--Formattazione date su JobInterview
+
+ALTER TABLE job_interview
+ADD COLUMN date_formatted VARCHAR(10);
+
+UPDATE job_interview
+SET date_formatted = to_char(date, 'YYYY-MM-DD');
+
+ALTER TABLE job_interview
+DROP COLUMN date;
+
+ALTER TABLE job_interview
+RENAME COLUMN date_formatted TO date;
+
+ALTER TABLE job_interview
+ALTER COLUMN date TYPE DATE USING date::DATE;

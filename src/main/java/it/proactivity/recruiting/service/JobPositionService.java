@@ -24,7 +24,7 @@ public class JobPositionService {
     GlobalValidator globalValidator;
 
     public ResponseEntity<List<JobPositionDto>> getAll() {
-        List<JobPosition> jobPositionList = jobPositionRepository.findAll();
+        List<JobPosition> jobPositionList = jobPositionRepository.findByIsActive(true);
 
         List<JobPositionDto> dtoList = jobPositionList.stream()
                 .map(j -> createJobPositionDto(j.getTitle(), j.getArea(), j.getDescription(), j.getCity(), j.getRegion(),
@@ -35,7 +35,7 @@ public class JobPositionService {
 
     public ResponseEntity<JobPositionDto> findById(Long id) {
         globalValidator.validateId(id);
-        Optional<JobPosition> jobPosition = jobPositionRepository.findById(id);
+        Optional<JobPosition> jobPosition = jobPositionRepository.findByIdAndIsActive(id, true);
 
         if (jobPosition.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

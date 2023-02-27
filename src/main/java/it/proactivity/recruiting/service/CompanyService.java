@@ -25,7 +25,7 @@ public class CompanyService {
 
     public ResponseEntity<List<CompanyDto>> getdAll() {
 
-        List<Company> companyList = companyRepository.findAll();
+        List<Company> companyList = companyRepository.findByIsActive(true);
 
         List<CompanyDto> dtoList = companyList.stream()
                 .map(c -> createCompanyDto(c.getName(), c.getIsActive()))
@@ -38,7 +38,7 @@ public class CompanyService {
 
         globalValidator.validateId(id);
 
-        Optional<Company> company = companyRepository.findById(id);
+        Optional<Company> company = companyRepository.findByIdAndIsActive(id, true);
 
         if (company.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

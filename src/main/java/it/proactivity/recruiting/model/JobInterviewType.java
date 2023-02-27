@@ -21,6 +21,9 @@ public class JobInterviewType {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "job_interview_type_id")
     private List<JobInterview> jobInterviewList;
