@@ -24,4 +24,13 @@ public class JobInterviewType {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "job_interview_type_id")
     private List<JobInterview> jobInterviewList;
+
+    @Override
+    public String toString() {
+        return "JobInterviewType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", jobInterviewList=" + jobInterviewList +
+                '}';
+    }
 }

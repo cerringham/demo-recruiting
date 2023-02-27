@@ -1,17 +1,15 @@
 package it.proactivity.recruiting.builder;
 
 import it.proactivity.recruiting.model.dto.CompanyDto;
-
 public class CompanyDtoBuilder {
 
     private String name;
 
     private Boolean isActive;
 
-    private CompanyDtoBuilder(String name) {
+    private CompanyDtoBuilder (String name) {
         this.name = name;
     }
-
     public static CompanyDtoBuilder newBuilder(String name) {
         return new CompanyDtoBuilder(name);
     }

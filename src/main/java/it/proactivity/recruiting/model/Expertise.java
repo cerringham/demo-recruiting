@@ -33,4 +33,15 @@ public class Expertise {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "expertise_id")
     private Set<Employee> employeeList;
+
+    @Override
+    public String toString() {
+        return "Expertise{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isActive=" + isActive +
+                ", candidateList=" + candidateList +
+                ", employeeList=" + employeeList +
+                '}';
+    }
 }

@@ -31,4 +31,15 @@ public class Skill {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "skill_id")
     private List<SkillLevel> skillList;
+
+    @Override
+    public String toString() {
+        return "Skill{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isActive=" + isActive +
+                ", candidateSkillList=" + candidateSkillList +
+                ", skillList=" + skillList +
+                '}';
+    }
 }

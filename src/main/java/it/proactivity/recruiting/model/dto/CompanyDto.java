@@ -20,6 +20,9 @@ public class CompanyDto {
 
     @Override
     public String toString() {
-        return name ;
+        return "CompanyDto{" +
+                "name='" + name + '\'' +
+                ", isActive=" + isActive +
+                '}';
     }
 }

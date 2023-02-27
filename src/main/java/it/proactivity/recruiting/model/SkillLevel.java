@@ -29,4 +29,15 @@ public class SkillLevel {
 
     @ManyToOne
     private JobPosition jobPosition;
+
+    @Override
+    public String toString() {
+        return "SkillLevel{" +
+                "id=" + id +
+                ", isActive=" + isActive +
+                ", level=" + level +
+                ", skill=" + skill +
+                ", jobPosition=" + jobPosition +
+                '}';
+    }
 }

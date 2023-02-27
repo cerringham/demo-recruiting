@@ -2,56 +2,55 @@ package it.proactivity.recruiting.service;
 
 import it.proactivity.recruiting.builder.CompanyRoleDtoBuilder;
 import it.proactivity.recruiting.model.CompanyRole;
+import it.proactivity.recruiting.model.dto.CompanyDto;
 import it.proactivity.recruiting.model.dto.CompanyRoleDto;
 import it.proactivity.recruiting.repository.CompanyRoleRepository;
-import it.proactivity.recruiting.utility.GlobalValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CompanyRoleService {
-
     @Autowired
     CompanyRoleRepository companyRoleRepository;
 
-    @Autowired
-    GlobalValidator globalValidator;
-
-    public ResponseEntity<List<CompanyRoleDto>> getAll() {
-        List<CompanyRole> companyRoleList = companyRoleRepository.findAll();
-
-        List<CompanyRoleDto> dtoList = companyRoleList.stream()
+    public ResponseEntity<Set<CompanyRoleDto>> getAll() {
+        List<CompanyRole> companyList = companyRoleRepository.findAll();
+        if (companyList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Set<CompanyRoleDto> dtoSet = companyList.stream()
                 .map(c -> createCompanyRoleDto(c.getName(), c.getIsActive()))
-                .toList();
+                .collect(Collectors.toSet());
 
-        return ResponseEntity.ok(dtoList);
+        return ResponseEntity.ok(dtoSet);
     }
-
     public ResponseEntity<CompanyRoleDto> findById(Long id) {
-        globalValidator.validateId(id);
-
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
         Optional<CompanyRole> companyRole = companyRoleRepository.findById(id);
-
         if (companyRole.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(createCompanyRoleDto(companyRole.get().getName(), companyRole.get().getIsActive()));
+        CompanyRoleDto companyRoleDto = createCompanyRoleDto(companyRole.get().getName(),
+                companyRole.get().getIsActive());
+        return ResponseEntity.ok(companyRoleDto);
     }
 
-    private CompanyRoleDto createCompanyRoleDto(String name, Boolean isActive) {
+    public CompanyRoleDto createCompanyRoleDto(String name, Boolean isActive) {
         if (StringUtils.isEmpty(name) || isActive == null) {
-            throw new IllegalArgumentException("the parameters for creating the company role dto can'y be null or empty");
+            throw new IllegalArgumentException();
         }
-
         return CompanyRoleDtoBuilder.newBuilder(name)
-                .isActive(isActive)
-                .build();
+                .isActive(isActive).build();
     }
+
+
 }

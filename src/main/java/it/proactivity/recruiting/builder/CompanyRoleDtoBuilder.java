@@ -8,15 +8,16 @@ public class CompanyRoleDtoBuilder {
 
     private Boolean isActive;
 
-    private CompanyRoleDtoBuilder(String name) {
+    private CompanyRoleDtoBuilder (String name) {
         this.name = name;
     }
 
     public static CompanyRoleDtoBuilder newBuilder(String name) {
+
         return new CompanyRoleDtoBuilder(name);
     }
 
-    public CompanyRoleDtoBuilder isActive(Boolean isActive) {
+    public CompanyRoleDtoBuilder isActive (Boolean isActive) {
         this.isActive = isActive;
         return this;
     }

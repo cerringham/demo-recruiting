@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -22,7 +23,7 @@ public class CandidateController {
     }
 
     @GetMapping("/get-candidate/{id}")
-    public ResponseEntity<CandidateDto> findById(@PathVariable Long id) {
+    public ResponseEntity<Optional<CandidateDto>> findById(@PathVariable Long id) {
         return candidateService.findById(id);
     }
 }

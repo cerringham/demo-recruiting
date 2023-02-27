@@ -3,7 +3,6 @@ package it.proactivity.recruiting.builder;
 import it.proactivity.recruiting.model.dto.CurriculumDto;
 
 public class CurriculumDtoBuilder {
-
     private Long candidateId;
 
     private String candidateName;
@@ -14,19 +13,18 @@ public class CurriculumDtoBuilder {
 
     private String level;
 
-    private CurriculumDtoBuilder(Long candidateId) {
+    private CurriculumDtoBuilder (Long candidateId) {
+
         this.candidateId = candidateId;
     }
-
     public static CurriculumDtoBuilder newBuilder(Long candidateId) {
+
         return new CurriculumDtoBuilder(candidateId);
     }
-
     public CurriculumDtoBuilder candidateName(String candidateName) {
         this.candidateName = candidateName;
         return this;
     }
-
     public CurriculumDtoBuilder candidateSurname(String candidateSurname) {
         this.candidateSurname = candidateSurname;
         return this;
@@ -42,7 +40,7 @@ public class CurriculumDtoBuilder {
         return this;
     }
 
-    public CurriculumDto build() {
+    public CurriculumDto buil() {
         return new CurriculumDto(candidateId, candidateName, candidateSurname, skillName, level);
     }
 }

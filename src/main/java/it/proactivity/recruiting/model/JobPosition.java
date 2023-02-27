@@ -52,4 +52,22 @@ public class JobPosition {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "job_position_id")
     private List<SkillLevel> skillList;
+
+    @Override
+    public String toString() {
+        return "JobPosition{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", area='" + area + '\'' +
+                ", description='" + description + '\'' +
+                ", city='" + city + '\'' +
+                ", region='" + region + '\'' +
+                ", country='" + country + '\'' +
+                ", isActive=" + isActive +
+                ", company=" + company +
+                ", jobPositionStatus=" + jobPositionStatus +
+                ", jobInterviewList=" + jobInterviewList +
+                ", skillList=" + skillList +
+                '}';
+    }
 }

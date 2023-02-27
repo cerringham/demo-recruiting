@@ -2,32 +2,21 @@ package it.proactivity.recruiting.utility;
 
 import org.springframework.stereotype.Component;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 @Component
 public class ParsingUtility {
 
-    public  String parseDateToString(LocalDate date) {
+    public static LocalDate parseStringToLocalDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        try {
-            String formattedDate = date.format(formatter);
-            return formattedDate;
-        } catch (DateTimeException e) {
-            return null;
-        }
+        LocalDate parsedDate = LocalDate.parse(date, formatter);
+        return parsedDate;
     }
 
-    public  String parseTimeToString(LocalTime time) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        try {
-            String formattedTime = time.format(formatter);
-            return formattedTime;
-        } catch (DateTimeParseException e) {
-            return null;
-        }
+    public static String parseLocalDateToString(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String parsedString = date.format(formatter);
+        return parsedString;
     }
 }

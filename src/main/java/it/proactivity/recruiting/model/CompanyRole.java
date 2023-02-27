@@ -28,4 +28,14 @@ public class CompanyRole {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_role_id")
     private Set<Employee> employeeList;
+
+    @Override
+    public String toString() {
+        return "CompanyRole{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isActive=" + isActive +
+                ", employeeList=" + employeeList +
+                '}';
+    }
 }

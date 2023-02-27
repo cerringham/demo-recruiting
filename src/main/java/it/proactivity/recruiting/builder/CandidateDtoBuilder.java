@@ -3,7 +3,6 @@ package it.proactivity.recruiting.builder;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 
 public class CandidateDtoBuilder {
-
     private String fiscalCode;
 
     private String name;
@@ -32,16 +31,16 @@ public class CandidateDtoBuilder {
 
     private String birthDate;
 
-    private CandidateDtoBuilder(String name) {
-        this.name = name;
-    }
-
-    public static CandidateDtoBuilder newBuilder(String name) {
-        return new CandidateDtoBuilder(name);
-    }
-
-    public CandidateDtoBuilder fiscalCode(String fiscalCode) {
+    private CandidateDtoBuilder(String fiscalCode) {
         this.fiscalCode = fiscalCode;
+    }
+
+    public static CandidateDtoBuilder newBuilder(String fiscalCode) {
+        return new CandidateDtoBuilder(fiscalCode);
+    }
+
+    public CandidateDtoBuilder name(String name) {
+        this.name = name;
         return this;
     }
 
@@ -74,12 +73,10 @@ public class CandidateDtoBuilder {
         this.regionOfResidence = regionOfResidence;
         return this;
     }
-
     public CandidateDtoBuilder countryOfResidence(String countryOfResidence) {
         this.countryOfResidence = countryOfResidence;
         return this;
     }
-
     public CandidateDtoBuilder email(String email) {
         this.email = email;
         return this;
@@ -94,20 +91,18 @@ public class CandidateDtoBuilder {
         this.gender = gender;
         return this;
     }
-
     public CandidateDtoBuilder isActive(Boolean isActive) {
         this.isActive = isActive;
         return this;
     }
-
     public CandidateDtoBuilder birthDate(String birthDate) {
         this.birthDate = birthDate;
         return this;
     }
 
-    public CandidateDto build() {
-        return new CandidateDto(fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence, streetOfResidence,
-                regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate);
-
+    public CandidateDto build(){
+        return new CandidateDto(fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence,
+                streetOfResidence, regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate);
     }
+
 }

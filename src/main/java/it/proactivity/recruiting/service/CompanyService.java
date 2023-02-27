@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CompanyService {
@@ -23,14 +25,15 @@ public class CompanyService {
     @Autowired
     GlobalValidator globalValidator;
 
-    public ResponseEntity<List<CompanyDto>> getdAll() {
+    public ResponseEntity<Set<CompanyDto>> getAll() {
 
         List<Company> companyList = companyRepository.findAll();
-
-        List<CompanyDto> dtoList = companyList.stream()
+        if (companyList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Set<CompanyDto> dtoList = companyList.stream()
                 .map(c -> createCompanyDto(c.getName(), c.getIsActive()))
-                .toList();
-
+                .collect(Collectors.toSet());
         return ResponseEntity.ok(dtoList);
     }
 

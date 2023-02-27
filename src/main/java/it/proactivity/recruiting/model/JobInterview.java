@@ -52,5 +52,21 @@ public class JobInterview {
     @ManyToOne
     private JobInterviewType jobInterviewType;
 
-
+    @Override
+    public String toString() {
+        return "JobInterview{" +
+                "id=" + id +
+                ", date=" + date +
+                ", hour=" + hour +
+                ", place='" + place + '\'' +
+                ", rating=" + rating +
+                ", note='" + note + '\'' +
+                ", isActive=" + isActive +
+                ", candidate=" + candidate +
+                ", employee=" + employee +
+                ", jobPosition=" + jobPosition +
+                ", jobInterviewStatus=" + jobInterviewStatus +
+                ", jobInterviewType=" + jobInterviewType +
+                '}';
+    }
 }

@@ -35,4 +35,16 @@ public class Company {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id")
     private List<JobPosition> jobPositionList;
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cooId=" + cooId +
+                ", isActive=" + isActive +
+                ", employeeList=" + employeeList +
+                ", jobPositionList=" + jobPositionList +
+                '}';
+    }
 }

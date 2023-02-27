@@ -73,4 +73,29 @@ public class Employee {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_id")
     private List<JobInterview> jobInterviewList;
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", fiscalCode='" + fiscalCode + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", cityOfBirth='" + cityOfBirth + '\'' +
+                ", countryOfBirth='" + countryOfBirth + '\'' +
+                ", cityOfResidence='" + cityOfResidence + '\'' +
+                ", streetOfResidence='" + streetOfResidence + '\'' +
+                ", regionOfResidence='" + regionOfResidence + '\'' +
+                ", countryOfResidence='" + countryOfResidence + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", gender='" + gender + '\'' +
+                ", expertise=" + expertise +
+                ", companyRole=" + companyRole +
+                ", company=" + company +
+                ", isActive=" + isActive +
+                ", birthDate=" + birthDate +
+                ", jobInterviewList=" + jobInterviewList +
+                '}';
+    }
 }

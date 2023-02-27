@@ -30,4 +30,15 @@ public class JobInterviewStatus {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "job_interview_status_id")
     private List<JobInterview> jobInterviewList;
+
+    @Override
+    public String toString() {
+        return "JobInterviewStatus{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", isActive=" + isActive +
+                ", jobInterviewList=" + jobInterviewList +
+                '}';
+    }
 }

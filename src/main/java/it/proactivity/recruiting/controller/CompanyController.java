@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class CompanyController {
@@ -17,8 +18,8 @@ public class CompanyController {
     CompanyService companyService;
 
     @GetMapping("/get-all-companies")
-    public ResponseEntity<List<CompanyDto>> getAll() {
-        return companyService.getdAll();
+    public ResponseEntity<Set<CompanyDto>> getAll() {
+        return companyService.getAll();
     }
 
     @GetMapping("/get-company/{id}")

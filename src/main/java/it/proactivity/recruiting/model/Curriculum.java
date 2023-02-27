@@ -29,4 +29,15 @@ public class Curriculum {
 
     @Column(name = "is_active")
     private Boolean isActive;
+
+    @Override
+    public String toString() {
+        return "Curriculum{" +
+                "id=" + id +
+                ", candidate=" + candidate +
+                ", skill=" + skill +
+                ", level=" + level +
+                ", isActive=" + isActive +
+                '}';
+    }
 }
