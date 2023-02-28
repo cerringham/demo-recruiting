@@ -3,7 +3,9 @@ package it.proactivity.recruiting.service;
 import it.proactivity.recruiting.builder.CandidateDtoBuilder;
 import it.proactivity.recruiting.model.Candidate;
 import it.proactivity.recruiting.model.dto.CandidateDto;
+import it.proactivity.recruiting.model.dto.CandidateWithSkillDto;
 import it.proactivity.recruiting.repository.CandidateRepository;
+import it.proactivity.recruiting.utility.CandidateValidator;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.ParsingUtility;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +30,9 @@ public class CandidateService {
 
     @Autowired
     GlobalValidator globalValidator;
+
+    @Autowired
+    CandidateValidator candidateValidator;
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
@@ -59,21 +64,12 @@ public class CandidateService {
                 candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate())));
     }
 
-    public ResponseEntity<CandidateDto> insertNewCandidate(CandidateDto candidateDto) {
-        if (!globalValidator.validateFiscalCode(candidateDto.getFiscalCode()) ||
-                !globalValidator.validateNameOrSurname(candidateDto.getName()) ||
-                !globalValidator.validateNameOrSurname(candidateDto.getSurname()) ||
-                !globalValidator.validateBirthDate(candidateDto.getBirthDate()) ||
-                !globalValidator.validateNameOrSurname(candidateDto.getCityOfBirth()) ||
-                !globalValidator.validateNameOrSurname(candidateDto.getCountryOfBirth()) ||
-                !globalValidator.validateNameOrSurname(candidateDto.getCityOfResidence()) ||
-                !globalValidator.validateNameOrSurname(candidateDto.getRegionOfResidence()) ||
-                !globalValidator.validateEmail(candidateDto.getEmail()) ||
-                globalValidator.validatePhoneNumber(candidateDto.getPhoneNumber())) {
+    public ResponseEntity<CandidateDto> insertNewCandidate(CandidateWithSkillDto candidateWithSkillDto) {
+        if (!candidateValidator.validateCandidate(candidateWithSkillDto)) {
             return ResponseEntity.badRequest().build();
         }
-
-        Candidate candidate = createCandidateDto()
+        return null;
+        Candidate candidate = createCandidateFromDto(candidateWithSkillDto);
     }
 
     public ResponseEntity<CandidateDto> deleteById(Long id) {
@@ -125,7 +121,7 @@ public class CandidateService {
                 .build();
     }
 
-    private Candidate createCandidateFromDto(CandidateDto candidateDto) {
+    private Candidate createCandidateFromDto(CandidateWithSkillDto candidateDto) {
         Candidate candidate = new Candidate();
         candidate.setFiscalCode(candidateDto.getFiscalCode());
         candidate.setName(candidateDto.getName());

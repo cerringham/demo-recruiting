@@ -1,6 +1,7 @@
 package it.proactivity.recruiting.controller;
 
 import it.proactivity.recruiting.model.dto.CandidateDto;
+import it.proactivity.recruiting.model.dto.CandidateWithSkillDto;
 import it.proactivity.recruiting.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class CandidateController {
     }
 
     @PostMapping("/insert-candidate")
-    public ResponseEntity<CandidateDto> insertNewCandidate(@RequestBody CandidateDto candidateDto) {
-        return candidateService.insertNewCandidate(candidateDto);
+    public ResponseEntity<CandidateDto> insertNewCandidate(@RequestBody CandidateWithSkillDto candidateWithSkillDto) {
+        return candidateService.insertNewCandidate(candidateWithSkillDto);
     }
 }
