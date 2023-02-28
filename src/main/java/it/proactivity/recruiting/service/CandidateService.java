@@ -59,8 +59,21 @@ public class CandidateService {
                 candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate())));
     }
 
-    public ResponseEntity<CandidateDto> insertCandidate(CandidateDto candidateDto) {
+    public ResponseEntity<CandidateDto> insertNewCandidate(CandidateDto candidateDto) {
+        if (!globalValidator.validateFiscalCode(candidateDto.getFiscalCode()) ||
+                !globalValidator.validateNameOrSurname(candidateDto.getName()) ||
+                !globalValidator.validateNameOrSurname(candidateDto.getSurname()) ||
+                !globalValidator.validateBirthDate(candidateDto.getBirthDate()) ||
+                !globalValidator.validateNameOrSurname(candidateDto.getCityOfBirth()) ||
+                !globalValidator.validateNameOrSurname(candidateDto.getCountryOfBirth()) ||
+                !globalValidator.validateNameOrSurname(candidateDto.getCityOfResidence()) ||
+                !globalValidator.validateNameOrSurname(candidateDto.getRegionOfResidence()) ||
+                !globalValidator.validateEmail(candidateDto.getEmail()) ||
+                globalValidator.validatePhoneNumber(candidateDto.getPhoneNumber())) {
+            return ResponseEntity.badRequest().build();
+        }
 
+        Candidate candidate = createCandidateDto()
     }
 
     public ResponseEntity<CandidateDto> deleteById(Long id) {
@@ -110,5 +123,12 @@ public class CandidateService {
                 .isActive(isActive)
                 .birthDate(birthDate)
                 .build();
+    }
+
+    private Candidate createCandidateFromDto(CandidateDto candidateDto) {
+        Candidate candidate = new Candidate();
+        candidate.setFiscalCode(candidateDto.getFiscalCode());
+        candidate.setName(candidateDto.getName());
+
     }
 }

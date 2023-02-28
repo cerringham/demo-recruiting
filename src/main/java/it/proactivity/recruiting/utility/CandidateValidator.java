@@ -2,6 +2,7 @@ package it.proactivity.recruiting.utility;
 
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 //Il candidato ha tutte le informazioni valorizzate.
 //Nome e cognome hanno solo caratteri alfabetici e spazi.
@@ -14,13 +15,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CandidateValidator {
 
-    public Boolean validateCandidateDto(CandidateDto candidateDto) {
-        if (!StringUtils.isEmpty(candidateDto.getName()) || !StringUtils.isEmpty(candidateDto.getSurname())) {
-            return StringUtils.isAlphaSpace(candidateDto.getName()) &&
-                    StringUtils.isAlphaSpace(candidateDto.getSurname());
-        }
-        return false;
-    }
+    @Autowired
+    GlobalValidator globalValidator;
+
 
 
 }

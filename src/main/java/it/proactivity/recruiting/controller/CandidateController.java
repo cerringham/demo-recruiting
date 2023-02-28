@@ -28,4 +28,9 @@ public class CandidateController {
     public ResponseEntity<CandidateDto> deleteById(@RequestParam Long id) {
         return candidateService.deleteById(id);
     }
+
+    @PostMapping("/insert-candidate")
+    public ResponseEntity<CandidateDto> insertNewCandidate(@RequestBody CandidateDto candidateDto) {
+        return candidateService.insertNewCandidate(candidateDto);
+    }
 }
