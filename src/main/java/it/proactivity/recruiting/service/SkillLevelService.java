@@ -24,7 +24,7 @@ public class SkillLevelService {
     GlobalValidator globalValidator;
 
     public ResponseEntity<List<SkillLevelDto>> getAll() {
-        List<SkillLevel> skillLevelList = skillLevelRepository.findAll();
+        List<SkillLevel> skillLevelList = skillLevelRepository.findByIsActive(true);
         List<SkillLevelDto> dtoList = skillLevelList.stream()
                 .map(s -> createSkillLevelDto(s.getIsActive(), s.getLevel().toString(), s.getSkill().getName(),
                         s.getJobPosition().getTitle())).toList();
@@ -33,7 +33,7 @@ public class SkillLevelService {
 
     public ResponseEntity<SkillLevelDto> findById(Long id) {
         globalValidator.validateId(id);
-        Optional<SkillLevel> skillLevel = skillLevelRepository.findById(id);
+        Optional<SkillLevel> skillLevel = skillLevelRepository.findByIdAndIsActive(id, true);
         if (skillLevel.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

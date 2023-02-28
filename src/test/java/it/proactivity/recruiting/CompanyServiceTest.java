@@ -19,7 +19,7 @@ public class CompanyServiceTest {
 
     @Test
     void getAllCompanyTest() {
-        List<CompanyDto> dtoList = companyService.getdAll().getBody();
+        List<CompanyDto> dtoList = companyService.getAll().getBody();
         assertTrue(dtoList.size() != 0);
     }
 
@@ -27,5 +27,11 @@ public class CompanyServiceTest {
     void getCompanyByIdTest() {
         CompanyDto companyDto = companyService.findById(1l).getBody();
         assertNotNull(companyDto);
+    }
+
+    @Test
+    void getCompanyByIdAndIsActiveTest() {
+        List<CompanyDto> companyDto = companyService.getAll().getBody();
+        assertTrue(companyDto.size() == 3);
     }
 }
