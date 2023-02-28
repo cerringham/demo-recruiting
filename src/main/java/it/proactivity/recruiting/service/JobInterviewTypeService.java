@@ -24,7 +24,7 @@ public class JobInterviewTypeService {
     GlobalValidator globalValidator;
 
     public ResponseEntity<List<JobInterviewTypeDto>> getAll() {
-        List<JobInterviewType> jobInterviewTypeList = jobInterviewTypeRepository.findAll();
+        List<JobInterviewType> jobInterviewTypeList = jobInterviewTypeRepository.findByIsActive(true);
 
         List<JobInterviewTypeDto> dtoList = jobInterviewTypeList.stream()
                 .map(j -> createJobInterviewTypeDto(j.getName()))
@@ -36,7 +36,7 @@ public class JobInterviewTypeService {
     public ResponseEntity<JobInterviewTypeDto> findById(Long id) {
         globalValidator.validateId(id);
 
-        Optional<JobInterviewType> jobInterviewType = jobInterviewTypeRepository.findById(id);
+        Optional<JobInterviewType> jobInterviewType = jobInterviewTypeRepository.findByIdAndIsActive(id, true);
 
         if (jobInterviewType.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

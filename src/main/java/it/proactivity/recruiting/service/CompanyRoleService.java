@@ -24,7 +24,7 @@ public class CompanyRoleService {
     GlobalValidator globalValidator;
 
     public ResponseEntity<List<CompanyRoleDto>> getAll() {
-        List<CompanyRole> companyRoleList = companyRoleRepository.findAll();
+        List<CompanyRole> companyRoleList = companyRoleRepository.findByIsActive(true);
 
         List<CompanyRoleDto> dtoList = companyRoleList.stream()
                 .map(c -> createCompanyRoleDto(c.getName(), c.getIsActive()))
@@ -36,7 +36,7 @@ public class CompanyRoleService {
     public ResponseEntity<CompanyRoleDto> findById(Long id) {
         globalValidator.validateId(id);
 
-        Optional<CompanyRole> companyRole = companyRoleRepository.findById(id);
+        Optional<CompanyRole> companyRole = companyRoleRepository.findByIdAndIsActive(id, true);
 
         if (companyRole.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

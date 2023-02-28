@@ -25,7 +25,7 @@ public class JobInterviewStatusService {
 
     public ResponseEntity<List<JobInterviewStatusDto>> getAll() {
 
-        List<JobInterviewStatus> jobInterviewStatusList = jobInterviewStatusRepository.findAll();
+        List<JobInterviewStatus> jobInterviewStatusList = jobInterviewStatusRepository.findByIsActive(true);
 
         List<JobInterviewStatusDto> dtoList = jobInterviewStatusList.stream()
                 .map(j -> createJobInterviewStatusDto(j.getName(), j.getDescription(), j.getIsActive()))
@@ -37,7 +37,7 @@ public class JobInterviewStatusService {
     public ResponseEntity<JobInterviewStatusDto> findById(Long id) {
         globalValidator.validateId(id);
 
-        Optional<JobInterviewStatus> jobInterviewStatus = jobInterviewStatusRepository.findById(id);
+        Optional<JobInterviewStatus> jobInterviewStatus = jobInterviewStatusRepository.findByIdAndIsActive(id, true);
         if (jobInterviewStatus.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

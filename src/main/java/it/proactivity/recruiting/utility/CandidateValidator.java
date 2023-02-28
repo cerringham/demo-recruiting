@@ -1,5 +1,6 @@
 package it.proactivity.recruiting.utility;
 
+import it.proactivity.recruiting.model.dto.CandidateDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 //Il candidato ha tutte le informazioni valorizzate.
@@ -11,25 +12,15 @@ import org.springframework.stereotype.Component;
 //Se la skill non esiste nel nostro database (match case insensitive) allora viene salvata anche la nuova skill.
 //Viene creata una entry nella tabella Curriculum per ogni Skill associata al candidate.
 @Component
-public class GlobalValidator {
+public class CandidateValidator {
 
-    public Boolean validateId(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Id can't be null");
+    public Boolean validateCandidateDto(CandidateDto candidateDto) {
+        if (!StringUtils.isEmpty(candidateDto.getName()) || !StringUtils.isEmpty(candidateDto.getSurname())) {
+            return StringUtils.isAlphaSpace(candidateDto.getName()) &&
+                    StringUtils.isAlphaSpace(candidateDto.getSurname());
         }
-        return true;
-    }
-    public Boolean validateFiscalCode(String fiscalCode){
-        if (StringUtils.isEmpty(fiscalCode)) {
-            return false;
-        }
-        return StringUtils.isAlphanumeric(fiscalCode);
-    }
-    public Boolean validateNameOrSurname(String name){
-
+        return false;
     }
 
-    public Boolean validateEmail(String email) {}
-    public Boolean validateBirthDate(String date) {}
 
 }

@@ -25,7 +25,7 @@ public class CurriculumService {
 
     public ResponseEntity<List<CurriculumDto>> getAll() {
 
-        List<Curriculum> curriculumListList = curriculumRepository.findAll();
+        List<Curriculum> curriculumListList = curriculumRepository.findByIsActive(true);
 
         List<CurriculumDto> dtoList = curriculumListList.stream()
                 .map(c -> new CurriculumDto(c.getCandidate().getId(), c.getCandidate().getName(),
@@ -37,7 +37,7 @@ public class CurriculumService {
     public ResponseEntity<CurriculumDto> findById(Long id) {
         globalValidator.validateId(id);
 
-        Optional<Curriculum> curriculum = curriculumRepository.findById(id);
+        Optional<Curriculum> curriculum = curriculumRepository.findByIdAndIsActive(id, true);
 
         if (curriculum.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

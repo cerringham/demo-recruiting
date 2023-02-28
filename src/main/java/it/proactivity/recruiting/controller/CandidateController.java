@@ -4,9 +4,7 @@ import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -24,5 +22,10 @@ public class CandidateController {
     @GetMapping("/get-candidate/{id}")
     public ResponseEntity<CandidateDto> findById(@PathVariable Long id) {
         return candidateService.findById(id);
+    }
+
+    @PostMapping("/delete-candidate")
+    public ResponseEntity<CandidateDto> deleteById(@RequestParam Long id) {
+        return candidateService.deleteById(id);
     }
 }

@@ -24,7 +24,7 @@ public class SkillService {
     GlobalValidator globalValidator;
 
     public ResponseEntity<List<SkillDto>> getAll() {
-        List<Skill> skillList = skillRepository.findAll();
+        List<Skill> skillList = skillRepository.findByIsActive(true);
 
         List<SkillDto> dtoList = skillList.stream()
                 .map(s -> createSkillDto(s.getName(), s.getIsActive()))
@@ -35,7 +35,7 @@ public class SkillService {
     public ResponseEntity<SkillDto> findById(Long id) {
         globalValidator.validateId(id);
 
-        Optional<Skill> skill = skillRepository.findById(id);
+        Optional<Skill> skill = skillRepository.findByIdAndIsActive(id, true);
 
         if (skill.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

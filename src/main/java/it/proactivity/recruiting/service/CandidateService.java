@@ -31,7 +31,7 @@ public class CandidateService {
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
-        List<Candidate> candidateList = candidateRepository.findAll();
+        List<Candidate> candidateList = candidateRepository.findByIsActive(true);
 
         Set<CandidateDto> dtoList = candidateList.stream()
                 .map(c -> createCandidateDto(c.getFiscalCode(), c.getName(), c.getSurname(), c.getCityOfBirth(),
@@ -46,7 +46,7 @@ public class CandidateService {
     public ResponseEntity<CandidateDto> findById(Long id) {
         globalValidator.validateId(id);
 
-        Optional<Candidate> candidate = candidateRepository.findById(id);
+        Optional<Candidate> candidate = candidateRepository.findByIdAndIsActive(id, true);
 
         if (candidate.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -59,10 +59,31 @@ public class CandidateService {
                 candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate())));
     }
 
+    public ResponseEntity<CandidateDto> insertCandidate(CandidateDto candidateDto) {
+
+    }
+
+    public ResponseEntity<CandidateDto> deleteById(Long id) {
+        globalValidator.validateId(id);
+        Optional<Candidate> candidate = candidateRepository.findById(id);
+        if (candidate.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        candidate.get().setIsActive(false);
+        candidateRepository.save(candidate.get());
+        CandidateDto candidateDto = createCandidateDto(candidate.get().getName(), candidate.get().getFiscalCode(),
+                candidate.get().getSurname(), candidate.get().getCityOfBirth(), candidate.get().getCountryOfBirth(),
+                candidate.get().getCityOfResidence(), candidate.get().getStreetOfResidence(),
+                candidate.get().getRegionOfResidence(), candidate.get().getCountryOfResidence(),
+                candidate.get().getEmail(), candidate.get().getPhoneNumber(), candidate.get().getGender(),
+                candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate()));
+        return ResponseEntity.ok(candidateDto);
+    }
+
     private CandidateDto createCandidateDto(String fiscalCode, String name, String surname, String cityOfBirth,
-                                            String countryOfBirth, String cityOfResidence, String streetOfResidence,
-                                            String regionOfResidence, String countryOfResidence, String email,
-                                            String phoneNumber, String gender, Boolean isActive, String birthDate) {
+                                             String countryOfBirth, String cityOfResidence, String streetOfResidence,
+                                             String regionOfResidence, String countryOfResidence, String email,
+                                             String phoneNumber, String gender, Boolean isActive, String birthDate) {
 
         if (StringUtils.isEmpty(fiscalCode) || StringUtils.isEmpty(name) || StringUtils.isEmpty(surname) ||
                 StringUtils.isEmpty(cityOfBirth) || StringUtils.isEmpty(countryOfBirth) ||
