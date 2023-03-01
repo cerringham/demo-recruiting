@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,5 +55,16 @@ public class SkillServiceTest {
         assertNotNull(skill);
         Optional<Skill> skill2 = skillRepository.findByNameIgnoreCaseAndIsActive("altro", true);
         assertFalse(skill2.isPresent());
+    }
+
+    @Test
+    void createSkillListTest() {
+        List<String> stringList = Arrays.asList("Java", "Php", "Altro");
+        List<Skill> skills = skillValidator.createSkillList(stringList);
+        assertTrue(skills.size() == 3);
+        assertNotNull(skills);
+        List<String> stringList2 = Arrays.asList("Java", "Php", "Altro oi");
+        List<Skill> skills2 = skillValidator.createSkillList(stringList2);
+        assertFalse(skills2.size() == 3);
     }
 }
