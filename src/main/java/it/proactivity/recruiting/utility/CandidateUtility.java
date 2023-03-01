@@ -12,6 +12,9 @@ import it.proactivity.recruiting.myEnum.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class CandidateUtility {
     @Autowired
@@ -65,14 +68,19 @@ public class CandidateUtility {
                 .curriculumDtoList(candidateDto.getCurriculumList())
                 .build();
     }
-
-    public Curriculum createCurriculum(Candidate candidate, Skill skill, Level level) {
+    //CV
+//	- creo n oggetti (dove n è il numero delle skills) di tipo Curriculum dove setto come candidate l'oggetto appena creato (newCandidate)
+//	- associo questa lista di oggetti all'attriburo candidateSkillList di newCandidate
+//	- session.save() di newCandidate salva anche i cv
+    public List<Curriculum> createCurriculumList(Candidate candidate, Skill skill, Level level) {
         if (candidate == null || skill == null || level == null) {
             throw new IllegalArgumentException();
         }
-        return CurriculumBuilder.newBuilder(candidate)
+        List<Curriculum> curriculumList = new ArrayList<>();
+        curriculumList.add(CurriculumBuilder.newBuilder(candidate)
                 .skill(skill)
                 .level(level)
-                .build();
+                .build());
+        return curriculumList;
     }
 }

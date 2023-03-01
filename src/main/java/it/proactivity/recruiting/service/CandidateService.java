@@ -1,20 +1,23 @@
 package it.proactivity.recruiting.service;
 
+import it.proactivity.recruiting.builder.CurriculumBuilder;
 import it.proactivity.recruiting.model.Candidate;
+import it.proactivity.recruiting.model.Curriculum;
 import it.proactivity.recruiting.model.Expertise;
+import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateWithSkillDto;
+import it.proactivity.recruiting.myEnum.Level;
 import it.proactivity.recruiting.repository.CandidateRepository;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
-import it.proactivity.recruiting.utility.CandidateUtility;
-import it.proactivity.recruiting.utility.CandidateValidator;
-import it.proactivity.recruiting.utility.GlobalValidator;
-import it.proactivity.recruiting.utility.ParsingUtility;
+import it.proactivity.recruiting.repository.SkillRepository;
+import it.proactivity.recruiting.utility.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -40,6 +43,12 @@ public class CandidateService {
 
     @Autowired
     ExpertiseRepository expertiseRepository;
+
+    @Autowired
+    SkillRepository skillRepository;
+
+    @Autowired
+    SkillValidator skillValidator;
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
@@ -70,7 +79,9 @@ public class CandidateService {
                 candidate.get().getEmail(), candidate.get().getPhoneNumber(), candidate.get().getGender(),
                 candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate())));
     }
-
+    //creo n oggetti (dove n è il numero delle skills) di tipo Curriculum dove setto come candidate l'oggetto appena creato (newCandidate)
+    //	- associo questa lista di oggetti all'attriburo candidateSkillList di newCandidate
+    //	- session.save() di newCandidate salva anche i cv
     public ResponseEntity<CandidateWithSkillDto> insertNewCandidate(CandidateWithSkillDto candidateWithSkillDto) {
         if (!candidateValidator.validateCandidate(candidateWithSkillDto)) {
             return ResponseEntity.badRequest().build();
@@ -79,7 +90,17 @@ public class CandidateService {
         if (expertise.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+        List<Curriculum> curriculumList = new ArrayList<>();
+        List<String> curriculumNameList = candidateWithSkillDto.getCurriculumList().stream().map(c -> c.getSkill().getName()).toList();
+        List<Skill> skillsList = skillValidator.createSkillList(curriculumNameList);
         Candidate candidate = candidateUtility.createCandidateFromCandidateWithSkillDto(candidateWithSkillDto);
+        for (Skill s : skillsList) {
+            curriculumList.add(CurriculumBuilder.newBuilder(candidate)
+                    .skill(s)
+                    .isActive(true)
+                    .build());
+        }
+        candidate.setCandidateSkillList(curriculumList);
         candidateRepository.save(candidate);
         return ResponseEntity.ok(candidateWithSkillDto);
     }

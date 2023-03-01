@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -41,13 +42,13 @@ public class CandidateServiceTest {
         assertNotNull(candidateDto);
     }
 
-    /*@Test
+    @Test
     void insertNewCandidateTest() {
-        Optional<Expertise> expertise = expertiseRepository.findByIdAndIsActive(1l, true);
+        Optional<Expertise> expertise = expertiseRepository.findByNameAndIsActive("Junior", true);
         CandidateWithSkillDto candidate = new CandidateWithSkillDto("TRGFBIJEUTY16387S", "Veronica", "Zuniga", "Lima", "Peru",
                 "Milan", "corso milano 40", "Lombardy", "Ita", "veronicazuniga@gmail.com", "3677648655", "F", true,
                 "2000-06-22", expertise , );
         CandidateDto candidateDto = candidateService.insertNewCandidate();
-    }*/
+    }
 
 }
