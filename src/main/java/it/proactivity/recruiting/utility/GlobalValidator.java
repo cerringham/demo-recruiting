@@ -4,7 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Calendar;
+
+import static it.proactivity.recruiting.utility.ParsingUtility.parseStringToDate;
 
 @Component
 public class GlobalValidator {
@@ -58,12 +62,9 @@ public class GlobalValidator {
         if (StringUtils.isEmpty(date)) {
             return false;
         }
-        if (ParsingUtility.parseStringToDate(date) != null) {
-            Calendar today = Calendar.getInstance();
-            int thisYear = today.get(Calendar.YEAR);
-            int birthYear = Integer.parseInt(date.substring(0, 4));
-
-            int age = thisYear - birthYear;
+        if (parseStringToDate(date) != null) {
+            LocalDate today = LocalDate.now();
+            int age = Period.between(parseStringToDate(date), today).getYears();
             return (age >= 18);
         }
         return false;

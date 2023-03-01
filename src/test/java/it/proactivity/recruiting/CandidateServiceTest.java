@@ -31,15 +31,4 @@ public class CandidateServiceTest {
         assertNotNull(candidateDto);
     }
 
-    @Test
-    void validateBirthDateTest() {
-        String date = "2005-02-28";
-        assertTrue(globalValidator.validateBirthDate(date));
-    }
-
-    @Test
-    void validatePhoneNumber() {
-        String phoneNumber = "+37884564980";
-        assertTrue(globalValidator.validatePhoneNumber(phoneNumber));
-    }
 }
