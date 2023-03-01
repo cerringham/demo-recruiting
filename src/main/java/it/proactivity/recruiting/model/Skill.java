@@ -31,4 +31,9 @@ public class Skill {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "skill_id")
     private List<SkillLevel> skillList;
+
+    public Skill(String name, Boolean isActive) {
+        this.name = name;
+        this.isActive = isActive;
+    }
 }

@@ -20,6 +20,22 @@ public class CandidateValidator {
     @Autowired
     GlobalValidator globalValidator;
 
+    public Boolean validateParameters(String fiscalCode, String name, String surname, String cityOfBirth,
+                                            String countryOfBirth, String cityOfResidence, String streetOfResidence,
+                                            String regionOfResidence, String countryOfResidence, String email,
+                                            String phoneNumber, String gender, Boolean isActive, String birthDate) {
+
+        if (StringUtils.isEmpty(fiscalCode) || StringUtils.isEmpty(name) || StringUtils.isEmpty(surname) ||
+                StringUtils.isEmpty(cityOfBirth) || StringUtils.isEmpty(countryOfBirth) ||
+                StringUtils.isEmpty(cityOfResidence) || StringUtils.isEmpty(streetOfResidence) ||
+                StringUtils.isEmpty(regionOfResidence) || StringUtils.isEmpty(countryOfResidence) ||
+                StringUtils.isEmpty(email) || StringUtils.isEmpty(phoneNumber) || StringUtils.isEmpty(gender) ||
+                isActive == null || StringUtils.isEmpty(birthDate)) {
+            return false;
+        }
+        return true;
+    }
+
     public Boolean validateCandidate(CandidateWithSkillDto candidateWithSkillDto) {
         if (!globalValidator.validateFiscalCode(candidateWithSkillDto.getFiscalCode()) ||
                 !globalValidator.validateNameOrSurname(candidateWithSkillDto.getName()) ||
@@ -30,7 +46,7 @@ public class CandidateValidator {
                 !globalValidator.validateNameOrSurname(candidateWithSkillDto.getCityOfResidence()) ||
                 !globalValidator.validateNameOrSurname(candidateWithSkillDto.getRegionOfResidence()) ||
                 !globalValidator.validateEmail(candidateWithSkillDto.getEmail()) ||
-                globalValidator.validatePhoneNumber(candidateWithSkillDto.getPhoneNumber()) ||
+                !globalValidator.validatePhoneNumber(candidateWithSkillDto.getPhoneNumber()) ||
                 StringUtils.isEmpty(candidateWithSkillDto.getGender())) {
             return false;
         }

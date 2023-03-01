@@ -31,7 +31,7 @@ public class CandidateController {
     }
 
     @PostMapping("/insert-candidate")
-    public ResponseEntity<CandidateDto> insertNewCandidate(@RequestBody CandidateWithSkillDto candidateWithSkillDto) {
+    public ResponseEntity<CandidateWithSkillDto> insertNewCandidate(@RequestBody CandidateWithSkillDto candidateWithSkillDto) {
         return candidateService.insertNewCandidate(candidateWithSkillDto);
     }
 }

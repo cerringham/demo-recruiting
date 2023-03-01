@@ -2,6 +2,7 @@ package it.proactivity.recruiting.model;
 
 import it.proactivity.recruiting.myEnum.Level;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,4 +30,11 @@ public class Curriculum {
 
     @Column(name = "is_active")
     private Boolean isActive;
+
+    public Curriculum(Candidate candidate, Skill skill, Level level, Boolean isActive) {
+        this.candidate = candidate;
+        this.skill = skill;
+        this.level = level;
+        this.isActive = isActive;
+    }
 }

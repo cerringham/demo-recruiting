@@ -1,14 +1,15 @@
 package it.proactivity.recruiting.service;
 
-import it.proactivity.recruiting.builder.CandidateDtoBuilder;
 import it.proactivity.recruiting.model.Candidate;
+import it.proactivity.recruiting.model.Expertise;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateWithSkillDto;
 import it.proactivity.recruiting.repository.CandidateRepository;
+import it.proactivity.recruiting.repository.ExpertiseRepository;
+import it.proactivity.recruiting.utility.CandidateUtility;
 import it.proactivity.recruiting.utility.CandidateValidator;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.ParsingUtility;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +35,18 @@ public class CandidateService {
     @Autowired
     CandidateValidator candidateValidator;
 
+    @Autowired
+    CandidateUtility candidateUtility;
+
+    @Autowired
+    ExpertiseRepository expertiseRepository;
+
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
         List<Candidate> candidateList = candidateRepository.findByIsActive(true);
 
         Set<CandidateDto> dtoList = candidateList.stream()
-                .map(c -> createCandidateDto(c.getFiscalCode(), c.getName(), c.getSurname(), c.getCityOfBirth(),
+                .map(c -> candidateUtility.createCandidateDto(c.getFiscalCode(), c.getName(), c.getSurname(), c.getCityOfBirth(),
                         c.getCountryOfBirth(), c.getCityOfResidence(), c.getStreetOfResidence(), c.getRegionOfResidence(),
                         c.getCountryOfResidence(), c.getEmail(), c.getPhoneNumber(), c.getGender(), c.getIsActive(),
                         parsingUtility.parseDateToString(c.getBirthDate())))
@@ -56,7 +63,7 @@ public class CandidateService {
         if (candidate.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(createCandidateDto(candidate.get().getFiscalCode(), candidate.get().getName(),
+        return ResponseEntity.ok(candidateUtility.createCandidateDto(candidate.get().getFiscalCode(), candidate.get().getName(),
                 candidate.get().getSurname(), candidate.get().getCityOfBirth(), candidate.get().getCountryOfBirth(),
                 candidate.get().getCityOfResidence(), candidate.get().getStreetOfResidence(),
                 candidate.get().getRegionOfResidence(), candidate.get().getCountryOfResidence(),
@@ -64,12 +71,17 @@ public class CandidateService {
                 candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate())));
     }
 
-    public ResponseEntity<CandidateDto> insertNewCandidate(CandidateWithSkillDto candidateWithSkillDto) {
+    public ResponseEntity<CandidateWithSkillDto> insertNewCandidate(CandidateWithSkillDto candidateWithSkillDto) {
         if (!candidateValidator.validateCandidate(candidateWithSkillDto)) {
             return ResponseEntity.badRequest().build();
         }
-        return null;
-        Candidate candidate = createCandidateFromDto(candidateWithSkillDto);
+        Optional<Expertise> expertise = expertiseRepository.findByNameAndIsActive(candidateWithSkillDto.getExpertise().getName(), true);
+        if (expertise.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Candidate candidate = candidateUtility.createCandidateFromCandidateWithSkillDto(candidateWithSkillDto);
+        candidateRepository.save(candidate);
+        return ResponseEntity.ok(candidateWithSkillDto);
     }
 
     public ResponseEntity<CandidateDto> deleteById(Long id) {
@@ -80,51 +92,12 @@ public class CandidateService {
         }
         candidate.get().setIsActive(false);
         candidateRepository.save(candidate.get());
-        CandidateDto candidateDto = createCandidateDto(candidate.get().getName(), candidate.get().getFiscalCode(),
+        CandidateDto candidateDto = candidateUtility.createCandidateDto(candidate.get().getName(), candidate.get().getFiscalCode(),
                 candidate.get().getSurname(), candidate.get().getCityOfBirth(), candidate.get().getCountryOfBirth(),
                 candidate.get().getCityOfResidence(), candidate.get().getStreetOfResidence(),
                 candidate.get().getRegionOfResidence(), candidate.get().getCountryOfResidence(),
                 candidate.get().getEmail(), candidate.get().getPhoneNumber(), candidate.get().getGender(),
                 candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate()));
         return ResponseEntity.ok(candidateDto);
-    }
-
-    private CandidateDto createCandidateDto(String fiscalCode, String name, String surname, String cityOfBirth,
-                                             String countryOfBirth, String cityOfResidence, String streetOfResidence,
-                                             String regionOfResidence, String countryOfResidence, String email,
-                                             String phoneNumber, String gender, Boolean isActive, String birthDate) {
-
-        if (StringUtils.isEmpty(fiscalCode) || StringUtils.isEmpty(name) || StringUtils.isEmpty(surname) ||
-                StringUtils.isEmpty(cityOfBirth) || StringUtils.isEmpty(countryOfBirth) ||
-                StringUtils.isEmpty(cityOfResidence) || StringUtils.isEmpty(streetOfResidence) ||
-                StringUtils.isEmpty(regionOfResidence) || StringUtils.isEmpty(countryOfResidence) ||
-                StringUtils.isEmpty(email) || StringUtils.isEmpty(phoneNumber) || StringUtils.isEmpty(gender) ||
-                isActive == null || StringUtils.isEmpty(birthDate)) {
-
-            throw new IllegalArgumentException("The data's for creating the candidate dto are empty or null");
-        }
-
-        return CandidateDtoBuilder.newBuilder(name)
-                .fiscalCode(fiscalCode)
-                .surname(surname)
-                .cityOfBirth(cityOfBirth)
-                .countryOfBirth(countryOfBirth)
-                .cityOfResidence(cityOfResidence)
-                .streetOfResidence(streetOfResidence)
-                .regionOfResidence(regionOfResidence)
-                .countryOfResidence(countryOfResidence)
-                .email(email)
-                .phoneNumber(phoneNumber)
-                .gender(gender)
-                .isActive(isActive)
-                .birthDate(birthDate)
-                .build();
-    }
-
-    private Candidate createCandidateFromDto(CandidateWithSkillDto candidateDto) {
-        Candidate candidate = new Candidate();
-        candidate.setFiscalCode(candidateDto.getFiscalCode());
-        candidate.setName(candidateDto.getName());
-
     }
 }

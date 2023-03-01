@@ -1,10 +1,7 @@
 package it.proactivity.recruiting.model;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class Candidate {
 
@@ -73,4 +71,26 @@ public class Candidate {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id")
     private List<JobInterview> candidateList;
+
+    public Candidate(String fiscalCode, String name, String surname, String cityOfBirth, String countryOfBirth,
+                     String cityOfResidence, String streetOfResidence, String regionOfResidence, String countryOfResidence,
+                     String email, String phoneNumber, String gender, Boolean isActive, LocalDate birthDate,
+                     Expertise expertise, List<Curriculum> candidateSkillList) {
+        this.fiscalCode = fiscalCode;
+        this.name = name;
+        this.surname = surname;
+        this.cityOfBirth = cityOfBirth;
+        this.countryOfBirth = countryOfBirth;
+        this.cityOfResidence = cityOfResidence;
+        this.streetOfResidence = streetOfResidence;
+        this.regionOfResidence = regionOfResidence;
+        this.countryOfResidence = countryOfResidence;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.isActive = isActive;
+        this.birthDate = birthDate;
+        this.expertise = expertise;
+        this.candidateSkillList = candidateSkillList;
+    }
 }
