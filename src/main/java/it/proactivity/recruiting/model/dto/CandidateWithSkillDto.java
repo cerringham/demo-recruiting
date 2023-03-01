@@ -1,6 +1,7 @@
 package it.proactivity.recruiting.model.dto;
 
 import it.proactivity.recruiting.model.Curriculum;
+import it.proactivity.recruiting.model.Expertise;
 import lombok.*;
 
 import java.util.List;
@@ -40,7 +41,29 @@ public class CandidateWithSkillDto {
 
     private String birthDate;
 
-    private String expertise;
+    private Expertise expertise;
 
-    private List<CurriculumDto> curriculumDtoList;
+    private List<Curriculum> curriculumList;
+
+    @Override
+    public String toString() {
+        return "CandidateWithSkillDto{" +
+                "fiscalCode='" + fiscalCode + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", cityOfBirth='" + cityOfBirth + '\'' +
+                ", countryOfBirth='" + countryOfBirth + '\'' +
+                ", cityOfResidence='" + cityOfResidence + '\'' +
+                ", streetOfResidence='" + streetOfResidence + '\'' +
+                ", regionOfResidence='" + regionOfResidence + '\'' +
+                ", countryOfResidence='" + countryOfResidence + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", gender='" + gender + '\'' +
+                ", isActive=" + isActive +
+                ", birthDate='" + birthDate + '\'' +
+                ", expertise=" + expertise +
+                ", curriculumList=" + curriculumList +
+                '}';
+    }
 }

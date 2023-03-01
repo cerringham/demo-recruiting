@@ -32,14 +32,8 @@ public class Skill {
     @JoinColumn(name = "skill_id")
     private List<SkillLevel> skillList;
 
-    @Override
-    public String toString() {
-        return "Skill{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", isActive=" + isActive +
-                ", candidateSkillList=" + candidateSkillList +
-                ", skillList=" + skillList +
-                '}';
+    public Skill(String name, Boolean isActive) {
+        this.name = name;
+        this.isActive = isActive;
     }
 }

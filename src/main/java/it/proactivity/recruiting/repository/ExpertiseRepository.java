@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface ExpertiseRepository extends JpaRepository<Expertise, Long> {
     List<Expertise> findByIsActive(Boolean isActive);
     Optional<Expertise> findByIdAndIsActive(Long id, Boolean isActive);
+
+    Optional<Expertise> findByNameAndIsActive(String name, Boolean isActive);
 }
