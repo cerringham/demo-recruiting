@@ -1,16 +1,15 @@
 package it.proactivity.recruiting.model.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
+
 public class SkillDto {
 
+    private Long id;
     private String name;
 
     private Boolean isActive;
@@ -18,6 +17,11 @@ public class SkillDto {
     public SkillDto(String name, Boolean isActive) {
         this.name = name;
         this.isActive = isActive;
+    }
+
+    public SkillDto(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     @Override

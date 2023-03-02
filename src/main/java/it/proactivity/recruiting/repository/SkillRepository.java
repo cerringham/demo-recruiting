@@ -15,4 +15,6 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
     Optional<Skill> findByIdAndIsActive(Long id, boolean isActive);
 
     Set<Skill> findByNameIgnoreCaseIn(Set<String> dtoSkills);
+
+    Optional<Skill> findByNameIgnoreCase(String capitalizeFully);
 }

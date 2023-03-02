@@ -21,6 +21,17 @@ public class GlobalValidator {
         return true;
     }
 
+    public Boolean validateStringAlphaNumericSpace(String name) {
+        if (StringUtils.isEmpty(name)) {
+            throw new IllegalArgumentException("String Must be alpha space");
+        }
+        if (StringUtils.isAlphanumericSpace(name)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public Boolean validateStringAlphaSpace(String name, String surname) {
         if (StringUtils.isEmpty(name) || StringUtils.isEmpty(surname)) {
             throw new IllegalArgumentException("Name and surname can't be null or empty");
