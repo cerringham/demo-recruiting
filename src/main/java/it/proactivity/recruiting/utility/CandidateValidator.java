@@ -16,10 +16,4 @@ public class CandidateValidator {
         return true;
     }
 
-    public Boolean validateSkillLevelMap(Map<String, Level> skillLevelMap) {
-        if (skillLevelMap == null || skillLevelMap.isEmpty()) {
-            throw new IllegalArgumentException("No skills or level found");
-        }
-        return true;
-    }
 }

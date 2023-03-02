@@ -88,30 +88,36 @@ public class CandidateService {
     }
 
     public ResponseEntity insertCandidate(CandidateInformationDto dto) {
-        candidateValidator.validateSkillLevelMap(dto.getSkillLevelMap());
+        if (dto == null) {
+            throw new IllegalArgumentException("dto can't be null");
+        }
         Set<String> skills = dto.getSkillLevelMap().keySet();
         candidateValidator.validateSkill(skills);
 
+        //Creo una mappa con le chiavi in lowerCase per un matching delle skill nel db
         Map<String, Level> lowerCaseKeySkillLevelMap = createSkillNameLowerLevelMap(dto.getSkillLevelMap());
 
-        globalValidator.validateStringAlphaSpace(dto.getName(), dto.getSurname());
+        globalValidator.validateStringAlphaSpace(dto.getName());
+        globalValidator.validateStringAlphaSpace(dto.getSurname());
         globalValidator.validateEmail(dto.getEmail());
         globalValidator.validateAge(dto.getBirthDate());
         globalValidator.validatePhoneNumber(dto.getPhoneNumber());
 
+        //Creo il candidate e inserisco le skill che non sono presenti nel db
         Candidate candidate = createCandidate(dto);
 
         if (candidate == null) {
             throw new IllegalStateException("Cannot create candidate");
         }
-        //Salvo sia il candidato che le skill a lui associate
+
+        //cerco tutte le skill dopo la creazione del candidate
+        Set<Skill> realSkills = skillRepository.findByNameIgnoreCaseIn(skills);
+
+        //creazione lista di cv associate al candidate
+        List<Curriculum> curriculumList = createCurriculumList(realSkills, lowerCaseKeySkillLevelMap, candidate);
+        candidate.setCandidateSkillList(curriculumList);
         candidateRepository.save(candidate);
 
-        //cerco tutte le skill dopo l'inserimento del candidate
-        Set<Skill> realSkills = skillRepository.findByNameIgnoreCaseIn(skills);
-        //Inserimento del curriculum
-
-        insertCurriculum(realSkills, lowerCaseKeySkillLevelMap, candidate);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -142,19 +148,9 @@ public class CandidateService {
         if (parsedDate == null) {
             throw new IllegalArgumentException("Impossible to parse the date");
         }
-        candidate.get().setName(dto.getName());
-        candidate.get().setSurname(dto.getSurname());
-        candidate.get().setPhoneNumber(dto.getPhoneNumber());
-        candidate.get().setGender(dto.getGender());
-        candidate.get().setEmail(dto.getEmail());
-        candidate.get().setRegionOfResidence(dto.getRegionOfResidence());
-        candidate.get().setCountryOfBirth(dto.getCountryOfBirth());
-        candidate.get().setStreetOfResidence(dto.getStreetOfResidence());
-        candidate.get().setCityOfBirth(dto.getCityOfBirth());
-        candidate.get().setCityOfResidence(dto.getCityOfResidence());
-        candidate.get().setCountryOfResidence(dto.getCountryOfResidence());
-        candidate.get().setFiscalCode(dto.getFiscalCode());
+        setAllStringParametersForCandidate(dto, candidate.get());
         candidate.get().setBirthDate(parsedDate);
+
         Optional<Expertise> expertise = expertiseRepository.findByNameIgnoreCase(dto.getExpertise());
         if (expertise.isEmpty()) {
             throw new IllegalArgumentException("Expertise not found");
@@ -170,11 +166,27 @@ public class CandidateService {
         //recuper delle skill reali del candidate
         Set<Skill> realSkills = skillRepository.findByNameIgnoreCaseIn(dtoSkills);
 
-        //creazione ed inserimento cv
-        insertCurriculum(realSkills, lowerCaseKeySkillLevelMap, candidate.get());
+        //creazione  lista di cv
+        List<Curriculum> curriculumList = createCurriculumList(realSkills, lowerCaseKeySkillLevelMap, candidate.get());
 
+        candidate.get().setCandidateSkillList(curriculumList);
         candidateRepository.save(candidate.get());
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    private void setAllStringParametersForCandidate(CandidateInformationDto dto, Candidate candidate) {
+        candidate.setName(dto.getName());
+        candidate.setSurname(dto.getSurname());
+        candidate.setPhoneNumber(dto.getPhoneNumber());
+        candidate.setGender(dto.getGender());
+        candidate.setEmail(dto.getEmail());
+        candidate.setRegionOfResidence(dto.getRegionOfResidence());
+        candidate.setCountryOfBirth(dto.getCountryOfBirth());
+        candidate.setStreetOfResidence(dto.getStreetOfResidence());
+        candidate.setCityOfBirth(dto.getCityOfBirth());
+        candidate.setCityOfResidence(dto.getCityOfResidence());
+        candidate.setCountryOfResidence(dto.getCountryOfResidence());
+        candidate.setFiscalCode(dto.getFiscalCode());
     }
 
     private Candidate createCandidate(CandidateInformationDto dto) {
@@ -289,15 +301,11 @@ public class CandidateService {
         return lowerCaseKeySkillLevelMap;
     }
 
-    private void insertCurriculum(Set<Skill> skills, Map<String, Level> lowerCaseKeySkillLevelMap, Candidate candidate) {
-        skills.stream()
-                .forEach(s -> {
-
-                    Curriculum curriculum = createCurriculum(candidate, s,
-                            lowerCaseKeySkillLevelMap.get(s.getName().toLowerCase()), true);
-
-                    curriculumRepository.save(curriculum);
-                });
+    private List<Curriculum> createCurriculumList(Set<Skill> skills, Map<String, Level> lowerCaseKeySkillLevelMap,
+                                                  Candidate candidate) {
+        return skills.stream()
+                .map(s -> createCurriculum(candidate, s,
+                        lowerCaseKeySkillLevelMap.get(s.getName().toLowerCase()), true)).toList();
     }
 }
 

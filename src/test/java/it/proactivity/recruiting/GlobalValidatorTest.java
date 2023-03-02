@@ -16,21 +16,21 @@ public class GlobalValidatorTest {
 
     @Test
     void validateNameAndSurnamePositiveTest() {
-        assertTrue(globalValidator.validateStringAlphaSpace("Alessio", "Cassarino"));
-        assertTrue(globalValidator.validateStringAlphaSpace("Alessio Giacomo", "Cassarino"));
+        assertTrue(globalValidator.validateStringAlphaSpace("Alessio"));
+        assertTrue(globalValidator.validateStringAlphaSpace("Alessio Giacomo"));
     }
 
     @Test
     void validateNameAndSurnameNegativeTest() {
-        assertFalse(globalValidator.validateStringAlphaSpace("Alessio11", "Cassarino"));
-        assertFalse(globalValidator.validateStringAlphaSpace("Alessio, Giacomo", "Cassarino"));
+        assertFalse(globalValidator.validateStringAlphaSpace("Alessio11"));
+        assertFalse(globalValidator.validateStringAlphaSpace("Alessio, Giacomo"));
     }
 
     @Test
     void validateNameAndSurnameNullOrEmptyNegativeTest() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            globalValidator.validateStringAlphaSpace(null, null);
-            globalValidator.validateStringAlphaSpace("", "");
+            globalValidator.validateStringAlphaSpace(null);
+            globalValidator.validateStringAlphaSpace("");
         });
 
         String message = "Name and surname can't be null or empty";

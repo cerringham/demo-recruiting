@@ -81,7 +81,7 @@ public class SkillService {
         if (dto == null) {
             throw new IllegalArgumentException("Dto can't be null");
         }
-        Optional<Skill> skill = skillRepository.findById(dto.getId());
+        Optional<Skill> skill = skillRepository.findByIdAndIsActive(dto.getId(), true);
         if (skill.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

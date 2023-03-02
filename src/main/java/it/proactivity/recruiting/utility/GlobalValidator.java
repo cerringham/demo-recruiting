@@ -32,11 +32,11 @@ public class GlobalValidator {
         }
     }
 
-    public Boolean validateStringAlphaSpace(String name, String surname) {
-        if (StringUtils.isEmpty(name) || StringUtils.isEmpty(surname)) {
-            throw new IllegalArgumentException("Name and surname can't be null or empty");
+    public Boolean validateStringAlphaSpace(String s) {
+        if (StringUtils.isEmpty(s)) {
+            throw new IllegalArgumentException("String and surname can't be null or empty");
         }
-        if (StringUtils.isAlphaSpace(name) && StringUtils.isAlphaSpace(surname)) {
+        if (StringUtils.isAlphaSpace(s)) {
             return true;
         } else {
             return false;
