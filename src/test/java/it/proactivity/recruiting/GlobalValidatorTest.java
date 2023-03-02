@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
-
 import static org.junit.Assert.*;
 
 @SpringBootTest
@@ -17,21 +16,21 @@ public class GlobalValidatorTest {
 
     @Test
     void validateNameAndSurnamePositiveTest() {
-        assertTrue(globalValidator.validateNameAndSurname("Alessio", "Cassarino"));
-        assertTrue(globalValidator.validateNameAndSurname("Alessio Giacomo", "Cassarino"));
+        assertTrue(globalValidator.validateStringAlphaSpace("Alessio", "Cassarino"));
+        assertTrue(globalValidator.validateStringAlphaSpace("Alessio Giacomo", "Cassarino"));
     }
 
     @Test
     void validateNameAndSurnameNegativeTest() {
-        assertFalse(globalValidator.validateNameAndSurname("Alessio11", "Cassarino"));
-        assertFalse(globalValidator.validateNameAndSurname("Alessio, Giacomo", "Cassarino"));
+        assertFalse(globalValidator.validateStringAlphaSpace("Alessio11", "Cassarino"));
+        assertFalse(globalValidator.validateStringAlphaSpace("Alessio, Giacomo", "Cassarino"));
     }
 
     @Test
     void validateNameAndSurnameNullOrEmptyNegativeTest() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->{
-            globalValidator.validateNameAndSurname(null, null);
-            globalValidator.validateNameAndSurname("", "");
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            globalValidator.validateStringAlphaSpace(null, null);
+            globalValidator.validateStringAlphaSpace("", "");
         });
 
         String message = "Name and surname can't be null or empty";
@@ -51,7 +50,7 @@ public class GlobalValidatorTest {
 
     @Test
     void validateEmailNullOrEmptyNegativeTest() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->{
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             globalValidator.validateEmail(null);
             globalValidator.validateEmail("");
         });
@@ -73,14 +72,14 @@ public class GlobalValidatorTest {
 
     @Test
     void validatePhoneNumberNullOrEmptyNegativeTest() {
-       Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-           globalValidator.validatePhoneNumber(null);
-           globalValidator.validatePhoneNumber("");
-       });
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            globalValidator.validatePhoneNumber(null);
+            globalValidator.validatePhoneNumber("");
+        });
 
-       String message = "PhoneNumber can't be null or empty";
+        String message = "PhoneNumber can't be null or empty";
 
-       assertEquals(message, exception.getMessage());
+        assertEquals(message, exception.getMessage());
     }
 
     @Test
@@ -95,7 +94,7 @@ public class GlobalValidatorTest {
 
     @Test
     void validateAgeNullOrEmptyNegativeTest() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->{
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             globalValidator.validateAge(null);
             globalValidator.validateAge("");
         });
@@ -107,7 +106,7 @@ public class GlobalValidatorTest {
 
     @Test
     void validateAgeWrongFormatNegativeTest() {
-        Exception exception = assertThrows(IllegalStateException.class, () ->{
+        Exception exception = assertThrows(IllegalStateException.class, () -> {
             globalValidator.validateAge("1995/12/12");
 
         });

@@ -26,7 +26,7 @@ public class CandidateServiceTest {
     @Autowired
     CandidateService candidateService;
     @Autowired
-    private CandidateRepository candidateRepository;
+    CandidateRepository candidateRepository;
 
     @Test
     void getAllCandidateTest() {
@@ -47,8 +47,8 @@ public class CandidateServiceTest {
         skillLevelMap.put("java", Level.BASIC);
 
         CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRETU09O87L222I", "Catania",
-                "Italia", "Catania","via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "male", "1995-12-09","junior",skillLevelMap);
+                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
+                "m", "1995-12-09", "junior", skillLevelMap);
 
         Long numberOfCandidateBeforeInsert = candidateRepository.findByIsActive(true).stream().count();
         candidateService.insertCandidate(dto);
@@ -61,8 +61,8 @@ public class CandidateServiceTest {
     @Test
     void insertCandidateNullMapNegativeTest() {
         CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRETU09O87L222I", "Catania",
-                "Italia", "Catania","via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "male", "1995-12-09","junior",null);
+                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
+                "male", "1995-12-09", "junior", null);
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             candidateService.insertCandidate(dto);
         });
@@ -76,8 +76,8 @@ public class CandidateServiceTest {
     void insertCandidateEmptyMapNegativeTest() {
         Map<String, Level> skillLevelMap = new HashMap<>();
         CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRETU09O87L222I", "Catania",
-                "Italia", "Catania","via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "male", "1995-12-09","junior",skillLevelMap);
+                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
+                "male", "1995-12-09", "junior", skillLevelMap);
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             candidateService.insertCandidate(dto);
         });
@@ -93,8 +93,8 @@ public class CandidateServiceTest {
         skillLevelMap.put("Azure", Level.ADVANCED);
         skillLevelMap.put("java", Level.BASIC);
         CandidateInformationDto dto = new CandidateInformationDto(null, null, "FDRETU09O87L222I", "Catania",
-                "Italia", "Catania","via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "male", "1995-12-09","junior",skillLevelMap);
+                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
+                "male", "1995-12-09", "junior", skillLevelMap);
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             candidateService.insertCandidate(dto);
         });
@@ -110,8 +110,8 @@ public class CandidateServiceTest {
         skillLevelMap.put("Azure", Level.ADVANCED);
         skillLevelMap.put("java", Level.BASIC);
         CandidateInformationDto dto = new CandidateInformationDto("", "", "FDRETU09O87L222I", "Catania",
-                "Italia", "Catania","via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "male", "1995-12-09","junior",skillLevelMap);
+                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
+                "male", "1995-12-09", "junior", skillLevelMap);
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             candidateService.insertCandidate(dto);
         });
@@ -127,8 +127,8 @@ public class CandidateServiceTest {
         skillLevelMap.put("Azure", Level.ADVANCED);
         skillLevelMap.put("java", Level.BASIC);
         CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRETU09O87L222I", "Catania",
-                "Italia", "Catania","via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "male", "1995-12-09","Fantastic",skillLevelMap);
+                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
+                "male", "1995-12-09", "Fantastic", skillLevelMap);
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             candidateService.insertCandidate(dto);
         });
@@ -155,5 +155,23 @@ public class CandidateServiceTest {
         ResponseEntity response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         assertEquals(candidateService.deleteCandidateById(100l).getStatusCode(), response.getStatusCode());
+    }
+
+    @Test
+    void updateCandidatePositiveTest() {
+        Map<String, Level> skillLevelMap = new HashMap<>();
+        skillLevelMap.put("CSS", Level.ADVANCED);//7
+        skillLevelMap.put("JavaScript", Level.BASIC);//5
+        skillLevelMap.put("C++", Level.INTERMEDIATE);//4
+        skillLevelMap.put("SQL", Level.ADVANCED);//3
+        skillLevelMap.put("Python", Level.BASIC);//2
+        skillLevelMap.put("vue", Level.BASIC);//10
+
+
+        CandidateInformationDto dto = new CandidateInformationDto(7l, "Paola", "Liconasti", "LCNCST92P47H501Z", "Palermo",
+                "Italia", "Roma", "Via  Tornabuoni", "Toscana", "Italia", "paola.liconasti@gmail.com", "+39 3204567890",
+                "f", "1992-05-04", "Senior", skillLevelMap);
+
+        candidateService.updateCandidate(dto);
     }
 }

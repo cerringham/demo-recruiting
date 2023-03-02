@@ -37,6 +37,6 @@ public class CandidateController {
 
     @PostMapping("update-candidate")
     public ResponseEntity updateCandidate(@RequestBody CandidateInformationDto dto) {
-        return candidateService.updateCandidate(dto, id);
+        return candidateService.updateCandidate(dto);
     }
 }

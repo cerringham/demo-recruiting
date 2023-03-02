@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.Period;
 
 @Component
@@ -14,6 +13,7 @@ public class GlobalValidator {
 
     @Autowired
     ParsingUtility parsingUtility;
+
     public Boolean validateId(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id can't be null");
@@ -21,7 +21,7 @@ public class GlobalValidator {
         return true;
     }
 
-    public Boolean validateNameAndSurname(String name, String surname) {
+    public Boolean validateStringAlphaSpace(String name, String surname) {
         if (StringUtils.isEmpty(name) || StringUtils.isEmpty(surname)) {
             throw new IllegalArgumentException("Name and surname can't be null or empty");
         }

@@ -18,6 +18,4 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
     Optional<Candidate> findByIdAndIsActive(Long id, boolean isActive);
 
-    @Query("SELECT c FROM candidate c INNER JOIN FETCH c.candidateSkillList WHERE ")
-    Optional<Candidate> findByIdAndIsActiveWithCurriculumList(Long id, boolean b);
 }

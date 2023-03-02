@@ -20,6 +20,7 @@ import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.ParsingUtility;
 import it.proactivity.recruiting.utility.PredicateUtility;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +54,7 @@ public class CandidateService {
     @Autowired
     PredicateUtility predicateUtility;
     @Autowired
-    private CurriculumRepository curriculumRepository;
+    CurriculumRepository curriculumRepository;
 
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
@@ -91,14 +92,9 @@ public class CandidateService {
         Set<String> skills = dto.getSkillLevelMap().keySet();
         candidateValidator.validateSkill(skills);
 
-        Map<String, Level> lowerCaseKeySkillLevelMap = new HashMap<>();
+        Map<String, Level> lowerCaseKeySkillLevelMap = createSkillNameLowerLevelMap(dto.getSkillLevelMap());
 
-        skills.stream().forEach(s -> {
-            Level level = dto.getSkillLevelMap().get(s);
-            lowerCaseKeySkillLevelMap.put(s.toLowerCase(), level);
-        });
-
-        globalValidator.validateNameAndSurname(dto.getName(), dto.getSurname());
+        globalValidator.validateStringAlphaSpace(dto.getName(), dto.getSurname());
         globalValidator.validateEmail(dto.getEmail());
         globalValidator.validateAge(dto.getBirthDate());
         globalValidator.validatePhoneNumber(dto.getPhoneNumber());
@@ -108,17 +104,14 @@ public class CandidateService {
         if (candidate == null) {
             throw new IllegalStateException("Cannot create candidate");
         }
+        //Salvo sia il candidato che le skill a lui associate
         candidateRepository.save(candidate);
 
+        //cerco tutte le skill dopo l'inserimento del candidate
         Set<Skill> realSkills = skillRepository.findByNameIgnoreCaseIn(skills);
-        realSkills.stream()
-                .forEach(s -> {
+        //Inserimento del curriculum
 
-                    Curriculum curriculum = createCurriculum(candidate, s,
-                            lowerCaseKeySkillLevelMap.get(s.getName().toLowerCase()), true);
-
-                    curriculumRepository.save(curriculum);
-                });
+        insertCurriculum(realSkills, lowerCaseKeySkillLevelMap, candidate);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -137,9 +130,51 @@ public class CandidateService {
 
     public ResponseEntity updateCandidate(CandidateInformationDto dto) {
 
-        Optional<Candidate> candidate = candidateRepository.findByIdAndIsActive(dto.getId(), true);
-        candidateRepository.update
+        if (dto == null) {
+            throw new IllegalArgumentException("dto can't be null");
+        }
 
+        Optional<Candidate> candidate = candidateRepository.findByIdAndIsActive(dto.getId(), true);
+        if (candidate.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        LocalDate parsedDate = parsingUtility.parseStringToLocalDate(dto.getBirthDate());
+        if (parsedDate == null) {
+            throw new IllegalArgumentException("Impossible to parse the date");
+        }
+        candidate.get().setName(dto.getName());
+        candidate.get().setSurname(dto.getSurname());
+        candidate.get().setPhoneNumber(dto.getPhoneNumber());
+        candidate.get().setGender(dto.getGender());
+        candidate.get().setEmail(dto.getEmail());
+        candidate.get().setRegionOfResidence(dto.getRegionOfResidence());
+        candidate.get().setCountryOfBirth(dto.getCountryOfBirth());
+        candidate.get().setStreetOfResidence(dto.getStreetOfResidence());
+        candidate.get().setCityOfBirth(dto.getCityOfBirth());
+        candidate.get().setCityOfResidence(dto.getCityOfResidence());
+        candidate.get().setCountryOfResidence(dto.getCountryOfResidence());
+        candidate.get().setFiscalCode(dto.getFiscalCode());
+        candidate.get().setBirthDate(parsedDate);
+        Optional<Expertise> expertise = expertiseRepository.findByNameIgnoreCase(dto.getExpertise());
+        if (expertise.isEmpty()) {
+            throw new IllegalArgumentException("Expertise not found");
+        }
+        candidate.get().setExpertise(expertise.get());
+
+        //Inserimento di eventuali nuove skill
+        insertSkills(dto.getSkillLevelMap());
+
+        Set<String> dtoSkills = dto.getSkillLevelMap().keySet();
+        Map<String, Level> lowerCaseKeySkillLevelMap = createSkillNameLowerLevelMap(dto.getSkillLevelMap());
+
+        //recuper delle skill reali del candidate
+        Set<Skill> realSkills = skillRepository.findByNameIgnoreCaseIn(dtoSkills);
+
+        //creazione ed inserimento cv
+        insertCurriculum(realSkills, lowerCaseKeySkillLevelMap, candidate.get());
+
+        candidateRepository.save(candidate.get());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     private Candidate createCandidate(CandidateInformationDto dto) {
@@ -147,32 +182,9 @@ public class CandidateService {
         if (expertise.isEmpty()) {
             throw new IllegalArgumentException("Expertise doesn't exists");
         }
-        Set<String> dtoSkills = dto.getSkillLevelMap().keySet();
 
-        Set<Skill>  skills = skillRepository.findByNameIgnoreCaseIn(dtoSkills);
-        if (skills.isEmpty()) {
-            skills.stream().forEach(s -> {
-                String initialLetter = String.valueOf(s.getName().charAt(0));
-                s.setName(initialLetter.toUpperCase() + s.getName().substring(1,s.getName().length() +1));
-                skillRepository.save(s);
-            });
-        }
-
-        if ((!skills.isEmpty()) && skills.size() != dtoSkills.size()) {
-            Set<String> existingSkillsName = skills.stream()
-                            .map(Skill::getName).collect(Collectors.toSet());
-
-          Set<String> nonexistentSkillsName = dtoSkills.stream()
-                    .filter(s -> predicateUtility.filterSkillsName(existingSkillsName, s))
-                    .collect(Collectors.toSet());
-
-          nonexistentSkillsName.stream()
-                  .forEach(s -> {
-                      String correctSkillName = s.substring(0,1).toUpperCase() + s.substring(1);
-                      Skill skill = SkillBuilder.newBuilder(correctSkillName).isActive(true).build();
-                      skillRepository.save(skill);
-                  });
-        }
+        //salvataggio ed inserimento delle skill
+        insertSkills(dto.getSkillLevelMap());
 
         return CandidateBuilder.newBuilder(dto.getName())
                 .surname(dto.getSurname())
@@ -190,6 +202,36 @@ public class CandidateService {
                 .birthDate(parsingUtility.parseStringToLocalDate(dto.getBirthDate()))
                 .expertise(expertise.get())
                 .build();
+    }
+
+    private void insertSkills(Map<String, Level> skillLevelMap) {
+        Set<String> dtoSkills = skillLevelMap.keySet();
+
+        Set<Skill> skills = skillRepository.findByNameIgnoreCaseIn(dtoSkills);
+        //salvataggio delle skill non presenti nel db
+        if (skills.isEmpty()) {
+            dtoSkills.stream().forEach(s -> {
+                Skill skill = SkillBuilder.newBuilder(WordUtils.capitalizeFully(s)).isActive(true).build();
+                skillRepository.save(skill);
+            });
+        }
+
+        //controllo eventuale che nella mappa ci siano skill esistenti e non
+        if ((!skills.isEmpty()) && skills.size() != dtoSkills.size()) {
+            Set<String> existingSkillsName = skills.stream()
+                    .map(Skill::getName).collect(Collectors.toSet());
+
+            Set<String> nonexistentSkillsName = dtoSkills.stream()
+                    .filter(s -> predicateUtility.filterSkillsName(existingSkillsName, s))
+                    .collect(Collectors.toSet());
+
+            nonexistentSkillsName.stream()
+                    .forEach(s -> {
+                        String correctSkillName = WordUtils.capitalizeFully(s);
+                        Skill skill = SkillBuilder.newBuilder(correctSkillName).isActive(true).build();
+                        skillRepository.save(skill);
+                    });
+        }
     }
 
     private CandidateDto createCandidateDto(String fiscalCode, String name, String surname, String cityOfBirth,
@@ -234,75 +276,28 @@ public class CandidateService {
                 .level(level)
                 .isActive(isActive)
                 .build();
-
-
     }
 
-    private void setCustomerParametersWithoutSkills(CandidateInformationDto dto, Candidate candidate) {
-        if (!StringUtils.isEmpty(dto.getName())) {
-            candidate.setName(dto.getName());
-        }
+    private Map<String, Level> createSkillNameLowerLevelMap(Map<String, Level> skillLevelMap) {
+        Map<String, Level> lowerCaseKeySkillLevelMap = new HashMap<>();
+        Set<String> skills = skillLevelMap.keySet();
 
-        if (!StringUtils.isEmpty(dto.getSurname())) {
-            candidate.setSurname(dto.getSurname());
-        }
+        skills.stream().forEach(s -> {
+            Level level = skillLevelMap.get(s);
+            lowerCaseKeySkillLevelMap.put(s.toLowerCase(), level);
+        });
+        return lowerCaseKeySkillLevelMap;
+    }
 
-        if (!StringUtils.isEmpty(dto.getEmail())) {
-            globalValidator.validateEmail(dto.getEmail());
-            candidate.setEmail(dto.getEmail());
-        }
+    private void insertCurriculum(Set<Skill> skills, Map<String, Level> lowerCaseKeySkillLevelMap, Candidate candidate) {
+        skills.stream()
+                .forEach(s -> {
 
-        if (!StringUtils.isEmpty(dto.getGender())) {
-            candidate.setGender(dto.getGender());
-        }
+                    Curriculum curriculum = createCurriculum(candidate, s,
+                            lowerCaseKeySkillLevelMap.get(s.getName().toLowerCase()), true);
 
-        if (!StringUtils.isEmpty(dto.getCityOfBirth())) {
-            candidate.setCityOfBirth(dto.getCityOfBirth());
-        }
-
-        if (!StringUtils.isEmpty(dto.getCityOfResidence())) {
-            candidate.setCityOfResidence(dto.getCityOfResidence());
-        }
-
-        if (!StringUtils.isEmpty(dto.getFiscalCode())) {
-            candidate.setFiscalCode(dto.getFiscalCode());
-        }
-
-        if (!StringUtils.isEmpty(dto.getCountryOfResidence())) {
-            candidate.setCountryOfResidence(dto.getCountryOfResidence());
-        }
-
-        if (!StringUtils.isEmpty(dto.getStreetOfResidence())) {
-            candidate.setStreetOfResidence(dto.getStreetOfResidence());
-        }
-
-        if (!StringUtils.isEmpty(dto.getCountryOfBirth())) {
-            candidate.setCountryOfBirth(dto.getCountryOfBirth());
-        }
-
-        if (!StringUtils.isEmpty(dto.getRegionOfResidence())) {
-            candidate.setRegionOfResidence(dto.getRegionOfResidence());
-        }
-
-        if (!StringUtils.isEmpty(dto.getPhoneNumber())) {
-            globalValidator.validatePhoneNumber(dto.getPhoneNumber());
-            candidate.setPhoneNumber(dto.getPhoneNumber());
-        }
-
-        if (!StringUtils.isEmpty(dto.getBirthDate())) {
-            globalValidator.validateAge(dto.getBirthDate());
-            LocalDate parsedDate = parsingUtility.parseStringToLocalDate(dto.getBirthDate());
-            candidate.setBirthDate(parsedDate);
-        }
-
-        if (!StringUtils.isEmpty(dto.getExpertise())) {
-            Optional<Expertise> expertise = expertiseRepository.findByNameIgnoreCase(dto.getExpertise());
-            if (expertise.isEmpty()) {
-                throw new IllegalArgumentException("Expertise not found");
-            }
-            candidate.setExpertise(expertise.get());
-        }
-
+                    curriculumRepository.save(curriculum);
+                });
     }
 }
 

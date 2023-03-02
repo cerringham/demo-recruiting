@@ -1,6 +1,7 @@
 package it.proactivity.recruiting.model.dto;
 
 import it.proactivity.recruiting.myEnum.Level;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.Map;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class CandidateInformationDto {
 
     private Long id;
