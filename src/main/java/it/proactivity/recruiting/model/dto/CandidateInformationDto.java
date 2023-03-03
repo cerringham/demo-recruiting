@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -16,6 +17,7 @@ import java.util.Map;
 public class CandidateInformationDto {
 
     private Long id;
+
     private String name;
 
     private String surname;
@@ -44,7 +46,7 @@ public class CandidateInformationDto {
 
     private String expertise;
 
-    private Map<String, Level> skillLevelMap;
+    private Map<String, Level> skillLevelMap = new HashMap<>();
 
     public CandidateInformationDto(String name, String surname, String fiscalCode, String cityOfBirth,
                                    String countryOfBirth, String cityOfResidence, String streetOfResidence,

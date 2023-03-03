@@ -33,7 +33,7 @@ public class ParsingUtility {
 
     public  LocalDate parseStringToLocalDate(String date) {
         if (date == null || date.isEmpty()) {
-            throw new IllegalArgumentException("date can't be null or empty");
+            return null;
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

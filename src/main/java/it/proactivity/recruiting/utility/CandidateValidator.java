@@ -11,7 +11,7 @@ public class CandidateValidator {
 
     public Boolean validateSkill(Set<String> skills) {
         if (skills == null || skills.isEmpty()) {
-            throw new IllegalArgumentException("The Candidate doesn't have any skills");
+            return false;
         }
         return true;
     }

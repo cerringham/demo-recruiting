@@ -16,14 +16,14 @@ public class GlobalValidator {
 
     public Boolean validateId(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("Id can't be null");
+            return false;
         }
         return true;
     }
 
     public Boolean validateStringAlphaNumericSpace(String name) {
         if (StringUtils.isEmpty(name)) {
-            throw new IllegalArgumentException("String Must be alpha space");
+            return false;
         }
         if (StringUtils.isAlphanumericSpace(name)) {
             return true;
@@ -34,7 +34,7 @@ public class GlobalValidator {
 
     public Boolean validateStringAlphaSpace(String s) {
         if (StringUtils.isEmpty(s)) {
-            throw new IllegalArgumentException("String and surname can't be null or empty");
+            return false;
         }
         if (StringUtils.isAlphaSpace(s)) {
             return true;
@@ -45,7 +45,7 @@ public class GlobalValidator {
 
     public Boolean validateEmail(String email) {
         if (StringUtils.isEmpty(email)) {
-            throw new IllegalArgumentException("Email can't be null or empty");
+            return false;
         }
         EmailValidator emailValidator = EmailValidator.getInstance();
         return emailValidator.isValid(email);
@@ -53,7 +53,7 @@ public class GlobalValidator {
 
     public Boolean validatePhoneNumber(String phoneNumber) {
         if (StringUtils.isEmpty(phoneNumber)) {
-            throw new IllegalArgumentException("PhoneNumber can't be null or empty");
+            return false;
         }
         if (StringUtils.startsWith(phoneNumber, "+")) {
             phoneNumber = phoneNumber.replace("+", "");
@@ -66,12 +66,12 @@ public class GlobalValidator {
 
     public Boolean validateAge(String birthDate) {
         if (StringUtils.isEmpty(birthDate)) {
-            throw new IllegalArgumentException("Birth date can't be null or empty");
+            return false;
         }
 
         LocalDate parsedBirthDate = parsingUtility.parseStringToLocalDate(birthDate);
         if (parsedBirthDate == null) {
-            throw new IllegalStateException("Impossible to parse the date");
+            return false;
         }
         Period period = Period.between(parsedBirthDate, LocalDate.now());
         Integer eta = period.getYears();

@@ -13,7 +13,5 @@ public interface ExpertiseRepository extends JpaRepository<Expertise, Long> {
 
     Optional<Expertise> findByIdAndIsActive(Long id, boolean isActive);
 
-    Optional<Expertise> findByName(String expertise);
-
-    Optional<Expertise> findByNameIgnoreCase(String expertise);
+    Optional<Expertise> findByNameIgnoreCaseAndIsActive(String expertise, boolean b);
 }
