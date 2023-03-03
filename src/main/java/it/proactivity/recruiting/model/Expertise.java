@@ -1,6 +1,7 @@
 package it.proactivity.recruiting.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import java.util.Set;
 @Table(name = "expertise")
 @Getter
 @Setter
-@NoArgsConstructor
+@AllArgsConstructor
 public class Expertise {
 
     @Id
@@ -33,6 +34,12 @@ public class Expertise {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "expertise_id")
     private Set<Employee> employeeList;
+
+    public Expertise(Long id, String name, Boolean isActive) {
+        this.id = id;
+        this.name = name;
+        this.isActive = isActive;
+    }
 
     @Override
     public String toString() {

@@ -12,27 +12,22 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class CurriculumDto {
 
-    private Long candidateId;
+    private Long id;
+    private CandidateDto candidateId;
 
-    private String candidateName;
-
-    private String candidateSurname;
-
-    private String skillName;
+    private SkillDto skillId;
 
     private String level;
 
-    public CurriculumDto(Long candidateId, String candidateName, String candidateSurname, String skillName, String level) {
+    public CurriculumDto(CandidateDto candidateId, SkillDto skillId, String level) {
         this.candidateId = candidateId;
-        this.candidateName = candidateName;
-        this.candidateSurname = candidateSurname;
-        this.skillName = skillName;
-        this.level = level.toString();
+        this.skillId = skillId;
+        this.level = level;
     }
 
     @Override
     public String toString() {
-        return candidateId + " " + candidateName + " " + candidateSurname + " " + skillName +
+        return candidateId + " " +
                 " " + level;
     }
 }

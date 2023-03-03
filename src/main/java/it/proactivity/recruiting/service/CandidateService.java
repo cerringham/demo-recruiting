@@ -31,9 +31,6 @@ public class CandidateService {
     CandidateRepository candidateRepository;
 
     @Autowired
-    ParsingUtility parsingUtility;
-
-    @Autowired
     GlobalValidator globalValidator;
 
     @Autowired
@@ -44,22 +41,21 @@ public class CandidateService {
 
     @Autowired
     ExpertiseRepository expertiseRepository;
-
-    @Autowired
-    SkillRepository skillRepository;
-
     @Autowired
     SkillValidator skillValidator;
+
+    @Autowired
+    ExpertiseUtility expertiseUtility;
+
+    @Autowired
+    CurriculumUtility curriculumUtility;
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
         List<Candidate> candidateList = candidateRepository.findByIsActive(true);
 
         Set<CandidateDto> dtoList = candidateList.stream()
-                .map(c -> candidateUtility.createCandidateDto(c.getFiscalCode(), c.getName(), c.getSurname(), c.getCityOfBirth(),
-                        c.getCountryOfBirth(), c.getCityOfResidence(), c.getStreetOfResidence(), c.getRegionOfResidence(),
-                        c.getCountryOfResidence(), c.getEmail(), c.getPhoneNumber(), c.getGender(), c.getIsActive(),
-                        parsingUtility.parseDateToString(c.getBirthDate())))
+                .map(c -> candidateUtility.createCandidateDto(c))
                 .collect(Collectors.toSet());
 
         return ResponseEntity.ok(dtoList);
@@ -73,12 +69,7 @@ public class CandidateService {
         if (candidate.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(candidateUtility.createCandidateDto(candidate.get().getFiscalCode(), candidate.get().getName(),
-                candidate.get().getSurname(), candidate.get().getCityOfBirth(), candidate.get().getCountryOfBirth(),
-                candidate.get().getCityOfResidence(), candidate.get().getStreetOfResidence(),
-                candidate.get().getRegionOfResidence(), candidate.get().getCountryOfResidence(),
-                candidate.get().getEmail(), candidate.get().getPhoneNumber(), candidate.get().getGender(),
-                candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate())));
+        return ResponseEntity.ok(candidateUtility.createCandidateDto(candidate.get()));
     }
 
     public ResponseEntity<CandidateWithSkillDto> insertNewCandidate(CandidateWithSkillDto candidateWithSkillDto) {
@@ -90,7 +81,9 @@ public class CandidateService {
             return ResponseEntity.badRequest().build();
         }
 
-        List<String> curriculumNameList = candidateWithSkillDto.getCurriculumList().stream().map(c -> c.getSkill().getName()).toList();
+        List<String> curriculumNameList = candidateWithSkillDto.getCurriculumList().stream()
+                .map(c -> c.getSkillId().getName())
+                .toList();
         List<Skill> skillsList = skillValidator.createSkillList(curriculumNameList);
         Candidate candidate = candidateUtility.createCandidateFromCandidateWithSkillDto(candidateWithSkillDto);
         Set<Curriculum> curriculumList = skillsList.stream()
@@ -105,7 +98,35 @@ public class CandidateService {
     }
 
     public ResponseEntity<CandidateWithSkillDto> updateCandidate(CandidateWithSkillDto candidateWithSkillDto) {
-        return null;
+        Optional<Candidate> candidate = candidateRepository.findById(candidateWithSkillDto.getId());
+        if (candidate.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Expertise> expertise = expertiseRepository.findByNameAndIsActive(candidateWithSkillDto.getExpertise().getName(), true);
+        if (candidate.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        List<String> curriculumNameList = candidateWithSkillDto.getCurriculumList().stream()
+                .map(c -> c.getSkillId().getName())
+                .toList();
+        List<Skill> skillList = skillValidator.createSkillList(curriculumNameList);
+        Set<Curriculum> curriculumSet = skillList.stream().map( s -> CurriculumBuilder.newBuilder(candidate.get())
+                        .skill(s)
+                        .isActive(true)
+                        .build())
+                .collect(Collectors.toSet());
+        candidate.get().setCityOfResidence(candidateWithSkillDto.getCityOfResidence());
+        candidate.get().setStreetOfResidence(candidateWithSkillDto.getStreetOfResidence());
+        candidate.get().setRegionOfResidence(candidateWithSkillDto.getRegionOfResidence());
+        candidate.get().setCountryOfResidence(candidateWithSkillDto.getCountryOfResidence());
+        candidate.get().setEmail(candidateWithSkillDto.getEmail());
+        candidate.get().setPhoneNumber(candidateWithSkillDto.getPhoneNumber());
+        candidate.get().setGender(candidateWithSkillDto.getGender());
+        candidate.get().setIsActive(candidateWithSkillDto.getIsActive());
+        candidate.get().setExpertise(expertiseUtility.createExpertiseFromDto(candidateWithSkillDto.getExpertise()));
+        candidate.get().setCandidateSkillList(curriculumUtility.createCurriculumSetFromDto(candidateWithSkillDto.getCurriculumList()));
+        candidateRepository.save(candidate.get());
+        return ResponseEntity.ok(candidateWithSkillDto);
     }
 
     public ResponseEntity<CandidateDto> deleteById(Long id) {
@@ -116,12 +137,7 @@ public class CandidateService {
         }
         candidate.get().setIsActive(false);
         candidateRepository.save(candidate.get());
-        CandidateDto candidateDto = candidateUtility.createCandidateDto(candidate.get().getName(), candidate.get().getFiscalCode(),
-                candidate.get().getSurname(), candidate.get().getCityOfBirth(), candidate.get().getCountryOfBirth(),
-                candidate.get().getCityOfResidence(), candidate.get().getStreetOfResidence(),
-                candidate.get().getRegionOfResidence(), candidate.get().getCountryOfResidence(),
-                candidate.get().getEmail(), candidate.get().getPhoneNumber(), candidate.get().getGender(),
-                candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate()));
+        CandidateDto candidateDto = candidateUtility.createCandidateDto(candidate.get());
         return ResponseEntity.ok(candidateDto);
     }
 }

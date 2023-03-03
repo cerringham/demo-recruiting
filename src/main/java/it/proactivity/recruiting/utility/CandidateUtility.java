@@ -21,32 +21,29 @@ public class CandidateUtility {
     ParsingUtility parsingUtility;
 
     @Autowired
-    CandidateValidator candidateValidator;
+    CurriculumUtility curriculumUtility;
+    @Autowired
+    ExpertiseUtility expertiseUtility;
 
-    public CandidateDto createCandidateDto(String fiscalCode, String name, String surname, String cityOfBirth,
-                                           String countryOfBirth, String cityOfResidence, String streetOfResidence,
-                                           String regionOfResidence, String countryOfResidence, String email,
-                                           String phoneNumber, String gender, Boolean isActive, String birthDate) {
+    public CandidateDto createCandidateDto(Candidate candidate) {
 
-        if (!candidateValidator.validateParameters(fiscalCode, name, surname, cityOfBirth, countryOfBirth,
-                cityOfResidence, streetOfResidence, regionOfResidence, countryOfResidence, email, phoneNumber, gender,
-                isActive, birthDate)) {
+        if (candidate == null) {
             throw new IllegalArgumentException("The data's for creating the candidate dto are empty or null");
         }
-        return CandidateDtoBuilder.newBuilder(fiscalCode)
-                .name(fiscalCode)
-                .surname(surname)
-                .cityOfBirth(cityOfBirth)
-                .countryOfBirth(countryOfBirth)
-                .cityOfResidence(cityOfResidence)
-                .streetOfResidence(streetOfResidence)
-                .regionOfResidence(regionOfResidence)
-                .countryOfResidence(countryOfResidence)
-                .email(email)
-                .phoneNumber(phoneNumber)
-                .gender(gender)
-                .isActive(isActive)
-                .birthDate(birthDate)
+        return CandidateDtoBuilder.newBuilder(candidate.getFiscalCode())
+                .name(candidate.getName())
+                .surname(candidate.getSurname())
+                .cityOfBirth(candidate.getCityOfBirth())
+                .countryOfBirth(candidate.getCountryOfBirth())
+                .cityOfResidence(candidate.getCityOfResidence())
+                .streetOfResidence(candidate.getStreetOfResidence())
+                .regionOfResidence(candidate.getRegionOfResidence())
+                .countryOfResidence(candidate.getCountryOfResidence())
+                .email(candidate.getEmail())
+                .phoneNumber(candidate.getPhoneNumber())
+                .gender(candidate.getGender())
+                .isActive(candidate.getIsActive())
+                .birthDate(parsingUtility.parseDateToString(candidate.getBirthDate()))
                 .build();
     }
     public Candidate createCandidateFromCandidateWithSkillDto(CandidateWithSkillDto candidateDto) {
@@ -64,14 +61,28 @@ public class CandidateUtility {
                 .gender(candidateDto.getGender())
                 .isActive(candidateDto.getIsActive())
                 .birthDate(parsingUtility.parseStringToDate(candidateDto.getBirthDate()))
-                .expertise(candidateDto.getExpertise())
-                .curriculumDtoList(candidateDto.getCurriculumList())
+                .expertise(expertiseUtility.createExpertiseFromDto(candidateDto.getExpertise()))
+                .curriculumDtoList(curriculumUtility.createCurriculumSetFromDto(candidateDto.getCurriculumList()))
                 .build();
     }
-    //CV
-//	- creo n oggetti (dove n è il numero delle skills) di tipo Curriculum dove setto come candidate l'oggetto appena creato (newCandidate)
-//	- associo questa lista di oggetti all'attriburo candidateSkillList di newCandidate
-//	- session.save() di newCandidate salva anche i cv
+
+    public Candidate createCandidateFromDto(CandidateDto candidateDto) {
+        return CandidateBuilder.newBuilder(candidateDto.getName())
+                .fiscalCode(candidateDto.getFiscalCode())
+                .surname(candidateDto.getSurname())
+                .cityOfBirth(candidateDto.getCityOfBirth())
+                .countryOfBirth(candidateDto.getCountryOfBirth())
+                .cityOfResidence(candidateDto.getCityOfResidence())
+                .streetOfResidence(candidateDto.getStreetOfResidence())
+                .regionOfResidence(candidateDto.getRegionOfResidence())
+                .countryOfResidence(candidateDto.getCountryOfResidence())
+                .email(candidateDto.getEmail())
+                .phoneNumber(candidateDto.getPhoneNumber())
+                .gender(candidateDto.getGender())
+                .isActive(candidateDto.getIsActive())
+                .birthDate(parsingUtility.parseStringToDate(candidateDto.getBirthDate()))
+                .build();
+    }
     public List<Curriculum> createCurriculumList(Candidate candidate, Skill skill, Level level) {
         if (candidate == null || skill == null || level == null) {
             throw new IllegalArgumentException();

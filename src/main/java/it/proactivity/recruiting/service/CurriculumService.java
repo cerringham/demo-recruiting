@@ -2,9 +2,14 @@ package it.proactivity.recruiting.service;
 
 import it.proactivity.recruiting.builder.CurriculumDtoBuilder;
 import it.proactivity.recruiting.model.Curriculum;
+import it.proactivity.recruiting.model.Skill;
+import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CurriculumDto;
+import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.CurriculumRepository;
+import it.proactivity.recruiting.utility.CandidateUtility;
 import it.proactivity.recruiting.utility.GlobalValidator;
+import it.proactivity.recruiting.utility.SkillUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,13 +28,19 @@ public class CurriculumService {
     @Autowired
     GlobalValidator globalValidator;
 
+    @Autowired
+    CandidateUtility candidateUtility;
+
+    @Autowired
+    SkillUtility skillUtility;
+
     public ResponseEntity<List<CurriculumDto>> getAll() {
 
         List<Curriculum> curriculumListList = curriculumRepository.findByIsActive(true);
 
         List<CurriculumDto> dtoList = curriculumListList.stream()
-                .map(c -> new CurriculumDto(c.getCandidate().getId(), c.getCandidate().getName(),
-                        c.getCandidate().getSurname(), c.getSkill().getName(), c.getLevel().toString()))
+                .map(c -> new CurriculumDto(candidateUtility.createCandidateDto(c.getCandidate()),
+                        skillUtility.createSkillDto(c.getSkill()), c.getLevel().toString()))
                 .toList();
         return ResponseEntity.ok(dtoList);
     }
@@ -43,22 +54,16 @@ public class CurriculumService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.ok(createCurriculumDto(curriculum.get().getCandidate().getId(),
-                curriculum.get().getCandidate().getName(), curriculum.get().getCandidate().getSurname(),
-                curriculum.get().getSkill().getName(), curriculum.get().getLevel().toString()));
+        return ResponseEntity.ok(createCurriculumDto(candidateUtility.createCandidateDto(curriculum.get().getCandidate()),
+                skillUtility.createSkillDto(curriculum.get().getSkill()), curriculum.get().getLevel().toString()));
     }
 
-    private CurriculumDto createCurriculumDto(Long candidateId, String candidateName, String candidateSurname,
-                                              String skillName, String level) {
-        if (candidateId == null || StringUtils.isEmpty(candidateName) || StringUtils.isEmpty(candidateSurname) ||
-                StringUtils.isEmpty(skillName) || StringUtils.isEmpty(level)) {
+    private CurriculumDto createCurriculumDto(CandidateDto candidateDto, SkillDto skillDto, String level) {
+        if (candidateDto == null || skillDto == null|| StringUtils.isEmpty(level)) {
             throw new IllegalArgumentException("The parameters for the creation of curriculum dto can't be null or empty");
         }
-
-        return CurriculumDtoBuilder.newBuilder(candidateId)
-                .candidateName(candidateName)
-                .candidateSurname(candidateSurname)
-                .skillName(skillName)
+        return CurriculumDtoBuilder.newBuilder(candidateDto)
+                .skillId(skillDto)
                 .level(level)
                 .build();
 

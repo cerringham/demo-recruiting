@@ -14,6 +14,8 @@ import java.util.Set;
 @EqualsAndHashCode
 public class CandidateWithSkillDto {
 
+    private Long id;
+
     private String fiscalCode;
 
     private String name;
@@ -42,9 +44,9 @@ public class CandidateWithSkillDto {
 
     private String birthDate;
 
-    private Expertise expertise;
+    private ExpertiseDto expertise;
 
-    private Set<Curriculum> curriculumList;
+    private Set<CurriculumDto> curriculumList;
 
     @Override
     public String toString() {

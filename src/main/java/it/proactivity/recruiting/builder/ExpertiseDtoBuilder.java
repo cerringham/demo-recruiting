@@ -4,6 +4,8 @@ import it.proactivity.recruiting.model.dto.ExpertiseDto;
 
 public class ExpertiseDtoBuilder {
 
+    private Long id;
+
     private String name;
 
     private Boolean isActive;
@@ -15,7 +17,10 @@ public class ExpertiseDtoBuilder {
     public static ExpertiseDtoBuilder newBuilder(String name) {
         return new ExpertiseDtoBuilder(name);
     }
-
+    public ExpertiseDtoBuilder id(Long id) {
+        this.id = id;
+        return this;
+    }
     public ExpertiseDtoBuilder isActive(Boolean isActive) {
         this.isActive = isActive;
         return this;

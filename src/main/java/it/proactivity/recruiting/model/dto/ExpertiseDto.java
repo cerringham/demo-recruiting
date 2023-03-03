@@ -11,6 +11,8 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class ExpertiseDto {
 
+    private Long id;
+
     private String name;
 
     private Boolean isActive;

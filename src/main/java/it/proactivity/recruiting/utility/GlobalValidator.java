@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Calendar;
 
 import static it.proactivity.recruiting.utility.ParsingUtility.parseStringToDate;
 
@@ -30,7 +29,7 @@ public class GlobalValidator {
         return StringUtils.isAlphanumeric(fiscalCode);
     }
 
-    public Boolean validateNameOrSurname(String name) {
+    public Boolean validateAlphaSpace(String name) {
         if (StringUtils.isEmpty(name)) {
             return false;
         }

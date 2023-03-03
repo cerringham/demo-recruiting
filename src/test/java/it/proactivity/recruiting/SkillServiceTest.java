@@ -46,6 +46,8 @@ public class SkillServiceTest {
         String name = "Php";
         assertTrue(skillValidator.validateSkillName(name));
         assertNotNull(name);
+        String name2= "Prova skill";
+        assertTrue(skillValidator.validateSkillName(name2));
     }
 
     @Test

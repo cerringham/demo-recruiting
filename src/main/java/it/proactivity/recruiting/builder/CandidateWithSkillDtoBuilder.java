@@ -3,11 +3,14 @@ package it.proactivity.recruiting.builder;
 import it.proactivity.recruiting.model.Curriculum;
 import it.proactivity.recruiting.model.Expertise;
 import it.proactivity.recruiting.model.dto.CandidateWithSkillDto;
+import it.proactivity.recruiting.model.dto.CurriculumDto;
+import it.proactivity.recruiting.model.dto.ExpertiseDto;
 
 import java.util.List;
 import java.util.Set;
 
 public class CandidateWithSkillDtoBuilder {
+    private Long id;
     private String fiscalCode;
 
     private String name;
@@ -36,9 +39,9 @@ public class CandidateWithSkillDtoBuilder {
 
     private String birthDate;
 
-    private Expertise expertise;
+    private ExpertiseDto expertise;
 
-    private Set<Curriculum> curriculumList;
+    private Set<CurriculumDto> curriculumList;
 
     private CandidateWithSkillDtoBuilder(String name) {
         this.name = name;
@@ -112,18 +115,18 @@ public class CandidateWithSkillDtoBuilder {
         this.birthDate = birthDate;
         return this;
     }
-    public CandidateWithSkillDtoBuilder expertise(Expertise expertise) {
+    public CandidateWithSkillDtoBuilder expertise(ExpertiseDto expertise) {
         this.expertise = expertise;
         return this;
     }
 
-    public CandidateWithSkillDtoBuilder curriculumList(Set<Curriculum> curriculumList) {
+    public CandidateWithSkillDtoBuilder curriculumList(Set<CurriculumDto> curriculumList) {
         this.curriculumList = curriculumList;
         return this;
     }
 
     public CandidateWithSkillDto build() {
-        return new CandidateWithSkillDto(fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence, streetOfResidence,
+        return new CandidateWithSkillDto(id, fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence, streetOfResidence,
                 regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate, expertise, curriculumList);
     }
 }

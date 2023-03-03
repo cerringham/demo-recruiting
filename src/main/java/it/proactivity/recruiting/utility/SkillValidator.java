@@ -3,6 +3,7 @@ package it.proactivity.recruiting.utility;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.repository.SkillRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 //validazione delle skill
@@ -32,12 +33,10 @@ public class SkillValidator {
         if (StringUtils.isEmpty(skillName)) {
             return false;
         }
-        if (!Character.isUpperCase(skillName.charAt(0))) {
-            return false;
-        }
+        skillName = WordUtils.capitalizeFully(skillName);
         String[] array = skillName.split(" ");
         for (String s : array) {
-            if (!Character.isUpperCase(s.charAt(1))) {
+            if (!Character.isUpperCase(s.charAt(0))) {
                 return false;
             }
         }
