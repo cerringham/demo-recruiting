@@ -1,5 +1,6 @@
 package it.proactivity.recruiting.service;
 
+import it.proactivity.recruiting.builder.CandidateWithSkillDtoBuilder;
 import it.proactivity.recruiting.builder.CurriculumBuilder;
 import it.proactivity.recruiting.model.Candidate;
 import it.proactivity.recruiting.model.Curriculum;
@@ -79,9 +80,7 @@ public class CandidateService {
                 candidate.get().getEmail(), candidate.get().getPhoneNumber(), candidate.get().getGender(),
                 candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate())));
     }
-    //creo n oggetti (dove n è il numero delle skills) di tipo Curriculum dove setto come candidate l'oggetto appena creato (newCandidate)
-    //	- associo questa lista di oggetti all'attriburo candidateSkillList di newCandidate
-    //	- session.save() di newCandidate salva anche i cv
+
     public ResponseEntity<CandidateWithSkillDto> insertNewCandidate(CandidateWithSkillDto candidateWithSkillDto) {
         if (!candidateValidator.validateCandidate(candidateWithSkillDto)) {
             return ResponseEntity.badRequest().build();
@@ -90,19 +89,23 @@ public class CandidateService {
         if (expertise.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        List<Curriculum> curriculumList = new ArrayList<>();
+
         List<String> curriculumNameList = candidateWithSkillDto.getCurriculumList().stream().map(c -> c.getSkill().getName()).toList();
         List<Skill> skillsList = skillValidator.createSkillList(curriculumNameList);
         Candidate candidate = candidateUtility.createCandidateFromCandidateWithSkillDto(candidateWithSkillDto);
-        for (Skill s : skillsList) {
-            curriculumList.add(CurriculumBuilder.newBuilder(candidate)
-                    .skill(s)
-                    .isActive(true)
-                    .build());
-        }
+        Set<Curriculum> curriculumList = skillsList.stream()
+                        .map(s -> CurriculumBuilder.newBuilder(candidate)
+                                .skill(s)
+                                .isActive(true)
+                                .build())
+                .collect(Collectors.toSet());
         candidate.setCandidateSkillList(curriculumList);
         candidateRepository.save(candidate);
         return ResponseEntity.ok(candidateWithSkillDto);
+    }
+
+    public ResponseEntity<CandidateWithSkillDto> updateCandidate(CandidateWithSkillDto candidateWithSkillDto) {
+
     }
 
     public ResponseEntity<CandidateDto> deleteById(Long id) {

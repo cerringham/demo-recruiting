@@ -6,6 +6,7 @@ import it.proactivity.recruiting.model.Expertise;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public class CandidateBuilder {
 
@@ -39,7 +40,7 @@ public class CandidateBuilder {
 
     private Expertise expertise;
 
-    private List<Curriculum> candidateSkillList;
+    private Set<Curriculum> candidateSkillList;
 
     private CandidateBuilder(String name) {
         this.name = name;
@@ -118,7 +119,7 @@ public class CandidateBuilder {
         return this;
     }
 
-    public CandidateBuilder curriculumDtoList(List<Curriculum> candidateSkillList) {
+    public CandidateBuilder curriculumDtoList(Set<Curriculum> candidateSkillList) {
         this.candidateSkillList = candidateSkillList;
         return this;
     }

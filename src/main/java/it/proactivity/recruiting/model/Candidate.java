@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "candidate")
@@ -65,7 +66,7 @@ public class Candidate {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id")
-    private List<Curriculum> candidateSkillList;
+    private Set<Curriculum> candidateSkillList;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id")
@@ -74,7 +75,7 @@ public class Candidate {
     public Candidate(String fiscalCode, String name, String surname, String cityOfBirth, String countryOfBirth,
                      String cityOfResidence, String streetOfResidence, String regionOfResidence, String countryOfResidence,
                      String email, String phoneNumber, String gender, Boolean isActive, LocalDate birthDate,
-                     Expertise expertise, List<Curriculum> candidateSkillList) {
+                     Expertise expertise, Set<Curriculum> candidateSkillList) {
         this.fiscalCode = fiscalCode;
         this.name = name;
         this.surname = surname;
