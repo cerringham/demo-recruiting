@@ -13,4 +13,6 @@ public interface CurriculumRepository extends JpaRepository<Curriculum, Long> {
     List<Curriculum> findByIsActive(Boolean isActive);
     Optional<Curriculum> findByIdAndIsActive(Long id, Boolean isActive);
     List<Curriculum> findByCandidateNameAndIsActive(String candidateName, Boolean isActive);
+
+    Optional<Curriculum> findBySkillNameAndIsActive(String skillName, Boolean isActive);
 }

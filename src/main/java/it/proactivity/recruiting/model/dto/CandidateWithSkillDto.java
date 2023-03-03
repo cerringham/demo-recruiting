@@ -5,6 +5,7 @@ import it.proactivity.recruiting.model.Expertise;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -43,7 +44,7 @@ public class CandidateWithSkillDto {
 
     private Expertise expertise;
 
-    private List<Curriculum> curriculumList;
+    private Set<Curriculum> curriculumList;
 
     @Override
     public String toString() {

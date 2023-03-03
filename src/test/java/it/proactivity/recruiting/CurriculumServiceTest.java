@@ -32,13 +32,13 @@ public class CurriculumServiceTest {
     void getCurriculumByIdTest() {
         CurriculumDto curriculumDto = curriculumService.findById(1l).getBody();
         assertNotNull(curriculumDto);
-        System.out.println(curriculumDto);
+        System.out.println("{" + curriculumDto + "}");
     }
 
     @Test
     void findByCandidateAndIsActiveTest() {
         List<Curriculum> curriculumList = curriculumRepository.findByCandidateNameAndIsActive("Marco", true);
         assertTrue(!curriculumList.isEmpty());
-        System.out.println(curriculumList);
+        System.out.println("{" + curriculumList.size() + "}");
     }
 }

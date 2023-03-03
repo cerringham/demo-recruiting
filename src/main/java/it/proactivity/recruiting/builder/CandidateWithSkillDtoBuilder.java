@@ -5,6 +5,7 @@ import it.proactivity.recruiting.model.Expertise;
 import it.proactivity.recruiting.model.dto.CandidateWithSkillDto;
 
 import java.util.List;
+import java.util.Set;
 
 public class CandidateWithSkillDtoBuilder {
     private String fiscalCode;
@@ -37,7 +38,7 @@ public class CandidateWithSkillDtoBuilder {
 
     private Expertise expertise;
 
-    private List<Curriculum> curriculumList;
+    private Set<Curriculum> curriculumList;
 
     private CandidateWithSkillDtoBuilder(String name) {
         this.name = name;
@@ -116,7 +117,7 @@ public class CandidateWithSkillDtoBuilder {
         return this;
     }
 
-    public CandidateWithSkillDtoBuilder curriculumList(List<Curriculum> curriculumList) {
+    public CandidateWithSkillDtoBuilder curriculumList(Set<Curriculum> curriculumList) {
         this.curriculumList = curriculumList;
         return this;
     }
