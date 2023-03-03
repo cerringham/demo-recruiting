@@ -74,8 +74,8 @@ public class EmployeeService {
             throw new IllegalArgumentException("The data's for creating the employee dto are empty or null");
         }
 
-        return EmployeeDtoBuilder.newBuilder(name)
-                .fiscalCode(fiscalCode)
+        return EmployeeDtoBuilder.newBuilder(fiscalCode)
+                .name(fiscalCode)
                 .surname(surname)
                 .cityOfBirth(cityOfBirth)
                 .countryOfBirth(countryOfBirth)

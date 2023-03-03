@@ -22,7 +22,7 @@ public class CandidateController {
     }
 
     @GetMapping("/get-candidate/{id}")
-    public ResponseEntity<Optional<CandidateDto>> findById(@PathVariable Long id) {
+    public ResponseEntity<CandidateDto> findById(@PathVariable Long id) {
         return candidateService.findById(id);
     }
 

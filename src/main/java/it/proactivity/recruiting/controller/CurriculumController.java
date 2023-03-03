@@ -18,7 +18,7 @@ public class CurriculumController {
     CurriculumService curriculumService;
 
     @GetMapping("/get-all-candidateSkills")
-    public ResponseEntity<Set<CurriculumDto>> getAll() {
+    public ResponseEntity<List<CurriculumDto>> getAll() {
         return curriculumService.getAll();
     }
 

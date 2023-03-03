@@ -105,7 +105,7 @@ public class CandidateService {
     }
 
     public ResponseEntity<CandidateWithSkillDto> updateCandidate(CandidateWithSkillDto candidateWithSkillDto) {
-
+        return null;
     }
 
     public ResponseEntity<CandidateDto> deleteById(Long id) {

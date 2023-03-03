@@ -33,8 +33,8 @@ public class CandidateUtility {
                 isActive, birthDate)) {
             throw new IllegalArgumentException("The data's for creating the candidate dto are empty or null");
         }
-        return CandidateDtoBuilder.newBuilder(name)
-                .fiscalCode(fiscalCode)
+        return CandidateDtoBuilder.newBuilder(fiscalCode)
+                .name(fiscalCode)
                 .surname(surname)
                 .cityOfBirth(cityOfBirth)
                 .countryOfBirth(countryOfBirth)

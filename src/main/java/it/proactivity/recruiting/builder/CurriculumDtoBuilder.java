@@ -40,7 +40,7 @@ public class CurriculumDtoBuilder {
         return this;
     }
 
-    public CurriculumDto buil() {
+    public CurriculumDto build() {
         return new CurriculumDto(candidateId, candidateName, candidateSurname, skillName, level);
     }
 }

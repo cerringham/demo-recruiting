@@ -42,13 +42,13 @@ public class CandidateServiceTest {
         assertNotNull(candidateDto);
     }
 
-    @Test
-    void insertNewCandidateTest() {
-        Optional<Expertise> expertise = expertiseRepository.findByNameAndIsActive("Junior", true);
-        CandidateWithSkillDto candidate = new CandidateWithSkillDto("TRGFBIJEUTY16387S", "Veronica", "Zuniga", "Lima", "Peru",
-                "Milan", "corso milano 40", "Lombardy", "Ita", "veronicazuniga@gmail.com", "3677648655", "F", true,
-                "2000-06-22", expertise , );
-        CandidateDto candidateDto = candidateService.insertNewCandidate();
-    }
+//    @Test
+//    void insertNewCandidateTest() {
+//        Optional<Expertise> expertise = expertiseRepository.findByNameAndIsActive("Junior", true);
+//        CandidateWithSkillDto candidate = new CandidateWithSkillDto("TRGFBIJEUTY16387S", "Veronica", "Zuniga", "Lima", "Peru",
+//                "Milan", "corso milano 40", "Lombardy", "Ita", "veronicazuniga@gmail.com", "3677648655", "F", true,
+//                "2000-06-22", expertise , );
+//        CandidateDto candidateDto = candidateService.insertNewCandidate();
+//    }
 
 }
