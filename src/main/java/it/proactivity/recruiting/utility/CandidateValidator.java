@@ -45,7 +45,7 @@ public class CandidateValidator {
                 !globalValidator.validateAlphaSpace(candidateWithSkillDto.getRegionOfResidence()) ||
                 !globalValidator.validateEmail(candidateWithSkillDto.getEmail()) ||
                 !globalValidator.validatePhoneNumber(candidateWithSkillDto.getPhoneNumber()) ||
-                StringUtils.isEmpty(candidateWithSkillDto.getGender()) || candidateWithSkillDto.getCurriculumList().isEmpty() ||
+                StringUtils.isEmpty(candidateWithSkillDto.getGender()) ||
                 candidateWithSkillDto.getExpertise() == null) {
             return false;
         }

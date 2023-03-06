@@ -45,6 +45,9 @@ public class CandidateService {
     SkillValidator skillValidator;
 
     @Autowired
+    SkillUtility skillUtility;
+
+    @Autowired
     ExpertiseUtility expertiseUtility;
 
     @Autowired
@@ -80,18 +83,14 @@ public class CandidateService {
         if (expertise.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-
-        List<String> curriculumNameList = candidateWithSkillDto.getCurriculumList().stream()
-                .map(c -> c.getSkillDto().getName())
-                .toList();
-        List<Skill> skillsList = skillValidator.createSkillList(curriculumNameList);
+        Set<Skill> skillsList = skillUtility.createSkillSetFromDto(candidateWithSkillDto.getSkills());
         Candidate candidate = candidateUtility.createCandidateFromCandidateWithSkillDto(candidateWithSkillDto);
-        Set<Curriculum> curriculumList = skillsList.stream().map(s -> CurriculumBuilder.newBuilder(candidate)
-                .skill(s)
-                .isActive(true)
-                .build())
+        Set<Curriculum> curriculumSet = skillsList.stream().map( s -> CurriculumBuilder.newBuilder(candidate)
+                        .skill(s)
+                        .isActive(true)
+                        .build())
                 .collect(Collectors.toSet());
-        candidate.setCandidateSkillList(curriculumList);
+        candidate.setCandidateSkillList(curriculumSet);
         candidateRepository.save(candidate);
         return ResponseEntity.ok(candidateWithSkillDto);
     }
@@ -105,10 +104,7 @@ public class CandidateService {
         if (candidate.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        List<String> curriculumNameList = candidateWithSkillDto.getCurriculumList().stream()
-                .map(c -> c.getSkillDto().getName())
-                .toList();
-        List<Skill> skillList = skillValidator.createSkillList(curriculumNameList);
+        Set<Skill> skillList = skillUtility.createSkillSetFromDto(candidateWithSkillDto.getSkills());
         Set<Curriculum> curriculumSet = skillList.stream().map( s -> CurriculumBuilder.newBuilder(candidate.get())
                         .skill(s)
                         .isActive(true)

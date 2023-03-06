@@ -5,6 +5,7 @@ import it.proactivity.recruiting.model.Expertise;
 import it.proactivity.recruiting.model.dto.CandidateWithSkillDto;
 import it.proactivity.recruiting.model.dto.CurriculumDto;
 import it.proactivity.recruiting.model.dto.ExpertiseDto;
+import it.proactivity.recruiting.model.dto.SkillDto;
 
 import java.util.List;
 import java.util.Set;
@@ -41,7 +42,7 @@ public class CandidateWithSkillDtoBuilder {
 
     private ExpertiseDto expertise;
 
-    private Set<CurriculumDto> curriculumDtoSet;
+    private Set<SkillDto> skills;
 
     private CandidateWithSkillDtoBuilder(String name) {
         this.name = name;
@@ -120,13 +121,13 @@ public class CandidateWithSkillDtoBuilder {
         return this;
     }
 
-    public CandidateWithSkillDtoBuilder curriculumDtoSet(Set<CurriculumDto> curriculumDtoSet) {
-        this.curriculumDtoSet = curriculumDtoSet;
+    public CandidateWithSkillDtoBuilder skills(Set<SkillDto> skills) {
+        this.skills = skills;
         return this;
     }
 
     public CandidateWithSkillDto build() {
         return new CandidateWithSkillDto(id, fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence, streetOfResidence,
-                regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate, expertise, curriculumDtoSet);
+                regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate, expertise, skills);
     }
 }

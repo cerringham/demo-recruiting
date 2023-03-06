@@ -6,6 +6,9 @@ import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Component
 public class SkillUtility {
 
@@ -25,5 +28,17 @@ public class SkillUtility {
         return SkillBuilder.newBuilder(skillDto.getName())
                 .isActive(skillDto.getIsActive())
                 .build();
+    }
+
+    public Set<Skill> createSkillSetFromDto(Set<SkillDto> skillDtoSet) {
+        if (skillDtoSet.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        Set<Skill> skills = skillDtoSet.stream()
+                .map(s -> SkillBuilder.newBuilder(s.getName())
+                        .isActive(true)
+                        .build())
+                .collect(Collectors.toSet());
+        return skills;
     }
 }

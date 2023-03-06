@@ -23,8 +23,6 @@ public class CandidateUtility {
     @Autowired
     ParsingUtility parsingUtility;
     @Autowired
-    CurriculumUtility curriculumUtility;
-    @Autowired
     ExpertiseUtility expertiseUtility;
 
     @Autowired
@@ -67,7 +65,6 @@ public class CandidateUtility {
                 .isActive(candidateDto.getIsActive())
                 .birthDate(parsingUtility.parseStringToDate(candidateDto.getBirthDate()))
                 .expertise(expertiseUtility.createExpertiseFromDto(candidateDto.getExpertise()))
-                .curriculumDtoList(createCurriculumSetFromDto(candidateDto.getCurriculumList()))
                 .build();
     }
 

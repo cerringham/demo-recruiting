@@ -46,7 +46,7 @@ public class CandidateWithSkillDto {
 
     private ExpertiseDto expertise;
 
-    private Set<CurriculumDto> curriculumList;
+    private Set<SkillDto> skills;
 
     @Override
     public String toString() {
@@ -66,7 +66,7 @@ public class CandidateWithSkillDto {
                 ", isActive=" + isActive +
                 ", birthDate='" + birthDate + '\'' +
                 ", expertise=" + expertise +
-                ", curriculumList=" + curriculumList +
+                ", skills=" + skills +
                 '}';
     }
 }

@@ -3,6 +3,7 @@ package it.proactivity.recruiting.builder;
 import it.proactivity.recruiting.model.Candidate;
 import it.proactivity.recruiting.model.Curriculum;
 import it.proactivity.recruiting.model.Expertise;
+import it.proactivity.recruiting.model.Skill;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,13 +41,15 @@ public class CandidateBuilder {
 
     private Expertise expertise;
 
-    private Set<Curriculum> candidateSkillList;
+    private Set<Skill> skills;
 
     private CandidateBuilder(String fiscalCode) {
+
         this.fiscalCode = fiscalCode;
     }
 
     public static CandidateBuilder newBuilder(String fiscalCode) {
+
         return new CandidateBuilder(fiscalCode);
     }
 
@@ -119,14 +122,9 @@ public class CandidateBuilder {
         return this;
     }
 
-    public CandidateBuilder curriculumDtoList(Set<Curriculum> candidateSkillList) {
-        this.candidateSkillList = candidateSkillList;
-        return this;
-    }
-
     public Candidate build() {
         return new Candidate(fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence, streetOfResidence,
-                regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate, expertise, candidateSkillList);
+                regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate, expertise);
     }
 }
 

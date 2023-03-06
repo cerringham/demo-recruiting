@@ -75,7 +75,7 @@ public class Candidate {
     public Candidate(String fiscalCode, String name, String surname, String cityOfBirth, String countryOfBirth,
                      String cityOfResidence, String streetOfResidence, String regionOfResidence, String countryOfResidence,
                      String email, String phoneNumber, String gender, Boolean isActive, LocalDate birthDate,
-                     Expertise expertise, Set<Curriculum> candidateSkillList) {
+                     Expertise expertise) {
         this.fiscalCode = fiscalCode;
         this.name = name;
         this.surname = surname;
@@ -91,6 +91,5 @@ public class Candidate {
         this.isActive = isActive;
         this.birthDate = birthDate;
         this.expertise = expertise;
-        this.candidateSkillList = candidateSkillList;
     }
 }
