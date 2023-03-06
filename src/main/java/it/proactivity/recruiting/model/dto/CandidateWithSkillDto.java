@@ -1,10 +1,7 @@
 package it.proactivity.recruiting.model.dto;
 
-import it.proactivity.recruiting.model.Curriculum;
-import it.proactivity.recruiting.model.Expertise;
 import lombok.*;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -46,7 +43,29 @@ public class CandidateWithSkillDto {
 
     private ExpertiseDto expertise;
 
-    private Set<SkillDto> skills;
+    private Set<SkillDto> skillDtoSet;
+
+    public CandidateWithSkillDto(String fiscalCode, String name, String surname, String cityOfBirth, String countryOfBirth,
+                                 String cityOfResidence, String streetOfResidence, String regionOfResidence,
+                                 String countryOfResidence, String email, String phoneNumber, String gender,
+                                 Boolean isActive, String birthDate, ExpertiseDto expertise, Set<SkillDto> skillDtoSet) {
+        this.fiscalCode = fiscalCode;
+        this.name = name;
+        this.surname = surname;
+        this.cityOfBirth = cityOfBirth;
+        this.countryOfBirth = countryOfBirth;
+        this.cityOfResidence = cityOfResidence;
+        this.streetOfResidence = streetOfResidence;
+        this.regionOfResidence = regionOfResidence;
+        this.countryOfResidence = countryOfResidence;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.isActive = isActive;
+        this.birthDate = birthDate;
+        this.expertise = expertise;
+        this.skillDtoSet = skillDtoSet;
+    }
 
     @Override
     public String toString() {
@@ -66,7 +85,6 @@ public class CandidateWithSkillDto {
                 ", isActive=" + isActive +
                 ", birthDate='" + birthDate + '\'' +
                 ", expertise=" + expertise +
-                ", skills=" + skills +
                 '}';
     }
 }

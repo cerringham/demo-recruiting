@@ -4,6 +4,8 @@ import it.proactivity.recruiting.builder.SkillBuilder;
 import it.proactivity.recruiting.builder.SkillDtoBuilder;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
+import it.proactivity.recruiting.repository.SkillRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -11,6 +13,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class SkillUtility {
+
+    @Autowired
+    SkillRepository skillRepository;
 
     public SkillDto createSkillDto(Skill skill) {
         if (skill == null) {

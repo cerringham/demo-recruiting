@@ -1,13 +1,9 @@
 package it.proactivity.recruiting.builder;
 
-import it.proactivity.recruiting.model.Curriculum;
-import it.proactivity.recruiting.model.Expertise;
 import it.proactivity.recruiting.model.dto.CandidateWithSkillDto;
-import it.proactivity.recruiting.model.dto.CurriculumDto;
 import it.proactivity.recruiting.model.dto.ExpertiseDto;
 import it.proactivity.recruiting.model.dto.SkillDto;
 
-import java.util.List;
 import java.util.Set;
 
 public class CandidateWithSkillDtoBuilder {
@@ -127,7 +123,7 @@ public class CandidateWithSkillDtoBuilder {
     }
 
     public CandidateWithSkillDto build() {
-        return new CandidateWithSkillDto(id, fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence, streetOfResidence,
+        return new CandidateWithSkillDto(fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence, streetOfResidence,
                 regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate, expertise, skills);
     }
 }

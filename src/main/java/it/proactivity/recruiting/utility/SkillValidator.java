@@ -1,6 +1,8 @@
 package it.proactivity.recruiting.utility;
 
+import it.proactivity.recruiting.builder.SkillBuilder;
 import it.proactivity.recruiting.model.Skill;
+import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.SkillRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
@@ -19,15 +21,17 @@ import org.springframework.stereotype.Component;
 //	- creo n oggetti (dove n è il numero delle skills) di tipo Curriculum dove setto come candidate l'oggetto appena creato (newCandidate)
 //	- associo questa lista di oggetti all'attriburo candidateSkillList di newCandidate
 //	- session.save() di newCandidate salva anche i cv
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class SkillValidator {
 
     @Autowired
     SkillRepository skillRepository;
+
+    @Autowired
+    SkillUtility skillUtility;
 
     public Boolean validateSkillName(String skillName) {
         if (StringUtils.isEmpty(skillName)) {
@@ -43,22 +47,22 @@ public class SkillValidator {
         return true;
     }
 
-    public List<Skill> createSkillList(List<String> skillNames) {
-        if (skillNames == null) {
+    public Set<SkillDto> validateSkillSet(Set<SkillDto> skills) {
+        if (skills.isEmpty()) {
             return null;
         }
-        List<Skill> skills = new ArrayList<>();
-        for (String s : skillNames) {
-            Optional<Skill> skill = skillRepository.findByNameIgnoreCaseAndIsActive(s, true);
+        Set<SkillDto> skillDtoSet = new HashSet<>();
+        for (SkillDto s : skills) {
+            Optional<Skill> skill = skillRepository.findByNameIgnoreCaseAndIsActive(s.getName(), true);
             if (skill.isPresent()) {
-                skills.add(skill.get());
+                skillDtoSet.add(s);
 
-            } else if (validateSkillName(s)) {
-                Skill newSkill = new Skill(s, true);
-                skillRepository.save(newSkill);
-                skills.add(newSkill);
+            } else if (validateSkillName(s.getName())) {
+                Skill skill1 = new Skill(s.getName(), true);
+                SkillDto skillDto = skillUtility.createSkillDto(skill1);
+                skillDtoSet.add(skillDto);
             }
         }
-        return skills;
+        return skillDtoSet;
     }
 }

@@ -13,7 +13,6 @@ import it.proactivity.recruiting.myEnum.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -64,7 +63,6 @@ public class CandidateUtility {
                 .gender(candidateDto.getGender())
                 .isActive(candidateDto.getIsActive())
                 .birthDate(parsingUtility.parseStringToDate(candidateDto.getBirthDate()))
-                .expertise(expertiseUtility.createExpertiseFromDto(candidateDto.getExpertise()))
                 .build();
     }
 
@@ -84,26 +82,5 @@ public class CandidateUtility {
                 .isActive(candidateDto.getIsActive())
                 .birthDate(parsingUtility.parseStringToDate(candidateDto.getBirthDate()))
                 .build();
-    }
-    public Set<Curriculum> createCurriculumSetFromParameters(Candidate candidate, Skill skill, Level level) {
-        if (candidate == null || skill == null || level == null) {
-            throw new IllegalArgumentException();
-        }
-        Set<Curriculum> curriculumSet = new HashSet<>();
-        curriculumSet.add(CurriculumBuilder.newBuilder(candidate)
-                .skill(skill)
-                .level(level)
-                .build());
-        return curriculumSet;
-    }
-
-    public Set<Curriculum> createCurriculumSetFromDto(Set<CurriculumDto> curriculumDtos) {
-        Set<Curriculum> curriculumSet = curriculumDtos.stream()
-                .map(c -> CurriculumBuilder.newBuilder(createCandidateFromDto(c.getCandidateDto()))
-                        .skill(skillUtility.createSkillFromDto(c.getSkillDto()))
-                        .isActive(true)
-                        .build())
-                .collect(Collectors.toSet());
-        return curriculumSet;
     }
 }

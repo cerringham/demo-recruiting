@@ -1,6 +1,5 @@
 package it.proactivity.recruiting.service;
 
-import it.proactivity.recruiting.builder.CandidateWithSkillDtoBuilder;
 import it.proactivity.recruiting.builder.CurriculumBuilder;
 import it.proactivity.recruiting.model.Candidate;
 import it.proactivity.recruiting.model.Curriculum;
@@ -8,8 +7,9 @@ import it.proactivity.recruiting.model.Expertise;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateWithSkillDto;
-import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.CandidateRepository;
+import it.proactivity.recruiting.repository.CurriculumRepository;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
 import it.proactivity.recruiting.repository.SkillRepository;
 import it.proactivity.recruiting.utility.*;
@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -48,10 +47,10 @@ public class CandidateService {
     SkillUtility skillUtility;
 
     @Autowired
-    ExpertiseUtility expertiseUtility;
+    CurriculumRepository curriculumRepository;
 
     @Autowired
-    CurriculumUtility curriculumUtility;
+    SkillRepository skillRepository;
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
@@ -83,15 +82,19 @@ public class CandidateService {
         if (expertise.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        Set<Skill> skillsList = skillUtility.createSkillSetFromDto(candidateWithSkillDto.getSkills());
+        Set<SkillDto> skillDto = skillValidator.validateSkillSet(candidateWithSkillDto.getSkillDtoSet());
+        Set<Skill> skills = skillUtility.createSkillSetFromDto(skillDto);
+        skillRepository.saveAll(skills);
         Candidate candidate = candidateUtility.createCandidateFromCandidateWithSkillDto(candidateWithSkillDto);
-        Set<Curriculum> curriculumSet = skillsList.stream().map( s -> CurriculumBuilder.newBuilder(candidate)
+        Set<Curriculum> curriculumSet = skills.stream().map( s -> CurriculumBuilder.newBuilder(candidate)
                         .skill(s)
                         .isActive(true)
                         .build())
                 .collect(Collectors.toSet());
+        candidate.setExpertise(expertise.get());
         candidate.setCandidateSkillList(curriculumSet);
         candidateRepository.save(candidate);
+
         return ResponseEntity.ok(candidateWithSkillDto);
     }
 
@@ -104,7 +107,7 @@ public class CandidateService {
         if (candidate.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        Set<Skill> skillList = skillUtility.createSkillSetFromDto(candidateWithSkillDto.getSkills());
+        Set<Skill> skillList = skillUtility.createSkillSetFromDto(candidateWithSkillDto.getSkillDtoSet());
         Set<Curriculum> curriculumSet = skillList.stream().map( s -> CurriculumBuilder.newBuilder(candidate.get())
                         .skill(s)
                         .isActive(true)

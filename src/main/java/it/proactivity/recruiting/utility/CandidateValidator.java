@@ -18,6 +18,9 @@ public class CandidateValidator {
     @Autowired
     GlobalValidator globalValidator;
 
+    @Autowired
+    SkillValidator skillValidator;
+
     public Boolean validateParameters(String fiscalCode, String name, String surname, String cityOfBirth,
                                             String countryOfBirth, String cityOfResidence, String streetOfResidence,
                                             String regionOfResidence, String countryOfResidence, String email,
@@ -46,7 +49,7 @@ public class CandidateValidator {
                 !globalValidator.validateEmail(candidateWithSkillDto.getEmail()) ||
                 !globalValidator.validatePhoneNumber(candidateWithSkillDto.getPhoneNumber()) ||
                 StringUtils.isEmpty(candidateWithSkillDto.getGender()) ||
-                candidateWithSkillDto.getExpertise() == null) {
+                candidateWithSkillDto.getExpertise() == null ) {
             return false;
         }
         return true;
