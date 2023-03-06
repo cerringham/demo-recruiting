@@ -30,4 +30,18 @@ public class ParsingUtility {
             return null;
         }
     }
+
+    public  LocalDate parseStringToLocalDate(String date) {
+        if (date == null || date.isEmpty()) {
+            return null;
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            LocalDate parsedDate = LocalDate.parse(date, formatter);
+            return parsedDate;
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
 }

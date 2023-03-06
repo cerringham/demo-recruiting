@@ -30,7 +30,7 @@ public class EmployeeService {
     GlobalValidator globalValidator;
 
     public ResponseEntity<Set<EmployeeDto>> getAll() {
-        List<Employee> employeeList = employeeRepository.findAll();
+        List<Employee> employeeList = employeeRepository.findByIsActive(true);
 
         Set<EmployeeDto> dtoList = employeeList.stream()
                 .map(e -> createEmployeeDto(e.getFiscalCode(), e.getName(), e.getSurname(), e.getCityOfBirth(),
@@ -45,7 +45,7 @@ public class EmployeeService {
     public ResponseEntity<EmployeeDto> findById(Long id) {
         globalValidator.validateId(id);
 
-        Optional<Employee> employee = employeeRepository.findById(id);
+        Optional<Employee> employee = employeeRepository.findByIdAndIsActive(id, true);
 
         if (employee.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

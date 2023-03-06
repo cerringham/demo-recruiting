@@ -25,7 +25,7 @@ public class JobPositionStatusService {
 
     public ResponseEntity<List<JobPositionStatusDto>> getAll() {
 
-        List<JobPositionStatus> jobPositionStatusList = jobPositionStatusRepository.findAll();
+        List<JobPositionStatus> jobPositionStatusList = jobPositionStatusRepository.findByIsActive(true);
 
         List<JobPositionStatusDto> dtoList = jobPositionStatusList.stream()
                 .map(j -> createJobPositionStatusDto(j.getName(), j.getIsActive()))
@@ -38,7 +38,7 @@ public class JobPositionStatusService {
     public ResponseEntity<JobPositionStatusDto> findById(Long id) {
         globalValidator.validateId(id);
 
-        Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository.findById(id);
+        Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository.findByIdAndIsActive(id, true);
         if (jobPositionStatus.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

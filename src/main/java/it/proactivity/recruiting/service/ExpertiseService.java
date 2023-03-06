@@ -26,7 +26,7 @@ public class ExpertiseService {
 
     public ResponseEntity<List<ExpertiseDto>> getAll() {
 
-        List<Expertise> expertiseDtoList = expertiseRepository.findAll();
+        List<Expertise> expertiseDtoList = expertiseRepository.findByIsActive(true);
 
         List<ExpertiseDto> dtoList = expertiseDtoList.stream()
                 .map(c -> createExpertiseDto(c.getName(), c.getIsActive()))
@@ -39,7 +39,7 @@ public class ExpertiseService {
 
         globalValidator.validateId(id);
 
-        Optional<Expertise> expertise = expertiseRepository.findById(id);
+        Optional<Expertise> expertise = expertiseRepository.findByIdAndIsActive(id, true);
 
         if (expertise.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

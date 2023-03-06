@@ -73,4 +73,26 @@ public class Candidate {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id")
     private List<JobInterview> candidateList;
+
+    public Candidate(String name, String surname, String fiscalCode, String cityOfBirth, String countryOfBirth,
+                     String cityOfResidence, String streetOfResidence, String regionOfResidence, String countryOfResidence,
+                     String email, String phoneNumber, String gender, Boolean isActive, LocalDate birthDate,
+                     Expertise expertise) {
+
+        this.name = name;
+        this.surname = surname;
+        this.fiscalCode = fiscalCode;
+        this.cityOfBirth = cityOfBirth;
+        this.countryOfBirth = countryOfBirth;
+        this.cityOfResidence = cityOfResidence;
+        this.streetOfResidence = streetOfResidence;
+        this.regionOfResidence = regionOfResidence;
+        this.countryOfResidence = countryOfResidence;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.isActive = isActive;
+        this.birthDate = birthDate;
+        this.expertise = expertise;
+    }
 }
