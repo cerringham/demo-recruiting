@@ -73,4 +73,28 @@ public class Employee {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_id")
     private List<JobInterview> jobInterviewList;
+
+    public Employee(String name, String surname, String fiscalCode, String cityOfBirth, String countryOfBirth,
+                    String cityOfResidence, String countryOfResidence, String streetOfResidence, String regionOfResidence,
+                    String email, String phoneNumber, String gender, LocalDate birthDate, Expertise expertise,
+                    Company company, CompanyRole companyRole, Boolean isActive) {
+
+        this.name = name;
+        this.surname = surname;
+        this.fiscalCode = fiscalCode;
+        this.cityOfBirth = cityOfBirth;
+        this.countryOfBirth = countryOfBirth;
+        this.cityOfResidence = cityOfResidence;
+        this.countryOfResidence = countryOfResidence;
+        this.streetOfResidence = streetOfResidence;
+        this.regionOfResidence = regionOfResidence;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.expertise = expertise;
+        this.company = company;
+        this.companyRole = companyRole;
+        this.isActive = isActive;
+    }
 }

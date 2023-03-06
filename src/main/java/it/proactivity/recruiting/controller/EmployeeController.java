@@ -4,9 +4,7 @@ import it.proactivity.recruiting.model.dto.EmployeeDto;
 import it.proactivity.recruiting.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -25,5 +23,20 @@ public class EmployeeController {
     @GetMapping("/get-employee/{id}")
     public ResponseEntity<EmployeeDto> findById(@PathVariable Long id) {
         return employeeService.findById(id);
+    }
+
+    @PostMapping("/insert-employee")
+    public ResponseEntity insertEmployee(@RequestBody EmployeeDto dto) {
+        return employeeService.insertEmployee(dto);
+    }
+
+    @GetMapping("/delete-employee/{id}")
+    public ResponseEntity deleteEmployee(@PathVariable Long id) {
+        return employeeService.deleteEmployee(id);
+    }
+
+    @PostMapping("/update-employee")
+    public ResponseEntity updateEmployee(@RequestBody EmployeeDto dto) {
+        return employeeService.updateEmployee(dto);
     }
 }

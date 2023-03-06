@@ -12,4 +12,6 @@ public interface CompanyRoleRepository extends JpaRepository<CompanyRole, Long> 
     List<CompanyRole> findByIsActive(boolean isActive);
 
     Optional<CompanyRole> findByIdAndIsActive(Long id, boolean isActive);
+
+    Optional<CompanyRole> findByNameIgnoreCaseAndIsActive(String companyRoleName, boolean b);
 }

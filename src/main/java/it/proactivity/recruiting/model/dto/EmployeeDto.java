@@ -1,16 +1,15 @@
 package it.proactivity.recruiting.model.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class EmployeeDto {
 
+    private Long id;
     private String fiscalCode;
 
     private String name;
@@ -39,10 +38,16 @@ public class EmployeeDto {
 
     private String birthDate;
 
+    private String expertiseName;
+
+    private String companyName;
+
+    private String companyRoleName;
+
     public EmployeeDto(String fiscalCode, String name, String surname, String cityOfBirth, String countryOfBirth,
                        String cityOfResidence, String streetOfResidence, String regionOfResidence,
                        String countryOfResidence, String email, String phoneNumber, String gender, Boolean isActive,
-                       String birthDate) {
+                       String birthDate, String expertiseName, String companyName, String companyRoleName) {
         this.fiscalCode = fiscalCode;
         this.name = name;
         this.surname = surname;
@@ -57,6 +62,9 @@ public class EmployeeDto {
         this.gender = gender;
         this.isActive = isActive;
         this.birthDate = birthDate;
+        this.expertiseName = expertiseName;
+        this.companyName = companyName;
+        this.companyRoleName = companyRoleName;
     }
 
     @Override

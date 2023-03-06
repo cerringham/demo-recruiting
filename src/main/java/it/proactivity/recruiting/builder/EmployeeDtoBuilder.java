@@ -1,6 +1,6 @@
 package it.proactivity.recruiting.builder;
 
-import it.proactivity.recruiting.model.dto.CandidateDto;
+
 import it.proactivity.recruiting.model.dto.EmployeeDto;
 
 public class EmployeeDtoBuilder {
@@ -32,6 +32,12 @@ public class EmployeeDtoBuilder {
     private Boolean isActive;
 
     private String birthDate;
+
+    private String expertiseName;
+
+    private String companyName;
+
+    private String companyRoleName;
 
     private EmployeeDtoBuilder(String name) {
         this.name = name;
@@ -106,9 +112,24 @@ public class EmployeeDtoBuilder {
         return this;
     }
 
+    public EmployeeDtoBuilder expertiseName(String expertiseName) {
+        this.expertiseName = expertiseName;
+        return this;
+    }
+
+    public EmployeeDtoBuilder companyName(String companyName) {
+        this.companyName = companyName;
+        return this;
+    }
+
+    public EmployeeDtoBuilder companyRoleName(String companyRoleName) {
+        this.companyRoleName = companyRoleName;
+        return this;
+    }
+
     public EmployeeDto build() {
         return new EmployeeDto(fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence, streetOfResidence,
-                regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate);
-
+                regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate, expertiseName,
+                companyName, companyRoleName);
     }
 }
