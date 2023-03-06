@@ -156,7 +156,7 @@ public class EmployeeService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
         }
 
-        Optional<Expertise> expertise = expertiseRepository.findByNameIgnoreCaseAndIsActive(dto.getExpertiseName(), true);
+        Optional<Expertise> expertise = expertiseRepository.findByNameIgnoreCaseAndIsActive(dto.getExpertise(), true);
         if (expertise.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Expertise not found");
         }
@@ -224,7 +224,7 @@ public class EmployeeService {
 
         if (companyRoleName.equalsIgnoreCase("coo")) {
 
-            Long verifyCooExistance = companyRepository.countNumberOfCeo(company.get().getId());
+            Long verifyCooExistance = companyRepository.checkIfCooExists(company.get().getId());
             if (verifyCooExistance != null) {
                 return false;
             } else {
@@ -273,7 +273,7 @@ public class EmployeeService {
 
     private Employee createEmployee(EmployeeDto dto) {
 
-        Optional<Expertise> expertise = expertiseRepository.findByNameIgnoreCaseAndIsActive(dto.getExpertiseName(), true);
+        Optional<Expertise> expertise = expertiseRepository.findByNameIgnoreCaseAndIsActive(dto.getExpertise(), true);
         if (expertise.isEmpty()) {
             throw new IllegalArgumentException("Expertise not found");
         }

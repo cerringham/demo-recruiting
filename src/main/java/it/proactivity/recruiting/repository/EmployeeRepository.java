@@ -14,6 +14,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Optional<Employee> findByIdAndIsActive(Long id, boolean isActive);
 
-    @Query("SELECT COUNT(e) FROM Employee e WHERE e.companyRole = 1")
+    @Query("SELECT COUNT(e) FROM Employee e WHERE e.companyRole.name = 'CEO'")
     Long countNumberOfCeo();
 }

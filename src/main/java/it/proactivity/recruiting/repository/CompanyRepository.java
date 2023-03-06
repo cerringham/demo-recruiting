@@ -17,6 +17,6 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     Optional<Company> findByNameIgnoreCaseAndIsActive(String companyName, boolean b);
 
     @Query("SELECT c.cooId FROM Company c WHERE c.id = ?1")
-    Long countNumberOfCeo(Long companyId);
+    Long checkIfCooExists(Long companyId);
 
 }

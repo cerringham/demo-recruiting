@@ -68,4 +68,47 @@ public class CandidateInformationDto {
         this.expertise = expertise;
         this.skillLevelMap = skillLevelMap;
     }
+
+    public CandidateInformationDto(String name, String surname, String fiscalCode, String cityOfBirth, String countryOfBirth,
+                                   String cityOfResidence, String streetOfResidence, String regionOfResidence,
+                                   String countryOfResidence, String email, String phoneNumber, String gender,
+                                   String birthDate, String expertiseName) {
+
+        this.name = name;
+        this.surname = surname;
+        this.fiscalCode = fiscalCode;
+        this.cityOfBirth = cityOfBirth;
+        this.countryOfBirth = countryOfBirth;
+        this.cityOfResidence = cityOfResidence;
+        this.streetOfResidence = streetOfResidence;
+        this.regionOfResidence = regionOfResidence;
+        this.countryOfResidence = countryOfResidence;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.expertise = expertiseName;
+    }
+
+    public CandidateInformationDto(Long id, String name, String surname, String fiscalCode, String cityOfBirth, String countryOfBirth,
+                                   String cityOfResidence, String streetOfResidence, String regionOfResidence,
+                                   String countryOfResidence, String email, String phoneNumber, String gender,
+                                   String birthDate, String expertiseName) {
+
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.fiscalCode = fiscalCode;
+        this.cityOfBirth = cityOfBirth;
+        this.countryOfBirth = countryOfBirth;
+        this.cityOfResidence = cityOfResidence;
+        this.streetOfResidence = streetOfResidence;
+        this.regionOfResidence = regionOfResidence;
+        this.countryOfResidence = countryOfResidence;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.expertise = expertiseName;
+    }
 }
