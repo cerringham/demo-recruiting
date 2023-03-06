@@ -82,15 +82,14 @@ public class CandidateService {
         }
 
         List<String> curriculumNameList = candidateWithSkillDto.getCurriculumList().stream()
-                .map(c -> c.getSkillId().getName())
+                .map(c -> c.getSkillDto().getName())
                 .toList();
         List<Skill> skillsList = skillValidator.createSkillList(curriculumNameList);
         Candidate candidate = candidateUtility.createCandidateFromCandidateWithSkillDto(candidateWithSkillDto);
-        Set<Curriculum> curriculumList = skillsList.stream()
-                        .map(s -> CurriculumBuilder.newBuilder(candidate)
-                                .skill(s)
-                                .isActive(true)
-                                .build())
+        Set<Curriculum> curriculumList = skillsList.stream().map(s -> CurriculumBuilder.newBuilder(candidate)
+                .skill(s)
+                .isActive(true)
+                .build())
                 .collect(Collectors.toSet());
         candidate.setCandidateSkillList(curriculumList);
         candidateRepository.save(candidate);
@@ -107,7 +106,7 @@ public class CandidateService {
             return ResponseEntity.badRequest().build();
         }
         List<String> curriculumNameList = candidateWithSkillDto.getCurriculumList().stream()
-                .map(c -> c.getSkillId().getName())
+                .map(c -> c.getSkillDto().getName())
                 .toList();
         List<Skill> skillList = skillValidator.createSkillList(curriculumNameList);
         Set<Curriculum> curriculumSet = skillList.stream().map( s -> CurriculumBuilder.newBuilder(candidate.get())
@@ -123,8 +122,8 @@ public class CandidateService {
         candidate.get().setPhoneNumber(candidateWithSkillDto.getPhoneNumber());
         candidate.get().setGender(candidateWithSkillDto.getGender());
         candidate.get().setIsActive(candidateWithSkillDto.getIsActive());
-        candidate.get().setExpertise(expertiseUtility.createExpertiseFromDto(candidateWithSkillDto.getExpertise()));
-        candidate.get().setCandidateSkillList(curriculumUtility.createCurriculumSetFromDto(candidateWithSkillDto.getCurriculumList()));
+        candidate.get().setExpertise(expertise.get());
+        candidate.get().setCandidateSkillList(curriculumSet);
         candidateRepository.save(candidate.get());
         return ResponseEntity.ok(candidateWithSkillDto);
     }

@@ -14,6 +14,7 @@ import java.util.Set;
 @Table(name = "expertise")
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class Expertise {
 

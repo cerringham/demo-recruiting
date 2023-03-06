@@ -41,7 +41,7 @@ public class CandidateWithSkillDtoBuilder {
 
     private ExpertiseDto expertise;
 
-    private Set<CurriculumDto> curriculumList;
+    private Set<CurriculumDto> curriculumDtoSet;
 
     private CandidateWithSkillDtoBuilder(String name) {
         this.name = name;
@@ -120,13 +120,13 @@ public class CandidateWithSkillDtoBuilder {
         return this;
     }
 
-    public CandidateWithSkillDtoBuilder curriculumList(Set<CurriculumDto> curriculumList) {
-        this.curriculumList = curriculumList;
+    public CandidateWithSkillDtoBuilder curriculumDtoSet(Set<CurriculumDto> curriculumDtoSet) {
+        this.curriculumDtoSet = curriculumDtoSet;
         return this;
     }
 
     public CandidateWithSkillDto build() {
         return new CandidateWithSkillDto(id, fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence, streetOfResidence,
-                regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate, expertise, curriculumList);
+                regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate, expertise, curriculumDtoSet);
     }
 }

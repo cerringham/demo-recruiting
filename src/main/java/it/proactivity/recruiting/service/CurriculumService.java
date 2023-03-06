@@ -63,7 +63,7 @@ public class CurriculumService {
             throw new IllegalArgumentException("The parameters for the creation of curriculum dto can't be null or empty");
         }
         return CurriculumDtoBuilder.newBuilder(candidateDto)
-                .skillId(skillDto)
+                .skillDto(skillDto)
                 .level(level)
                 .build();
 

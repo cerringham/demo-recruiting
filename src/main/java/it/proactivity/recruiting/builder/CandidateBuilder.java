@@ -42,16 +42,16 @@ public class CandidateBuilder {
 
     private Set<Curriculum> candidateSkillList;
 
-    private CandidateBuilder(String name) {
-        this.name = name;
-    }
-
-    public static CandidateBuilder newBuilder(String name) {
-        return new CandidateBuilder(name);
-    }
-
-    public CandidateBuilder fiscalCode(String fiscalCode) {
+    private CandidateBuilder(String fiscalCode) {
         this.fiscalCode = fiscalCode;
+    }
+
+    public static CandidateBuilder newBuilder(String fiscalCode) {
+        return new CandidateBuilder(fiscalCode);
+    }
+
+    public CandidateBuilder name(String name) {
+        this.name = name;
         return this;
     }
 

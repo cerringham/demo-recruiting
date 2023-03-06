@@ -7,22 +7,22 @@ import it.proactivity.recruiting.model.dto.SkillDto;
 public class CurriculumDtoBuilder {
 
     private Long id;
-    private CandidateDto candidateId;
+    private CandidateDto candidateDto;
 
-    private SkillDto skillId;
+    private SkillDto skillDto;
 
     private String level;
 
-    private CurriculumDtoBuilder (CandidateDto candidateId) {
+    private CurriculumDtoBuilder (CandidateDto candidateDto) {
 
-        this.candidateId = candidateId;
+        this.candidateDto = candidateDto;
     }
-    public static CurriculumDtoBuilder newBuilder(CandidateDto candidateId) {
+    public static CurriculumDtoBuilder newBuilder(CandidateDto candidateDto) {
 
-        return new CurriculumDtoBuilder(candidateId);
+        return new CurriculumDtoBuilder(candidateDto);
     }
-    public CurriculumDtoBuilder skillId(SkillDto skillId) {
-        this.skillId = skillId;
+    public CurriculumDtoBuilder skillDto(SkillDto skillDto) {
+        this.skillDto = skillDto;
         return this;
     }
 
@@ -32,6 +32,6 @@ public class CurriculumDtoBuilder {
     }
 
     public CurriculumDto build() {
-        return new CurriculumDto(candidateId, skillId, level);
+        return new CurriculumDto(candidateDto, skillDto, level);
     }
 }

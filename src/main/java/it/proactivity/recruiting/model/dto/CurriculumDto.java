@@ -13,21 +13,26 @@ import lombok.Setter;
 public class CurriculumDto {
 
     private Long id;
-    private CandidateDto candidateId;
+    private CandidateDto candidateDto;
 
-    private SkillDto skillId;
+    private SkillDto skillDto;
 
     private String level;
 
-    public CurriculumDto(CandidateDto candidateId, SkillDto skillId, String level) {
-        this.candidateId = candidateId;
-        this.skillId = skillId;
+    public CurriculumDto(CandidateDto candidateDto, SkillDto skillDto, String level) {
+        this.candidateDto = candidateDto;
+        this.skillDto = skillDto;
+        this.level = level;
+    }
+
+    public CurriculumDto(SkillDto skillDto, String level) {
+        this.skillDto = skillDto;
         this.level = level;
     }
 
     @Override
     public String toString() {
-        return candidateId + " " +
+        return candidateDto + " " +
                 " " + level;
     }
 }
