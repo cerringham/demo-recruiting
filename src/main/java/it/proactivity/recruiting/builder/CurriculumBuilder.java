@@ -38,6 +38,6 @@ public class CurriculumBuilder {
     }
 
     public Curriculum build() {
-        return new Curriculum(candidate, skill, level, isActive);
+        return new Curriculum(candidate, skill, isActive);
     }
 }

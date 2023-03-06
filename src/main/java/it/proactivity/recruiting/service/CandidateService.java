@@ -74,7 +74,7 @@ public class CandidateService {
         return ResponseEntity.ok(candidateUtility.createCandidateDto(candidate.get()));
     }
 
-    public ResponseEntity<CandidateWithSkillDto> insertNewCandidate(CandidateWithSkillDto candidateWithSkillDto) {
+    public ResponseEntity<?> insertNewCandidate(CandidateWithSkillDto candidateWithSkillDto) {
         if (!candidateValidator.validateCandidate(candidateWithSkillDto)) {
             return ResponseEntity.badRequest().build();
         }
@@ -84,18 +84,18 @@ public class CandidateService {
         }
         Set<SkillDto> skillDto = skillValidator.validateSkillSet(candidateWithSkillDto.getSkillDtoSet());
         Set<Skill> skills = skillUtility.createSkillSetFromDto(skillDto);
-        skillRepository.saveAll(skills);
         Candidate candidate = candidateUtility.createCandidateFromCandidateWithSkillDto(candidateWithSkillDto);
+        candidate.setExpertise(expertise.get());
+        candidateRepository.save(candidate);
         Set<Curriculum> curriculumSet = skills.stream().map( s -> CurriculumBuilder.newBuilder(candidate)
                         .skill(s)
                         .isActive(true)
                         .build())
                 .collect(Collectors.toSet());
-        candidate.setExpertise(expertise.get());
         candidate.setCandidateSkillList(curriculumSet);
-        candidateRepository.save(candidate);
+        curriculumRepository.saveAll(curriculumSet);
 
-        return ResponseEntity.ok(candidateWithSkillDto);
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<CandidateWithSkillDto> updateCandidate(CandidateWithSkillDto candidateWithSkillDto) {

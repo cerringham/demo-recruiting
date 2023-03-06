@@ -37,4 +37,10 @@ public class Curriculum {
         this.level = level;
         this.isActive = isActive;
     }
+
+    public Curriculum(Candidate candidate, Skill skill, Boolean isActive) {
+        this.candidate = candidate;
+        this.skill = skill;
+        this.isActive = isActive;
+    }
 }

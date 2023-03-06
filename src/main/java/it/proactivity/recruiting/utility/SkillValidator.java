@@ -58,9 +58,13 @@ public class SkillValidator {
                 skillDtoSet.add(s);
 
             } else if (validateSkillName(s.getName())) {
-                Skill skill1 = new Skill(s.getName(), true);
-                SkillDto skillDto = skillUtility.createSkillDto(skill1);
-                skillDtoSet.add(skillDto);
+                List<Skill> skillList = skillRepository.findByIsActive(true);
+                if (!skillList.contains(s.getName())) {
+                    Skill skill1 = new Skill(s.getName(), true);
+                    skillRepository.save(skill1);
+                    SkillDto skillDto = skillUtility.createSkillDto(skill1);
+                    skillDtoSet.add(skillDto);
+                }
             }
         }
         return skillDtoSet;
