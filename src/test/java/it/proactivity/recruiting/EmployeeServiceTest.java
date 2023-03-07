@@ -40,10 +40,10 @@ public class EmployeeServiceTest {
     @Test
     void insertEmployeePositiveTest() {
 
-        EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "1995-12-09", "junior", "fortitude",
-                "coo");
+        EmployeeDto dto = new EmployeeDto("RTRTYU89U76G453W", "Barbara", "Buscetta", "Catania",
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "barbara.buscetta@gmail.it", "+39 7837493029", "f", true, "1995-12-09", "junior", "fortitude",
+                "hr");
 
         Long numberOfEmployeeBeforeInsert = employeeRepository.findByIsActive(true).stream().count();
 

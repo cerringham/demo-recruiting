@@ -1,12 +1,11 @@
 package it.proactivity.recruiting.service;
 
-import it.proactivity.recruiting.builder.SkillBuilder;
-import it.proactivity.recruiting.builder.SkillDtoBuilder;
+
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.SkillRepository;
 import it.proactivity.recruiting.utility.GlobalValidator;
-import org.apache.commons.lang3.StringUtils;
+import it.proactivity.recruiting.utility.SkillUtility;
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,11 +24,14 @@ public class SkillService {
     @Autowired
     GlobalValidator globalValidator;
 
+    @Autowired
+    SkillUtility skillUtility;
+
     public ResponseEntity<List<SkillDto>> getAll() {
         List<Skill> skillList = skillRepository.findByIsActive(true);
 
         List<SkillDto> dtoList = skillList.stream()
-                .map(s -> createSkillDto(s.getName(), s.getIsActive()))
+                .map(s -> skillUtility.createSkillDto(s.getName(), s.getIsActive()))
                 .toList();
         return ResponseEntity.ok(dtoList);
     }
@@ -43,7 +45,7 @@ public class SkillService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.ok(createSkillDto(skill.get().getName(), skill.get().getIsActive()));
+        return ResponseEntity.ok(skillUtility.createSkillDto(skill.get().getName(), skill.get().getIsActive()));
     }
 
     public ResponseEntity insertSkill(SkillDto dto) {
@@ -58,7 +60,7 @@ public class SkillService {
             return ResponseEntity.status(HttpStatus.FOUND).build();
         }
         //creo la skill inserendo il nome nel formato corretto
-        Skill skill = createSkill(dto);
+        Skill skill = skillUtility.createSkill(dto);
         skillRepository.save(skill);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -95,21 +97,4 @@ public class SkillService {
         skillRepository.save(skill.get());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
-    private SkillDto createSkillDto(String name, Boolean isActive) {
-        if (StringUtils.isEmpty(name) || isActive == null) {
-            throw new IllegalArgumentException("The parameters for the creation of skillDto can't be null or empty");
-        }
-
-        return SkillDtoBuilder.newBuilder(name)
-                .isActive(isActive)
-                .build();
-    }
-
-    private Skill createSkill(SkillDto dto) {
-        return SkillBuilder.newBuilder(WordUtils.capitalizeFully(dto.getName()))
-                .isActive(dto.getIsActive())
-                .build();
-    }
-
 }

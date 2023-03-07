@@ -1,11 +1,11 @@
 package it.proactivity.recruiting.service;
 
-import it.proactivity.recruiting.builder.JobPositionStatusDtoBuilder;
+
 import it.proactivity.recruiting.model.JobPositionStatus;
 import it.proactivity.recruiting.model.dto.JobPositionStatusDto;
 import it.proactivity.recruiting.repository.JobPositionStatusRepository;
 import it.proactivity.recruiting.utility.GlobalValidator;
-import org.apache.commons.lang3.StringUtils;
+import it.proactivity.recruiting.utility.JobPositionStatusUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +23,15 @@ public class JobPositionStatusService {
     @Autowired
     GlobalValidator globalValidator;
 
+    @Autowired
+    JobPositionStatusUtility jobPositionStatusUtility;
+
     public ResponseEntity<List<JobPositionStatusDto>> getAll() {
 
         List<JobPositionStatus> jobPositionStatusList = jobPositionStatusRepository.findByIsActive(true);
 
         List<JobPositionStatusDto> dtoList = jobPositionStatusList.stream()
-                .map(j -> createJobPositionStatusDto(j.getName(), j.getIsActive()))
+                .map(j -> jobPositionStatusUtility.createJobPositionStatusDto(j.getName(), j.getIsActive()))
                 .toList();
 
         return ResponseEntity.ok(dtoList);
@@ -43,17 +46,7 @@ public class JobPositionStatusService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.ok(createJobPositionStatusDto(jobPositionStatus.get().getName(),
+        return ResponseEntity.ok(jobPositionStatusUtility.createJobPositionStatusDto(jobPositionStatus.get().getName(),
                 jobPositionStatus.get().getIsActive()));
-    }
-
-    private JobPositionStatusDto createJobPositionStatusDto(String name, Boolean isActive) {
-        if (StringUtils.isEmpty(name) || isActive == null) {
-            throw new IllegalArgumentException("The parameters for the creation of JobPositionStatusDto can't be null or empty");
-        }
-
-        return JobPositionStatusDtoBuilder.newBuilder(name)
-                .isActive(isActive)
-                .build();
     }
 }

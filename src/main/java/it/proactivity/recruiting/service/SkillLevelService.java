@@ -1,11 +1,11 @@
 package it.proactivity.recruiting.service;
 
-import it.proactivity.recruiting.builder.SkillLevelDtoBuilder;
+
 import it.proactivity.recruiting.model.SkillLevel;
 import it.proactivity.recruiting.model.dto.SkillLevelDto;
 import it.proactivity.recruiting.repository.SkillLevelRepository;
 import it.proactivity.recruiting.utility.GlobalValidator;
-import org.apache.commons.lang3.StringUtils;
+import it.proactivity.recruiting.utility.SkillLevelUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +23,13 @@ public class SkillLevelService {
     @Autowired
     GlobalValidator globalValidator;
 
+    @Autowired
+    SkillLevelUtility skillLevelUtility;
+
     public ResponseEntity<List<SkillLevelDto>> getAll() {
         List<SkillLevel> skillLevelList = skillLevelRepository.findByIsActive(true);
         List<SkillLevelDto> dtoList = skillLevelList.stream()
-                .map(s -> createSkillLevelDto(s.getIsActive(), s.getLevel().toString(), s.getSkill().getName(),
+                .map(s -> skillLevelUtility.createSkillLevelDto(s.getIsActive(), s.getLevel().toString(), s.getSkill().getName(),
                         s.getJobPosition().getTitle())).toList();
         return ResponseEntity.ok(dtoList);
     }
@@ -37,20 +40,7 @@ public class SkillLevelService {
         if (skillLevel.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(createSkillLevelDto(skillLevel.get().getIsActive(), skillLevel.get().getLevel().toString(),
+        return ResponseEntity.ok(skillLevelUtility.createSkillLevelDto(skillLevel.get().getIsActive(), skillLevel.get().getLevel().toString(),
                 skillLevel.get().getSkill().getName(), skillLevel.get().getJobPosition().getTitle()));
-    }
-
-    private SkillLevelDto createSkillLevelDto(Boolean isActive, String level, String skillName, String jobPositionTitle) {
-        if (StringUtils.isEmpty(level) || StringUtils.isEmpty(skillName) || StringUtils.isEmpty(jobPositionTitle) ||
-        isActive == null){
-            throw new IllegalArgumentException("The parameters for the creation of SkillLevelDto can't be null or empty");
-        }
-
-        return SkillLevelDtoBuilder.newBuilder(isActive)
-                .skillName(skillName)
-                .level(level)
-                .jobPositionTitle(jobPositionTitle)
-                .build();
     }
 }

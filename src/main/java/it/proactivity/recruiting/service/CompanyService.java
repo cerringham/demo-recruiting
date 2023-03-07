@@ -1,11 +1,11 @@
 package it.proactivity.recruiting.service;
 
-import it.proactivity.recruiting.builder.CompanyDtoBuilder;
+
 import it.proactivity.recruiting.model.Company;
 import it.proactivity.recruiting.model.dto.CompanyDto;
 import it.proactivity.recruiting.repository.CompanyRepository;
+import it.proactivity.recruiting.utility.CompanyUtility;
 import it.proactivity.recruiting.utility.GlobalValidator;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +23,15 @@ public class CompanyService {
     @Autowired
     GlobalValidator globalValidator;
 
+    @Autowired
+    CompanyUtility companyUtility;
+
     public ResponseEntity<List<CompanyDto>> getdAll() {
 
         List<Company> companyList = companyRepository.findByIsActive(true);
 
         List<CompanyDto> dtoList = companyList.stream()
-                .map(c -> createCompanyDto(c.getName(), c.getIsActive()))
+                .map(c -> companyUtility.createCompanyDto(c.getName(), c.getIsActive()))
                 .toList();
 
         return ResponseEntity.ok(dtoList);
@@ -44,16 +47,6 @@ public class CompanyService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.ok(createCompanyDto(company.get().getName(), company.get().getIsActive()));
-    }
-
-    private CompanyDto createCompanyDto(String name, Boolean isActive) {
-        if (StringUtils.isEmpty(name) || isActive == null) {
-            throw new IllegalArgumentException("The parameters for the creation of company dto can't be null or empty");
-        }
-
-        return CompanyDtoBuilder.newBuilder(name)
-                .isActive(isActive)
-                .build();
+        return ResponseEntity.ok(companyUtility.createCompanyDto(company.get().getName(), company.get().getIsActive()));
     }
 }

@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class EmployeeDto extends CandidateInformationDto {
+public class EmployeeDto extends AnagraficalDto {
 
     private String companyName;
 
