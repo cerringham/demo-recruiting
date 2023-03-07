@@ -1,10 +1,12 @@
 package it.proactivity.recruiting.service;
 
+import it.proactivity.recruiting.builder.SkillBuilder;
 import it.proactivity.recruiting.builder.SkillDtoBuilder;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.SkillRepository;
 import it.proactivity.recruiting.utility.GlobalValidator;
+import it.proactivity.recruiting.utility.SkillValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class SkillService {
@@ -23,13 +27,16 @@ public class SkillService {
     @Autowired
     GlobalValidator globalValidator;
 
-    public ResponseEntity<List<SkillDto>> getAll() {
+    @Autowired
+    SkillValidator skillValidator;
+
+    public ResponseEntity<Set<SkillDto>> getAll() {
         List<Skill> skillList = skillRepository.findByIsActive(true);
 
-        List<SkillDto> dtoList = skillList.stream()
+        Set<SkillDto> skillDtos = skillList.stream()
                 .map(s -> createSkillDto(s.getName(), s.getIsActive()))
-                .toList();
-        return ResponseEntity.ok(dtoList);
+                .collect(Collectors.toSet());
+        return ResponseEntity.ok(skillDtos);
     }
 
     public ResponseEntity<SkillDto> findById(Long id) {
@@ -52,5 +59,52 @@ public class SkillService {
         return SkillDtoBuilder.newBuilder(name)
                 .isActive(isActive)
                 .build();
+    }
+
+    public ResponseEntity<SkillDto> deleteSkill(Long id) {
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Skill> skill = skillRepository.findByIdAndIsActive(id, true);
+        if (skill.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        skill.get().setIsActive(false);
+        skillRepository.save(skill.get());
+        SkillDto skillDto = SkillDtoBuilder.newBuilder(skill.get().getName()).isActive(false).build();
+        return ResponseEntity.ok(skillDto);
+    }
+
+    public ResponseEntity<SkillDto> insertSkill(SkillDto skillDto) {
+        if (!skillValidator.validateSkillParameters(skillDto)) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Skill> skill = skillRepository.findByNameIgnoreCaseAndIsActive(skillDto.getName(), true);
+        if (skill.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        if (!skillValidator.validateSkillName(skillDto.getName())) {
+            return ResponseEntity.badRequest().build();
+        }
+        Skill newSkill = SkillBuilder.newBuilder(skillDto.getName()).isActive(true).build();
+        skillRepository.save(newSkill);
+        return ResponseEntity.ok(skillDto);
+    }
+
+    public ResponseEntity<SkillDto> updateSkill(SkillDto skillDto) {
+        if (!skillValidator.validateSkillParameters(skillDto)) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Skill> skill = skillRepository.findByIdAndIsActive(skillDto.getId(), true);
+        if (skill.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        if (!skillValidator.validateSkillName(skillDto.getName())) {
+            return ResponseEntity.badRequest().build();
+        }
+        skill.get().setName(skillDto.getName());
+        skill.get().setIsActive(skillDto.getIsActive());
+        skillRepository.save(skill.get());
+        return ResponseEntity.ok(skillDto);
     }
 }

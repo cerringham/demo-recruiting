@@ -28,17 +28,23 @@ public class SkillValidator {
     @Autowired
     SkillRepository skillRepository;
 
-    @Autowired
-    SkillUtility skillUtility;
+    public Boolean validateSkillParameters(SkillDto skillDto) {
+        if (StringUtils.isEmpty(skillDto.getName())) {
+            return false;
+        }
+        if (skillDto.getIsActive() == false) {
+            return false;
+        }
+        return validateSkillName(skillDto.getName());
+    }
 
     public Boolean validateSkillName(String skillName) {
         if (StringUtils.isEmpty(skillName)) {
             return false;
         }
-        skillName = WordUtils.capitalizeFully(skillName);
-        String[] array = skillName.split(" ");
+        String[] array = skillName.split("\\s+");
         for (String s : array) {
-            if (!Character.isUpperCase(s.charAt(0))) {
+            if (!WordUtils.capitalizeFully(s).equals(s)) {
                 return false;
             }
         }

@@ -1,5 +1,6 @@
 package it.proactivity.recruiting;
 
+import it.proactivity.recruiting.builder.SkillDtoBuilder;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.SkillRepository;
@@ -31,7 +32,7 @@ public class SkillServiceTest {
 
     @Test
     void getAllSkillsTest() {
-        List<SkillDto> dtoList = skillService.getAll().getBody();
+        Set<SkillDto> dtoList = skillService.getAll().getBody();
         assertTrue(dtoList.size() != 0);
     }
 
@@ -69,6 +70,30 @@ public class SkillServiceTest {
         Set<Skill> skills = skillValidator.validateSkillSet(s);
         assertTrue(skills.size() == 1);
         assertNotNull(skills);
+    }
+
+    @Test
+    void deleteSkillTest() {
+        Optional<Skill> skill = skillRepository.findByNameIgnoreCaseAndIsActive("New", true);
+        skillService.deleteSkill(skill.get().getId());
+        List<Skill> skillList = skillRepository.findByIsActive(true);
+        assertTrue(skillList.size() == 10);
+    }
+
+    @Test
+    void insertSkillTest() {
+        SkillDto skillDto = SkillDtoBuilder.newBuilder("Eclipse").isActive(true).build();
+        skillService.insertSkill(skillDto);
+        List<Skill> skillList = skillRepository.findByIsActive(true);
+        assertTrue(skillList.size() == 13);
+    }
+
+    @Test
+    void updateSkillTest() {
+        SkillDto skillDto = SkillDtoBuilder.newBuilder("Eclipse Plus Plus").id(55l).isActive(true).build();
+        skillService.updateSkill(skillDto);
+        Optional<Skill> skillOptional = skillRepository.findById(55l);
+        assertTrue(skillOptional.get().getName().equals("Eclipse Plus Plus"));
     }
 
 

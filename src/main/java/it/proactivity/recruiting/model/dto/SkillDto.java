@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class SkillDto {
+    private Long id;
 
     private String name;
 
