@@ -1,7 +1,9 @@
 package it.proactivity.recruiting.utility;
 
+import it.proactivity.recruiting.repository.CandidateRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -11,6 +13,9 @@ import static it.proactivity.recruiting.utility.ParsingUtility.parseStringToDate
 
 @Component
 public class GlobalValidator {
+
+    @Autowired
+    CandidateRepository candidateRepository;
 
     public Boolean validateId(Long id) {
         if (id == null) {

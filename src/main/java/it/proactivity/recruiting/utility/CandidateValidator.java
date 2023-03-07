@@ -1,9 +1,15 @@
 package it.proactivity.recruiting.utility;
 
+import it.proactivity.recruiting.model.Candidate;
 import it.proactivity.recruiting.model.dto.CandidateWithSkillDto;
+import it.proactivity.recruiting.repository.CandidateRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+
 //Il candidato ha tutte le informazioni valorizzate.
 //Nome e cognome hanno solo caratteri alfabetici e spazi.
 //La mail deve essere formattata correttamente.
@@ -19,7 +25,7 @@ public class CandidateValidator {
     GlobalValidator globalValidator;
 
     @Autowired
-    SkillValidator skillValidator;
+    CandidateRepository candidateRepository;
 
     public Boolean validateParameters(String fiscalCode, String name, String surname, String cityOfBirth,
                                             String countryOfBirth, String cityOfResidence, String streetOfResidence,
@@ -37,6 +43,22 @@ public class CandidateValidator {
         return true;
     }
 
+    public ResponseEntity validateUniqueParameters(String fiscalCode, String email, String phoneNumber) {
+        Optional<Candidate> candidateOptional = candidateRepository.findByFiscalCode(fiscalCode);
+        if (candidateOptional.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Candidate> candidateOptional1 = candidateRepository.findByEmail(email);
+        if (candidateOptional1.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<Candidate> candidateOptional2 = candidateRepository.findByPhoneNumber(phoneNumber);
+        if (candidateOptional2.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
     public Boolean validateCandidate(CandidateWithSkillDto candidateWithSkillDto) {
         if (!globalValidator.validateFiscalCode(candidateWithSkillDto.getFiscalCode()) ||
                 !globalValidator.validateAlphaSpace(candidateWithSkillDto.getName()) ||
@@ -49,7 +71,7 @@ public class CandidateValidator {
                 !globalValidator.validateEmail(candidateWithSkillDto.getEmail()) ||
                 !globalValidator.validatePhoneNumber(candidateWithSkillDto.getPhoneNumber()) ||
                 StringUtils.isEmpty(candidateWithSkillDto.getGender()) ||
-                candidateWithSkillDto.getExpertise() == null ) {
+                StringUtils.isEmpty(candidateWithSkillDto.getExpertise())) {
             return false;
         }
         return true;

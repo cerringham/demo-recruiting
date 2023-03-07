@@ -7,11 +7,9 @@ import it.proactivity.recruiting.model.Expertise;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateWithSkillDto;
-import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.CandidateRepository;
 import it.proactivity.recruiting.repository.CurriculumRepository;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
-import it.proactivity.recruiting.repository.SkillRepository;
 import it.proactivity.recruiting.utility.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,13 +42,8 @@ public class CandidateService {
     SkillValidator skillValidator;
 
     @Autowired
-    SkillUtility skillUtility;
-
-    @Autowired
     CurriculumRepository curriculumRepository;
 
-    @Autowired
-    SkillRepository skillRepository;
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
@@ -75,10 +68,15 @@ public class CandidateService {
     }
 
     public ResponseEntity<?> insertNewCandidate(CandidateWithSkillDto candidateWithSkillDto) {
+        ResponseEntity response = candidateValidator.validateUniqueParameters(candidateWithSkillDto.getFiscalCode(),
+                candidateWithSkillDto.getEmail(), candidateWithSkillDto.getPhoneNumber());
+        if (response.getStatusCode() != HttpStatus.OK) {
+            return response;
+        }
         if (!candidateValidator.validateCandidate(candidateWithSkillDto)) {
             return ResponseEntity.badRequest().build();
         }
-        Optional<Expertise> expertise = expertiseRepository.findByNameAndIsActive(candidateWithSkillDto.getExpertise().getName(), true);
+        Optional<Expertise> expertise = expertiseRepository.findByNameAndIsActive(candidateWithSkillDto.getExpertise(), true);
         if (expertise.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -98,20 +96,27 @@ public class CandidateService {
     }
 
     public ResponseEntity<CandidateWithSkillDto> updateCandidate(CandidateWithSkillDto candidateWithSkillDto) {
+        if (!candidateValidator.validateCandidate(candidateWithSkillDto)) {
+            return ResponseEntity.badRequest().build();
+        }
         Optional<Candidate> candidate = candidateRepository.findById(candidateWithSkillDto.getId());
         if (candidate.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        Optional<Expertise> expertise = expertiseRepository.findByNameAndIsActive(candidateWithSkillDto.getExpertise().getName(), true);
+
+        Optional<Expertise> expertise = expertiseRepository.findByNameAndIsActive(candidateWithSkillDto.getExpertise(), true);
         if (candidate.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        Set<Skill> skillList = skillUtility.createSkillSetFromDto(candidateWithSkillDto.getSkillDtoSet());
-        Set<Curriculum> curriculumSet = skillList.stream().map( s -> CurriculumBuilder.newBuilder(candidate.get())
+        Set<Skill> skills = skillValidator.validateSkillSet(candidateWithSkillDto.getSkillDtoSet());
+        Set<Curriculum> curriculumSet = skills.stream().map( s -> CurriculumBuilder.newBuilder(candidate.get())
                         .skill(s)
                         .isActive(true)
                         .build())
                 .collect(Collectors.toSet());
+        candidate.get().setFiscalCode(candidateWithSkillDto.getFiscalCode());
+        candidate.get().setName(candidateWithSkillDto.getName());
+        candidate.get().setSurname(candidateWithSkillDto.getSurname());
         candidate.get().setCityOfResidence(candidateWithSkillDto.getCityOfResidence());
         candidate.get().setStreetOfResidence(candidateWithSkillDto.getStreetOfResidence());
         candidate.get().setRegionOfResidence(candidateWithSkillDto.getRegionOfResidence());
@@ -119,10 +124,10 @@ public class CandidateService {
         candidate.get().setEmail(candidateWithSkillDto.getEmail());
         candidate.get().setPhoneNumber(candidateWithSkillDto.getPhoneNumber());
         candidate.get().setGender(candidateWithSkillDto.getGender());
-        candidate.get().setIsActive(candidateWithSkillDto.getIsActive());
         candidate.get().setExpertise(expertise.get());
+        candidate.get().setIsActive(candidateWithSkillDto.getIsActive());
         candidate.get().setCandidateSkillList(curriculumSet);
-        candidateRepository.save(candidate.get());
+        candidateRepository.saveAndFlush(candidate.get());
         return ResponseEntity.ok(candidateWithSkillDto);
     }
 

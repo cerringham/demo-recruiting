@@ -41,14 +41,14 @@ public class CandidateWithSkillDto {
 
     private String birthDate;
 
-    private ExpertiseDto expertise;
+    private String expertise;
 
     private Set<SkillDto> skillDtoSet;
 
     public CandidateWithSkillDto(String fiscalCode, String name, String surname, String cityOfBirth, String countryOfBirth,
                                  String cityOfResidence, String streetOfResidence, String regionOfResidence,
                                  String countryOfResidence, String email, String phoneNumber, String gender,
-                                 Boolean isActive, String birthDate, ExpertiseDto expertise, Set<SkillDto> skillDtoSet) {
+                                 Boolean isActive, String birthDate, String expertise, Set<SkillDto> skillDtoSet) {
         this.fiscalCode = fiscalCode;
         this.name = name;
         this.surname = surname;

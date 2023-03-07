@@ -1,7 +1,6 @@
 package it.proactivity.recruiting.builder;
 
 import it.proactivity.recruiting.model.dto.CandidateWithSkillDto;
-import it.proactivity.recruiting.model.dto.ExpertiseDto;
 import it.proactivity.recruiting.model.dto.SkillDto;
 
 import java.util.Set;
@@ -36,7 +35,7 @@ public class CandidateWithSkillDtoBuilder {
 
     private String birthDate;
 
-    private ExpertiseDto expertise;
+    private String expertise;
 
     private Set<SkillDto> skills;
 
@@ -46,6 +45,11 @@ public class CandidateWithSkillDtoBuilder {
 
     public static CandidateWithSkillDtoBuilder newBuilder(String name) {
         return new CandidateWithSkillDtoBuilder(name);
+    }
+
+    public CandidateWithSkillDtoBuilder id(Long id) {
+        this.id = id;
+        return this;
     }
 
     public CandidateWithSkillDtoBuilder fiscalCode(String fiscalCode) {
@@ -112,7 +116,7 @@ public class CandidateWithSkillDtoBuilder {
         this.birthDate = birthDate;
         return this;
     }
-    public CandidateWithSkillDtoBuilder expertise(ExpertiseDto expertise) {
+    public CandidateWithSkillDtoBuilder expertise(String expertise) {
         this.expertise = expertise;
         return this;
     }
@@ -123,7 +127,7 @@ public class CandidateWithSkillDtoBuilder {
     }
 
     public CandidateWithSkillDto build() {
-        return new CandidateWithSkillDto(fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence, streetOfResidence,
+        return new CandidateWithSkillDto(id, fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence, streetOfResidence,
                 regionOfResidence, countryOfResidence, email, phoneNumber, gender, isActive, birthDate, expertise, skills);
     }
 }
