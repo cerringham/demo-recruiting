@@ -1,6 +1,5 @@
 package it.proactivity.recruiting.utility;
 
-import it.proactivity.recruiting.builder.SkillBuilder;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.SkillRepository;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Component;
 //	- associo questa lista di oggetti all'attriburo candidateSkillList di newCandidate
 //	- session.save() di newCandidate salva anche i cv
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class SkillValidator {
@@ -47,26 +45,22 @@ public class SkillValidator {
         return true;
     }
 
-    public Set<SkillDto> validateSkillSet(Set<SkillDto> skills) {
+    public Set<Skill> validateSkillSet(Set<SkillDto> skills) {
         if (skills.isEmpty()) {
             return null;
         }
-        Set<SkillDto> skillDtoSet = new HashSet<>();
-        for (SkillDto s : skills) {
+        Set<Skill> skillSet = new HashSet<>();
+        for (SkillDto  s : skills) {
             Optional<Skill> skill = skillRepository.findByNameIgnoreCaseAndIsActive(s.getName(), true);
             if (skill.isPresent()) {
-                skillDtoSet.add(s);
+                skillSet.add(skill.get());
 
             } else if (validateSkillName(s.getName())) {
-                List<Skill> skillList = skillRepository.findByIsActive(true);
-                if (!skillList.contains(s.getName())) {
-                    Skill skill1 = new Skill(s.getName(), true);
-                    skillRepository.save(skill1);
-                    SkillDto skillDto = skillUtility.createSkillDto(skill1);
-                    skillDtoSet.add(skillDto);
-                }
+                    Skill newSkill = new Skill(s.getName(), true);
+                    skillRepository.save(newSkill);
+                    skillSet.add(newSkill);
             }
         }
-        return skillDtoSet;
+        return skillSet;
     }
 }

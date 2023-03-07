@@ -82,18 +82,17 @@ public class CandidateService {
         if (expertise.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        Set<SkillDto> skillDto = skillValidator.validateSkillSet(candidateWithSkillDto.getSkillDtoSet());
-        Set<Skill> skills = skillUtility.createSkillSetFromDto(skillDto);
         Candidate candidate = candidateUtility.createCandidateFromCandidateWithSkillDto(candidateWithSkillDto);
         candidate.setExpertise(expertise.get());
         candidateRepository.save(candidate);
+        Set<Skill> skills = skillValidator.validateSkillSet(candidateWithSkillDto.getSkillDtoSet());
         Set<Curriculum> curriculumSet = skills.stream().map( s -> CurriculumBuilder.newBuilder(candidate)
                         .skill(s)
                         .isActive(true)
                         .build())
                 .collect(Collectors.toSet());
+        curriculumSet.forEach(curriculum -> curriculumRepository.save(curriculum));
         candidate.setCandidateSkillList(curriculumSet);
-        curriculumRepository.saveAll(curriculumSet);
 
         return ResponseEntity.ok().build();
     }

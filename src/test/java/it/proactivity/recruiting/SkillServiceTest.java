@@ -4,15 +4,13 @@ import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.SkillRepository;
 import it.proactivity.recruiting.service.SkillService;
+import it.proactivity.recruiting.utility.SkillUtility;
 import it.proactivity.recruiting.utility.SkillValidator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -27,6 +25,9 @@ public class SkillServiceTest {
 
     @Autowired
     SkillRepository skillRepository;
+
+    @Autowired
+    SkillUtility skillUtility;
 
     @Test
     void getAllSkillsTest() {
@@ -60,13 +61,15 @@ public class SkillServiceTest {
     }
 
     @Test
-    void createSkillListTest() {
-        List<String> stringList = Arrays.asList("Java", "Php", "Altro");
-        List<Skill> skills = skillValidator.createSkillList(stringList);
-        assertTrue(skills.size() == 3);
+    void createSkillSetTest() {
+        Set<SkillDto> s = new HashSet<>();
+        Optional<Skill> skill = skillRepository.findByNameIgnoreCaseAndIsActive("C+", true);
+        SkillDto skillDto = skillUtility.createSkillDto(skill.get());
+        s.add(skillDto);
+        Set<Skill> skills = skillValidator.validateSkillSet(s);
+        assertTrue(skills.size() == 1);
         assertNotNull(skills);
-        List<String> stringList2 = Arrays.asList("Java", "Php", "Altro oi");
-        List<Skill> skills2 = skillValidator.createSkillList(stringList2);
-        assertFalse(skills2.size() == 3);
     }
+
+
 }
