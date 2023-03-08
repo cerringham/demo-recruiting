@@ -25,4 +25,10 @@ public class CompanyController {
     public ResponseEntity<CompanyDto> findById(@PathVariable Long id) {
         return companyService.findById(id);
     }
+
+    @GetMapping("/check-company")
+    public ResponseEntity checkCompanyPresence() {
+        return companyService.checkCompanyPresence();
+    }
+
 }

@@ -1,5 +1,6 @@
 package it.proactivity.recruiting;
 
+import it.proactivity.recruiting.mapper.SkillMapper;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.SkillRepository;
@@ -72,5 +73,15 @@ public class SkillServiceTest {
         skillService.updateSkill(dto);
         Optional<Skill> skill = skillRepository.findById(6l);
         assertTrue(skill.get().getName().equals("Html5"));
+    }
+
+    @Test
+    void test() {
+
+        Skill skill = new Skill("Bootstrap", true);
+
+        SkillDto dto = SkillMapper.INSTANCE.skillToSkillSto(skill);
+
+        System.out.println(dto);
     }
 }
