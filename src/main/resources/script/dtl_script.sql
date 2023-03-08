@@ -3,18 +3,18 @@ INSERT INTO company (name, coo_id, is_active) VALUES ('Bitrock', null, true);
 INSERT INTO company (name, coo_id, is_active) VALUES ('RadicalBit', null, true);
 INSERT INTO company (name, coo_id, is_active) VALUES ('Proactivity', null, true);
 
-INSERT INTO company_role (name, is_active) VALUES ('CEO', true);
+INSERT INTO company_role (name, is_active) VALUES ('Ceo', true);
 INSERT INTO company_role (name, is_active) VALUES ('Head Of', true);
-INSERT INTO company_role (name, is_active) VALUES ('HR', true);
+INSERT INTO company_role (name, is_active) VALUES ('Hr', true);
 INSERT INTO company_role (name, is_active) VALUES ('Marketing', true);
 INSERT INTO company_role (name, is_active) VALUES ('Backend Engineer', true);
 INSERT INTO company_role (name, is_active) VALUES ('Frontend Engineer', true);
 INSERT INTO company_role (name, is_active) VALUES ('Data Engineer', true);
 INSERT INTO company_role (name, is_active) VALUES ('Mobile Engineer', true);
 INSERT INTO company_role (name, is_active) VALUES ('Team Leader', true);
-INSERT INTO company_role (name, is_active) VALUES ('COO', true);
-INSERT INTO company_role (name, is_active) VALUES ('Amministration', true);
-INSERT INTO company_role (name, is_active) VALUES ('Network and System Engineer', true);
+INSERT INTO company_role (name, is_active) VALUES ('Coo', true);
+INSERT INTO company_role (name, is_active) VALUES ('Administration', true);
+INSERT INTO company_role (name, is_active) VALUES ('Network And System Engineer', true);
 
 INSERT INTO job_interview_status (name, description, is_active) VALUES ('New', 'A job interview that is planned but not yet done', true);
 INSERT INTO job_interview_status (name, description, is_active) VALUES ('Behavioral', 'A behavioral interview is successfully done', true);
