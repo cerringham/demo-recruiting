@@ -7,15 +7,10 @@ import it.proactivity.recruiting.model.dto.CompanyDto;
 import it.proactivity.recruiting.repository.CompanyRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.awt.event.ComponentAdapter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,43 +29,41 @@ public class CompanyUtility {
                 .build();
     }
 
-    public Set<Company> createMissingCompany(List<Company> activeCompanyList) {
-        List<String> companyNames = Arrays.asList("Bitrock", "Fortitude", "Proactivity", "Radicalbit");
+    public Boolean checkCompanyNames(List<String> realCompany, List<String> expectedCompanies) {
+        for (String n : expectedCompanies) {
+            if (!realCompany.contains(n)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Set<Company> createMissingCompany(List<Company> activeCompanyList, List<String> expectedCompanyNames) {
+
 
         Set<String> activeCompanyNames = activeCompanyList.stream()
                 .map(Company::getName)
                 .collect(Collectors.toSet());
 
-        Set<Company> missingCompanies = companyNames.stream()
-                .map(n -> {
-                    Company company = null;
-                    if (!activeCompanyNames.contains(n)) {
-                        company = CompanyBuilder.newBuilder(n)
-                                .isActive(true)
-                                .build();
 
-                    }
-                    return company;
-                }).collect(Collectors.toSet());
-
-        return missingCompanies;
+        Set<Company> missingCompany = new HashSet<>();
+        for (String n : expectedCompanyNames) {
+            if (!activeCompanyNames.contains(n)) {
+                Company company = CompanyBuilder.newBuilder(n)
+                        .isActive(true)
+                        .build();
+                missingCompany.add(company);
+            }
+        }
+        return missingCompany;
     }
 
-
-    public void deleteCompany(String firstCompanyName, String secondCompanyName) {
-
-        Optional<Long> firstCompanyId = companyRepository.findByName(firstCompanyName);
-
-        Optional<Long> secondCompanyId = companyRepository.findByName(secondCompanyName);
-
-        Optional<Company> firstCompany = companyRepository.findByIdAndIsActive(firstCompanyId.get(), true);
-
-        Optional<Company> secondCompany = companyRepository.findByIdAndIsActive(firstCompanyId.get(), true);
-
-        firstCompany.get().setIsActive(false);
-        secondCompany.get().setIsActive(false);
-
-        List<Company> companies = Arrays.asList(firstCompany.get(), secondCompany.get());
-        companyRepository.saveAll(companies);
+    public void setIsActiveFlagToTrue(List<Company> companies) {
+        companies.stream()
+                .forEach(c -> {
+                    c.setIsActive(true);
+                    companyRepository.save(c);
+                });
     }
+
 }

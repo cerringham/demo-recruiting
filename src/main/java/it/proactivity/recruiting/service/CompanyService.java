@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
-
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -20,6 +20,7 @@ import java.util.Set;
 @Service
 public class CompanyService {
 
+    private static List<String> EXPECTED_COMPANIES = Arrays.asList("Bitrock", "Fortitude", "Proactivity", "Radicalbit");
     @Autowired
     CompanyRepository companyRepository;
 
@@ -54,44 +55,44 @@ public class CompanyService {
     }
 
     public ResponseEntity checkCompanyPresence() {
-        List<Company> activeCompanyList = companyRepository.findByIsActive(true);
+        List<Company> companies = companyRepository.findAll();
+        List<String> companyNames = companies.stream().map(Company::getName).toList();
+        List<Company> companiesWithFlagFalse = companyRepository.findByIsActive(false);
 
-        List<Company> notActiveCompanyList = companyRepository.findByIsActive(false);
-
-        if (activeCompanyList.size() > 4) {
+        if (companies.size() > 4) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        if (activeCompanyList.size() < 4 && !notActiveCompanyList.isEmpty()) {
-            notActiveCompanyList.stream()
-                    .forEach(c -> {
-                        c.setIsActive(true);
-                        companyRepository.save(c);
-                    });
+        //Controllo che ci siano le corrette Company nel db
+        if (companies.size() == 4) {
+            if (!companyUtility.checkCompanyNames(companyNames, EXPECTED_COMPANIES)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        }
 
-            Set<Company> missingCompanies = companyUtility.createMissingCompany(activeCompanyList);
-            missingCompanies.stream()
-                    .forEach(c -> companyRepository.save(c));
+        //Se le company sono meno di 4 creo quelle mancanti con il flag a true e setto quelle gia esistenti a true
+        if (companies.size() < 4) {
+            Set<Company> missingCompanies = companyUtility.createMissingCompany(companies, EXPECTED_COMPANIES);
+
+            missingCompanies.stream().forEach(c -> {
+                companyRepository.save(c);
+            });
+            companies.stream().forEach(c -> {
+                c.setIsActive(true);
+                companyRepository.save(c);
+            });
 
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
 
-        if (!notActiveCompanyList.isEmpty()) {
-            notActiveCompanyList.stream()
-                    .forEach(c -> {
-                        c.setIsActive(true);
-                        companyRepository.save(c);
-                    });
+        /*Se le company sono 4 e ci sono delle company a false setto il flag a true a tutte le company altrimenti,
+        ritorno una risposta 200
+         */
+        if (companies.size() == 4 && companiesWithFlagFalse.size() != 0) {
+            companyUtility.setIsActiveFlagToTrue(companies);
             return ResponseEntity.status(HttpStatus.CREATED).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
-
-        if (activeCompanyList.size() < 4) {
-            Set<Company> missingCompanies = companyUtility.createMissingCompany(activeCompanyList);
-            missingCompanies.stream()
-                    .forEach(c -> companyRepository.save(c));
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

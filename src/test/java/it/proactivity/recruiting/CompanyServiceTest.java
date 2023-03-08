@@ -1,9 +1,11 @@
 package it.proactivity.recruiting;
 
+import it.proactivity.recruiting.model.Company;
 import it.proactivity.recruiting.model.dto.CompanyDto;
 import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.service.CompanyService;
 import it.proactivity.recruiting.utility.CompanyUtility;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -20,10 +23,10 @@ public class CompanyServiceTest {
     @Autowired
     CompanyService companyService;
 
-    @Autowired
-    CompanyUtility companyUtility;
+
     @Autowired
     private CompanyRepository companyRepository;
+
 
     @Test
     void getAllCompanyTest() {
@@ -49,13 +52,49 @@ public class CompanyServiceTest {
 
     @Test
     void checkCompanyPresenceCompaniesNotActive() {
-        companyUtility.deleteCompany("RadicalBit", "Bitrock");
+        logicalDeleteCompany("RadicalBit");
+        logicalDeleteCompany("Bitrock");
 
         ResponseEntity response = companyService.checkCompanyPresence();
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.CREATED).build();
 
         assertEquals(response.getStatusCode(), expectedResponse.getStatusCode());
+    }
+
+    @Test
+    void checkCompanyPresenceCompaniesNotPresence() {
+        deleteCompany("RadicalBit");
+        deleteCompany("Bitrock");
+
+        ResponseEntity response = companyService.checkCompanyPresence();
+
+        ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.CREATED).build();
+
+        assertEquals(response.getStatusCode(), expectedResponse.getStatusCode());
+    }
+
+    private void logicalDeleteCompany(String name) {
+        if (!StringUtils.isEmpty(name)) {
+            Optional<Company> company = companyRepository.findByName(name);
+
+            if (company.isPresent()) {
+                company.get().setIsActive(false);
+                companyRepository.save(company.get());
+            }
+        }
+
+    }
+
+    private void deleteCompany(String name) {
+        if (!StringUtils.isEmpty(name)) {
+            Optional<Company> company = companyRepository.findByName(name);
+
+            if (company.isPresent()) {
+                companyRepository.delete(company.get());
+            }
+        }
+
     }
 
 }
