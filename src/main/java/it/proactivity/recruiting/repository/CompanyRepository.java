@@ -19,5 +19,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     @Query("SELECT c.cooId FROM Company c WHERE c.id = ?1")
     Long checkIfCooExists(Long companyId);
 
-    Optional<Company> findByNameIgnoreCase(String name);
+    Optional<Company> findByName(String name);
+
+    Optional<Company> findByNameAndIsActive(String companyName, boolean isActive);
 }

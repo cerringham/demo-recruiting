@@ -24,11 +24,6 @@ public class CompanyController {
         return companyService.findById(id);
     }
 
-    @DeleteMapping("/delete-company")
-    public ResponseEntity deleteCompanyById(@RequestParam Long id) {
-        return companyService.deleteCompanyById(id);
-    }
-
     @GetMapping("/check-company-presence")
     public ResponseEntity checkCompanyPresence() {
         return companyService.checkCompanyPresence();
