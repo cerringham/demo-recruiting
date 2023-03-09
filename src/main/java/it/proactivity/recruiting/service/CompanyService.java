@@ -7,6 +7,7 @@ import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.utility.CompanyUtility;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,9 @@ public class CompanyService {
 
     @Autowired
     CompanyUtility companyUtility;
+
+    @Autowired
+    private Environment environment;
 
     public ResponseEntity<List<CompanyDto>> getAll() {
 
@@ -53,10 +57,11 @@ public class CompanyService {
     }
     public ResponseEntity checkCompanyPresence() {
         List<Company> companiesBefore = companyRepository.findByIsActive(true);
-        if (companiesBefore.size() > 4) {
-            return ResponseEntity.status(400).build();
+        int maxCompanies = environment.getProperty("recruiting.maxCompanies", Integer.class);
+        if (companiesBefore.size() > maxCompanies) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        List<String> allowedNames = Arrays.asList("Fortitude", "Proactivity", "Bitrock", "RadicalBit");
+        List<String> allowedNames = Arrays.asList(environment.getProperty("recruiting.allowedNames").split(","));
         for (String name : allowedNames) {
             companyUtility.validCompany(name);
         }
@@ -65,12 +70,16 @@ public class CompanyService {
                 .map(Company::getName)
                 .toList();
         if (!actualCompanies.containsAll(allowedNames) || actualCompanies.size() != 4) {
-            return ResponseEntity.status(400).build();
+            List<String> notAllowed = actualCompanies.stream().filter(name -> !allowedNames.contains(name)).toList();
+            if (!notAllowed.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         if (companiesBefore.equals(companiesAfter)) {
-            return ResponseEntity.status(200).build();
+            return ResponseEntity.status(HttpStatus.OK).build();
         } else {
-            return ResponseEntity.status(201).build();
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         }
     }
 
