@@ -9,7 +9,7 @@ import java.util.Set;
 public class PredicateUtility {
 
     public Boolean filterSkillsName(Set<Skill> skills, String name) {
-        Boolean result = true;
+        boolean result = true;
 
         for (Skill s : skills) {
             if (s.getName().equalsIgnoreCase(name)) {

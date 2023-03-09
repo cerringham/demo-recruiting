@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -41,5 +42,20 @@ public class Company {
         this.name = name;
         this.cooId = cooId;
         this.isActive = isActive;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Company company = (Company) o;
+        return Objects.equals(id, company.id) && Objects.equals(name, company.name) &&
+                Objects.equals(cooId, company.cooId) && Objects.equals(isActive, company.isActive) &&
+                Objects.equals(employeeList, company.employeeList) && Objects.equals(jobPositionList, company.jobPositionList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, cooId, isActive, employeeList, jobPositionList);
     }
 }

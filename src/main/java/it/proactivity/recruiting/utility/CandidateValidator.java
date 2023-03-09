@@ -8,11 +8,8 @@ import java.util.Set;
 @Component
 public class CandidateValidator {
 
-    public Boolean validateSkill(Set<String> skills) {
-        if (skills == null || skills.isEmpty()) {
-            return false;
-        }
-        return true;
+    public boolean validateSkill(Set<String> skills) {
+        return skills != null && !skills.isEmpty();
     }
 
 }

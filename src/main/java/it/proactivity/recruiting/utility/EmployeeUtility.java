@@ -61,21 +61,13 @@ public class EmployeeUtility {
 
         if (companyRoleName.equalsIgnoreCase("ceo")) {
             Long numberOfCeo = employeeRepository.countNumberOfCeo();
-            if (numberOfCeo > 0) {
-                return false;
-            } else {
-                return true;
-            }
+            return numberOfCeo <= 0;
         }
 
         if (companyRoleName.equalsIgnoreCase("coo")) {
 
-            Long verifyCooExistance = companyRepository.checkIfCooExists(company.get().getId());
-            if (verifyCooExistance != null) {
-                return false;
-            } else {
-                return true;
-            }
+            Long verifyCooExistence = companyRepository.checkIfCooExists(company.get().getId());
+            return verifyCooExistence == null;
         }
 
         return true;

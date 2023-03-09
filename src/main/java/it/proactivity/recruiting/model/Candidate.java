@@ -1,20 +1,20 @@
 package it.proactivity.recruiting.model;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "candidate")
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
 public class Candidate {
 
     @Id
@@ -94,5 +94,18 @@ public class Candidate {
         this.isActive = isActive;
         this.birthDate = birthDate;
         this.expertise = expertise;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Candidate candidate = (Candidate) o;
+        return id != null && Objects.equals(id, candidate.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

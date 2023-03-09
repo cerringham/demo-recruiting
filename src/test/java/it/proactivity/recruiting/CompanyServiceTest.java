@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @SpringBootTest
-public class CompanyServiceTest {
+ class CompanyServiceTest {
 
     @Autowired
     CompanyService companyService;
@@ -29,13 +29,13 @@ public class CompanyServiceTest {
 
     @Test
     void getAllCompanyTest() {
-        List<CompanyDto> dtoList = companyService.getdAll().getBody();
-        assertTrue(dtoList.size() != 0);
+        List<CompanyDto> dtoList = companyService.getAll().getBody();
+        assertNotEquals(dtoList.size() , 0);
     }
 
     @Test
     void getCompanyByIdTest() {
-        CompanyDto companyDto = companyService.findById(1l).getBody();
+        CompanyDto companyDto = companyService.findById(1L).getBody();
         assertNotNull(companyDto);
     }
 
@@ -89,11 +89,7 @@ public class CompanyServiceTest {
         if (!StringUtils.isEmpty(name)) {
             Optional<Company> company = companyRepository.findByName(name);
 
-            if (company.isPresent()) {
-                companyRepository.delete(company.get());
-            }
+            company.ifPresent(value -> companyRepository.delete(value));
         }
-
     }
-
 }

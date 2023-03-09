@@ -18,7 +18,7 @@ public class CompanyController {
 
     @GetMapping("/get-all-companies")
     public ResponseEntity<List<CompanyDto>> getAll() {
-        return companyService.getdAll();
+        return companyService.getAll();
     }
 
     @GetMapping("/get-company/{id}")

@@ -11,7 +11,7 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 @SpringBootTest
-public class CandidateValidatorTest {
+ class CandidateValidatorTest {
     @Autowired
     CandidateValidator candidateValidator;
 

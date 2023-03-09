@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @SpringBootTest
-public class JobInterviewServiceTest {
+ class JobInterviewServiceTest {
 
     @Autowired
     JobInterviewService jobInterviewService;
@@ -25,7 +25,7 @@ public class JobInterviewServiceTest {
 
     @Test
     void getJobInterviewByIdTest() {
-        JobInterviewDto dto = jobInterviewService.findById(1l).getBody();
+        JobInterviewDto dto = jobInterviewService.findById(1L).getBody();
         assertNotNull(dto);
         System.out.println(dto);
     }

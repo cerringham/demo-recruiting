@@ -24,8 +24,8 @@ public class CompanyService {
     @Value("${recruiting.maxCompanies}")
     private int maxCompanies;
 
-    @Value("${EXPECTED_COMPANIES}")
-    private List<String> EXPECTED_COMPANIES;
+    @Value("${recruiting.expectedCompany}")
+    private List<String> expectedCompany;
     @Autowired
     CompanyRepository companyRepository;
 
@@ -35,7 +35,8 @@ public class CompanyService {
     @Autowired
     CompanyUtility companyUtility;
 
-    public ResponseEntity<List<CompanyDto>> getdAll() {
+
+    public ResponseEntity<List<CompanyDto>> getAll() {
 
         List<Company> companyList = companyRepository.findByIsActive(true);
 
@@ -69,21 +70,20 @@ public class CompanyService {
         }
 
         //Check if there are correct company
-        if (companies.size() == maxCompanies) {
-            if (!companyUtility.checkCompanyNames(companyNames, EXPECTED_COMPANIES)) {
+            if (companies.size() == maxCompanies && Boolean.FALSE.equals(companyUtility.checkCompanyNames(companyNames,
+                    expectedCompany))) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }
 
-        //If the companies are less than 4, i make the missing one with the flag set to true and set the flag to true for the
+
+        //If the companies are less than 4, I make the missing one with the flag set to true and set the flag to true for the
         //existence one
         if (companies.size() < maxCompanies) {
-            Set<Company> missingCompanies = companyUtility.createMissingCompany(companies, EXPECTED_COMPANIES);
+            Set<Company> missingCompanies = companyUtility.createMissingCompany(companies, expectedCompany);
 
-            missingCompanies.stream().forEach(c -> {
-                companyRepository.save(c);
-            });
-            companies.stream().forEach(c -> {
+            missingCompanies.forEach(c -> companyRepository.save(c));
+            
+            companies.forEach(c -> {
                 c.setIsActive(true);
                 companyRepository.save(c);
             });
@@ -96,10 +96,10 @@ public class CompanyService {
                 .filter(c -> c.getIsActive().equals(false))
                 .toList();
         /*
-        If the companies are 4 and there are companies with the flag set to false , i set all the flag to true,
-        else i return response ok
+        If the companies are 4 and there are companies with the flag set to false , I set all the flag to true,
+        else I return response ok
          */
-        if (companies.size() == maxCompanies && companiesNotActive.size() != 0) {
+        if (companies.size() == maxCompanies && !companiesNotActive.isEmpty()) {
             companyUtility.setIsActiveFlagToTrue(companies);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {

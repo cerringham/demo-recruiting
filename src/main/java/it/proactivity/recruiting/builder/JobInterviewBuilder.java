@@ -4,7 +4,7 @@ import it.proactivity.recruiting.model.dto.JobInterviewDto;
 
 public class JobInterviewBuilder {
 
-    private String date;
+    private final String date;
 
     private String hour;
 

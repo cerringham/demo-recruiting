@@ -4,7 +4,7 @@ import it.proactivity.recruiting.model.Company;
 
 public class CompanyBuilder {
 
-    private String name;
+    private final String name;
 
     private Long cooId;
 

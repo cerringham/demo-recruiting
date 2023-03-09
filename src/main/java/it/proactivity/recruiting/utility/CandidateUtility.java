@@ -14,7 +14,7 @@ import it.proactivity.recruiting.myEnum.Level;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
 import it.proactivity.recruiting.repository.SkillRepository;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -87,7 +87,7 @@ public class CandidateUtility {
         Set<Skill> skills = skillRepository.findByNameIgnoreCaseIn(dtoSkills);
         //salvataggio delle skill non presenti nel db
         if (skills.isEmpty()) {
-            dtoSkills.stream().forEach(s -> {
+            dtoSkills.forEach(s -> {
                 Skill skill = SkillBuilder.newBuilder(WordUtils.capitalizeFully(s)).isActive(true).build();
                 skillLevelMap.put(skill, dtoCapitalizeMap.get(s));
                 skillRepository.save(skill);
@@ -101,12 +101,9 @@ public class CandidateUtility {
                     .filter(s -> predicateUtility.filterSkillsName(skills, s))
                     .collect(Collectors.toSet());
 
-            skills.stream()
-                    .forEach(s -> {
-                        skillLevelMap.put(s, dtoCapitalizeMap.get(s.getName()));
-                    });
-            nonExistentSkillsName.stream()
-                    .forEach(s -> {
+            skills.forEach(s -> skillLevelMap.put(s, dtoCapitalizeMap.get(s.getName())));
+
+            nonExistentSkillsName.forEach(s -> {
                         String correctSkillName = WordUtils.capitalizeFully(s);
                         Skill skill = SkillBuilder.newBuilder(correctSkillName).isActive(true).build();
                         skillLevelMap.put(skill, dtoCapitalizeMap.get(s));

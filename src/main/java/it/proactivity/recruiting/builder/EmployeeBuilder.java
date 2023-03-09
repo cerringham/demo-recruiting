@@ -12,7 +12,7 @@ public class EmployeeBuilder {
 
     private String fiscalCode;
 
-    private String name;
+    private final String name;
 
     private String surname;
 

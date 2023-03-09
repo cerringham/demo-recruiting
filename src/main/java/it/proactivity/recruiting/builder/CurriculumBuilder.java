@@ -7,7 +7,7 @@ import it.proactivity.recruiting.myEnum.Level;
 
 public class CurriculumBuilder {
 
-    private Candidate candidate;
+    private final Candidate candidate;
 
     private Skill skill;
 

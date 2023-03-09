@@ -4,7 +4,7 @@ import it.proactivity.recruiting.model.dto.CurriculumDto;
 
 public class CurriculumDtoBuilder {
 
-    private Long candidateId;
+    private final Long candidateId;
 
     private String candidateName;
 

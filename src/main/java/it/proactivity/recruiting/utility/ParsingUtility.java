@@ -14,8 +14,7 @@ public class ParsingUtility {
     public  String parseDateToString(LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
-            String formattedDate = date.format(formatter);
-            return formattedDate;
+            return date.format(formatter);
         } catch (DateTimeException e) {
             return null;
         }
@@ -24,8 +23,7 @@ public class ParsingUtility {
     public  String parseTimeToString(LocalTime time) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         try {
-            String formattedTime = time.format(formatter);
-            return formattedTime;
+            return time.format(formatter);
         } catch (DateTimeParseException e) {
             return null;
         }
@@ -38,8 +36,7 @@ public class ParsingUtility {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
-            LocalDate parsedDate = LocalDate.parse(date, formatter);
-            return parsedDate;
+            return LocalDate.parse(date, formatter);
         } catch (DateTimeParseException e) {
             return null;
         }

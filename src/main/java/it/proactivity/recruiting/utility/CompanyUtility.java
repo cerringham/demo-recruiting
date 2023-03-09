@@ -59,7 +59,7 @@ public class CompanyUtility {
     }
 
     public void setIsActiveFlagToTrue(List<Company> companies) {
-        companies.stream()
+        companies
                 .forEach(c -> {
                     c.setIsActive(true);
                     companyRepository.save(c);

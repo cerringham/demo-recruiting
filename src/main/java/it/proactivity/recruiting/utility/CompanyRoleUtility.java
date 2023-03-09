@@ -10,7 +10,7 @@ public class CompanyRoleUtility {
 
     public CompanyRoleDto createCompanyRoleDto(String name, Boolean isActive) {
         if (StringUtils.isEmpty(name) || isActive == null) {
-            throw new IllegalArgumentException("the parameters for creating the company role dto can'y be null or empty");
+            throw new IllegalArgumentException("the parameters for creating the company role dto can't be null or empty");
         }
 
         return CompanyRoleDtoBuilder.newBuilder(name)

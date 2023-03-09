@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @SpringBootTest
-public class CompanyRoleServiceTest {
+ class CompanyRoleServiceTest {
 
     @Autowired
     CompanyRoleService companyRoleService;
@@ -25,7 +25,7 @@ public class CompanyRoleServiceTest {
 
     @Test
     void getCompanyRoleByIdTest() {
-        CompanyRoleDto dto = companyRoleService.findById(1l).getBody();
+        CompanyRoleDto dto = companyRoleService.findById(1L).getBody();
         assertNotNull(dto);
     }
 }

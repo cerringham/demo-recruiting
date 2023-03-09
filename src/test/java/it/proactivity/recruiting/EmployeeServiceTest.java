@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 
 @SpringBootTest
-public class EmployeeServiceTest {
+ class EmployeeServiceTest {
 
     @Autowired
     EmployeeService employeeService;
@@ -32,7 +32,7 @@ public class EmployeeServiceTest {
 
     @Test
     void getEmployeeByIdTest() {
-        EmployeeDto employeeDto = employeeService.findById(1l).getBody();
+        EmployeeDto employeeDto = employeeService.findById(1L).getBody();
         assertNotNull(employeeDto);
         System.out.println(employeeDto);
     }
@@ -42,14 +42,15 @@ public class EmployeeServiceTest {
 
         EmployeeDto dto = new EmployeeDto("RTRTYU89U76G453W", "Barbara", "Buscetta", "Catania",
                 "Italia", "Catania", "via catania 23", "Sicilia",
-                "Italia", "barbara.buscetta@gmail.it", "+39 7837493029", "f", true, "1995-12-09", "junior", "fortitude",
-                "hr");
+                "Italia", "barbara.buscetta@gmail.it", "+39 7837493029", "f",
+                true, "1995-12-09", "junior", "fortitude", "hr");
 
-        Long numberOfEmployeeBeforeInsert = employeeRepository.findByIsActive(true).stream().count();
+
+        long numberOfEmployeeBeforeInsert = employeeRepository.findByIsActive(true).size();
 
         employeeService.insertEmployee(dto);
 
-        Long numberOfEmployeeAfterInsert = employeeRepository.findByIsActive(true).stream().count();
+        long numberOfEmployeeAfterInsert = employeeRepository.findByIsActive(true).size();
 
         assertTrue(numberOfEmployeeBeforeInsert < numberOfEmployeeAfterInsert);
 
@@ -68,9 +69,9 @@ public class EmployeeServiceTest {
     void insertEmployeeNullNameNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", null, "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "1995-12-09", "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "1995-12-09", "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -84,9 +85,9 @@ public class EmployeeServiceTest {
     void insertEmployeeEmptyNameNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "1995-12-09", "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "1995-12-09", "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -100,9 +101,9 @@ public class EmployeeServiceTest {
     void insertEmployeeNullSurnameNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", null, "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "1995-12-09", "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "1995-12-09", "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -116,9 +117,9 @@ public class EmployeeServiceTest {
     void insertEmployeeNullEmailNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", null, "+39 8763483928",
-                "m", true, "1995-12-09", "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", null, "+39 8763483928", "m", true,
+                "1995-12-09", "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -132,9 +133,9 @@ public class EmployeeServiceTest {
     void insertEmployeeEmptyEmailNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "", "+39 8763483928",
-                "m", true, "1995-12-09", "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "", "+39 8763483928", "m", true,
+                "1995-12-09", "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -148,9 +149,9 @@ public class EmployeeServiceTest {
     void insertEmployeeWrongEmailNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "@email", "+39 8763483928",
-                "m", true, "1995-12-09", "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "@email", "+39 8763483928", "m", true,
+                "1995-12-09", "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -164,9 +165,9 @@ public class EmployeeServiceTest {
     void insertEmployeeNullPhoneNumberNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", null,
-                "m", true, "1995-12-09", "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", null, "m", true,
+                "1995-12-09", "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -180,9 +181,9 @@ public class EmployeeServiceTest {
     void insertEmployeeEmptyPhoneNumberNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "",
-                "m", true, "1995-12-09", "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "", "m", true,
+                "1995-12-09", "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -196,9 +197,9 @@ public class EmployeeServiceTest {
     void insertEmployeeWrongPhoneNumberNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "7366477www",
-                "m", true, "1995-12-09", "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "7366477www", "m", true,
+                "1995-12-09", "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -212,9 +213,9 @@ public class EmployeeServiceTest {
     void insertEmployeeEmptySurnameNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "1995-12-09", "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "1995-12-09", "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -228,9 +229,9 @@ public class EmployeeServiceTest {
     void insertEmployeeNullBirthDateNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, null, "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, null, "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -244,9 +245,9 @@ public class EmployeeServiceTest {
     void insertEmployeeEmptyBirthDateNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "", "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "", "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -260,9 +261,9 @@ public class EmployeeServiceTest {
     void insertEmployeeWrongBirthDateNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "12/12/1998", "junior", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "12/12/1998", "junior", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -276,9 +277,9 @@ public class EmployeeServiceTest {
     void insertEmployeeNullCompanyRoleNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "1995-12-12", "junior", "fortitude",
-                null);
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "1995-12-12", "junior", "fortitude", null);
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -292,9 +293,9 @@ public class EmployeeServiceTest {
     void insertEmployeeEmptyCompanyRoleNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "1995-12-12", "junior", "fortitude",
-                "");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "1995-12-12", "junior", "fortitude", "");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -308,9 +309,9 @@ public class EmployeeServiceTest {
     void insertEmployeeCeoCompanyRoleNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "1995-12-12", "junior", "fortitude",
-                "CEO");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "1995-12-12", "junior", "fortitude", "CEO");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -324,9 +325,9 @@ public class EmployeeServiceTest {
     void insertEmployeeCooCompanyRoleNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "1995-12-12", "junior", "proactivity",
-                "COO");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "1995-12-12", "junior", "proactivity", "COO");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -340,9 +341,9 @@ public class EmployeeServiceTest {
     void insertEmployeeExpertiseNotFoundNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "1995-12-09", "fantastic", "fortitude",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "1995-12-09", "fantastic", "fortitude", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -356,9 +357,9 @@ public class EmployeeServiceTest {
     void insertEmployeeCompanyNotFoundNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "1995-12-09", "junior", "fortitude2",
-                "coo");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "1995-12-09", "junior", "fortitude2", "coo");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -372,9 +373,9 @@ public class EmployeeServiceTest {
     void insertEmployeeCompanyRoleNotFoundNegativeTest() {
 
         EmployeeDto dto = new EmployeeDto("FDRETU09O87L222I", "Gigi", "Castello", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "m", true, "1995-12-09", "junior", "fortitude",
-                "cio");
+                "Italia", "Catania", "via catania 23", "Sicilia",
+                "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
+                true, "1995-12-09", "junior", "fortitude", "cio");
 
 
         ResponseEntity response = employeeService.insertEmployee(dto);
@@ -387,11 +388,11 @@ public class EmployeeServiceTest {
     @Test
     void deleteEmployeePositiveTest() {
 
-        Long numberOfEmployeeBeforeDelete = employeeRepository.findByIsActive(true).stream().count();
+        long numberOfEmployeeBeforeDelete = employeeRepository.findByIsActive(true).size();
 
-        employeeService.deleteEmployee(3l);
+        employeeService.deleteEmployee(3L);
 
-        Long numberOfEmployeeAfterDelete = employeeRepository.findByIsActive(true).stream().count();
+        long numberOfEmployeeAfterDelete = employeeRepository.findByIsActive(true).size();
 
         assertTrue(numberOfEmployeeBeforeDelete > numberOfEmployeeAfterDelete);
     }
@@ -409,7 +410,7 @@ public class EmployeeServiceTest {
     @Test
     void deleteEmployeeNotFoundNegativeTestTest() {
 
-        ResponseEntity response = employeeService.deleteEmployee(100l);
+        ResponseEntity response = employeeService.deleteEmployee(100L);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -419,41 +420,40 @@ public class EmployeeServiceTest {
 
     @Test
     void updateEmployeePositiveTest() {
-        EmployeeDto dto = new EmployeeDto(4l, "IJKUHG67J99Y111T", "Ludovico", "Brignani", "Siracusa",
-                "Italia", "Siracusa", "via roma 123", "Sicilia",
-                "Italia", "ludovico.brignani@email.it", "+39 2229987654", "m", true,
-                "1985-08-12", "junior", "proactivity",
-                "Software enginer");
+        EmployeeDto dto = new EmployeeDto(4L, "IJKUHG67J99Y111T", "Ludovico", "Brignani",
+                "Siracusa", "Italia", "Siracusa", "via roma 123",
+                "Sicilia", "Italia", "ludovico.brignani@email.it",
+                "+39 2229987654", "m", true, "1985-08-12", "junior",
+                "proactivity", "Software enginer");
 
         employeeService.updateEmployee(dto);
 
-        Optional<Employee> employee = employeeRepository.findByIdAndIsActive(4l, true);
-
-        assertTrue(employee.get().getCompanyRole().getName().equals("Software enginer"));
+        Optional<Employee> employee = employeeRepository.findByIdAndIsActive(4L, true);
+        employee.ifPresent(value -> assertTrue(value.getCompanyRole().getName().equals("Software engineer")));
     }
 
     @Test
     void updateEmployeeCooAlreadyExistsNegativeTest() {
-        EmployeeDto dto = new EmployeeDto(4l, "IJKUHG67J99Y111T", "Ludovico", "Brignani", "Siracusa",
-                "Italia", "Siracusa", "via roma 123", "Sicilia",
-                "Italia", "ludovico.brignani@email.it", "+39 2229987654", "m", true,
-                "1985-08-12", "junior", "proactivity",
-                "coo");
+        EmployeeDto dto = new EmployeeDto(4L, "IJKUHG67J99Y111T", "Ludovico", "Brignani",
+                "Siracusa", "Italia", "Siracusa", "via roma 123",
+                "Sicilia", "Italia", "ludovico.brignani@email.it",
+                "+39 2229987654", "m", true, "1985-08-12", "junior",
+                "proactivity", "coo");
 
         employeeService.updateEmployee(dto);
 
-        Optional<Employee> employee = employeeRepository.findByIdAndIsActive(4l, true);
+        Optional<Employee> employee = employeeRepository.findByIdAndIsActive(4L, true);
 
-        assertFalse(employee.get().getCompanyRole().getName().equals("COO"));
+        employee.ifPresent(value -> assertFalse(value.getCompanyRole().getName().equals("COO")));
     }
 
     @Test
     void updateEmployeeNotFoundNegativeTest() {
-        EmployeeDto dto = new EmployeeDto(100l, "IJKUHG67J99Y111T", "Ludovico", "Brignani", "Siracusa",
-                "Italia", "Siracusa", "via roma 123", "Sicilia",
-                "Italia", "ludovico.brignani@email.it", "+39 2229987654", "m", true,
-                "1985-08-12", "junior", "proactivity",
-                "coo");
+        EmployeeDto dto = new EmployeeDto(100L, "IJKUHG67J99Y111T", "Ludovico", "Brignani",
+                "Siracusa", "Italia", "Siracusa", "via roma 123",
+                "Sicilia", "Italia", "ludovico.brignani@email.it",
+                "+39 2229987654", "m", true, "1985-08-12", "junior",
+                "proactivity", "coo");
 
         ResponseEntity response = employeeService.updateEmployee(dto);
 
@@ -464,11 +464,11 @@ public class EmployeeServiceTest {
 
     @Test
     void updateEmployeeExpertiseNotFoundNegativeTest() {
-        EmployeeDto dto = new EmployeeDto(4l, "IJKUHG67J99Y111T", "Ludovico", "Brignani", "Siracusa",
-                "Italia", "Siracusa", "via roma 123", "Sicilia",
-                "Italia", "ludovico.brignani@email.it", "+39 2229987654", "m", true,
-                "1985-08-12", "fantastic", "proactivity",
-                "coo");
+        EmployeeDto dto = new EmployeeDto(4L, "IJKUHG67J99Y111T", "Ludovico", "Brignani",
+                "Siracusa", "Italia", "Siracusa", "via roma 123",
+                "Sicilia", "Italia", "ludovico.brignani@email.it",
+                "+39 2229987654", "m", true, "1985-08-12", "fantastic",
+                "proactivity", "coo");
 
         ResponseEntity response = employeeService.updateEmployee(dto);
 
@@ -479,11 +479,11 @@ public class EmployeeServiceTest {
 
     @Test
     void updateEmployeeCompanyNotFoundNegativeTest() {
-        EmployeeDto dto = new EmployeeDto(4l, "IJKUHG67J99Y111T", "Ludovico", "Brignani", "Siracusa",
-                "Italia", "Siracusa", "via roma 123", "Sicilia",
-                "Italia", "ludovico.brignani@email.it", "+39 2229987654", "m", true,
-                "1985-08-12", "junior", "proactivity2",
-                "coo");
+        EmployeeDto dto = new EmployeeDto(4L, "IJKUHG67J99Y111T", "Ludovico", "Brignani",
+                "Siracusa", "Italia", "Siracusa", "via roma 123",
+                "Sicilia", "Italia", "ludovico.brignani@email.it",
+                "+39 2229987654", "m", true, "1985-08-12", "junior",
+                "proactivity2", "coo");
 
         ResponseEntity response = employeeService.updateEmployee(dto);
 
@@ -494,11 +494,11 @@ public class EmployeeServiceTest {
 
     @Test
     void updateEmployeeCompanyRoleNotFoundNegativeTest() {
-        EmployeeDto dto = new EmployeeDto(4l, "IJKUHG67J99Y111T", "Ludovico", "Brignani", "Siracusa",
-                "Italia", "Siracusa", "via roma 123", "Sicilia",
-                "Italia", "ludovico.brignani@email.it", "+39 2229987654", "m", true,
-                "1985-08-12", "junior", "proactivity2",
-                "cooo");
+        EmployeeDto dto = new EmployeeDto(4l, "IJKUHG67J99Y111T", "Ludovico", "Brignani",
+                "Siracusa", "Italia", "Siracusa", "via roma 123",
+                "Sicilia", "Italia", "ludovico.brignani@email.it",
+                "+39 2229987654", "m", true, "1985-08-12", "junior",
+                "proactivity2", "cooo");
 
         ResponseEntity response = employeeService.updateEmployee(dto);
 
@@ -509,11 +509,11 @@ public class EmployeeServiceTest {
 
     @Test
     void updateEmployeeWrongDateFormatNegativeTest() {
-        EmployeeDto dto = new EmployeeDto(4l, "IJKUHG67J99Y111T", "Ludovico", "Brignani", "Siracusa",
-                "Italia", "Siracusa", "via roma 123", "Sicilia",
-                "Italia", "ludovico.brignani@email.it", "+39 2229987654", "m", true,
-                "1985/08/12", "junior", "proactivity",
-                "coo");
+        EmployeeDto dto = new EmployeeDto(4L, "IJKUHG67J99Y111T", "Ludovico", "Brignani",
+                "Siracusa", "Italia", "Siracusa", "via roma 123",
+                "Sicilia", "Italia", "ludovico.brignani@email.it",
+                "+39 2229987654", "m", true, "1985/08/12", "junior",
+                "proactivity", "coo");
 
         ResponseEntity response = employeeService.updateEmployee(dto);
 
