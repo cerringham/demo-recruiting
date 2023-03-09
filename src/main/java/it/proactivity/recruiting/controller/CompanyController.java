@@ -26,7 +26,7 @@ public class CompanyController {
         return companyService.findById(id);
     }
 
-    @GetMapping("/check-company")
+    @GetMapping("/check-company-presence")
     public ResponseEntity checkCompanyPresence() {
         return companyService.checkCompanyPresence();
     }

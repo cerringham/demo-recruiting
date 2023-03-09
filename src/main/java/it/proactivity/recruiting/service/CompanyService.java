@@ -57,20 +57,21 @@ public class CompanyService {
     public ResponseEntity checkCompanyPresence() {
         List<Company> companies = companyRepository.findAll();
         List<String> companyNames = companies.stream().map(Company::getName).toList();
-        List<Company> companiesWithFlagFalse = companyRepository.findByIsActive(false);
 
+        //Check if the companies are more than 4
         if (companies.size() > 4) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        //Controllo che ci siano le corrette Company nel db
+        //Check if there are correct company
         if (companies.size() == 4) {
             if (!companyUtility.checkCompanyNames(companyNames, EXPECTED_COMPANIES)) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
         }
 
-        //Se le company sono meno di 4 creo quelle mancanti con il flag a true e setto quelle gia esistenti a true
+        //If the companies are less than 4, i make the missing one with the flag set to true and set the flag to true for the
+        //existence one
         if (companies.size() < 4) {
             Set<Company> missingCompanies = companyUtility.createMissingCompany(companies, EXPECTED_COMPANIES);
 
@@ -85,10 +86,15 @@ public class CompanyService {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
 
-        /*Se le company sono 4 e ci sono delle company a false setto il flag a true a tutte le company altrimenti,
-        ritorno una risposta 200
+        //Retrieve any possible companies with flag false
+        List<Company> companiesNotActive = companies.stream()
+                .filter(c -> c.getIsActive().equals(false))
+                .toList();
+        /*
+        If the companies are 4 and there are companies with the flag set to false , i set all the flag to true,
+        else i return response ok
          */
-        if (companies.size() == 4 && companiesWithFlagFalse.size() != 0) {
+        if (companies.size() == 4 && companiesNotActive.size() != 0) {
             companyUtility.setIsActiveFlagToTrue(companies);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
