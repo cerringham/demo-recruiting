@@ -32,8 +32,17 @@ public class CompanyServiceTest {
 
     @Test
     void getCompanyByIdTest() {
-        CompanyDto companyDto = companyService.findById(1l).getBody();
+        CompanyDto companyDto = companyService.findById(6l).getBody();
         assertNotNull(companyDto);
+    }
+
+    @Test
+    void checkCompanyPresenceTest() {
+        companyService.checkCompanyPresence();
+        List<Company> companies = companyRepository.findAll();
+        Optional<Company> fortitude = companyRepository.findByNameAndIsActive("Fortitude", true);
+        assertTrue(companies.size() == 4);
+        assertTrue(fortitude.isPresent());
     }
 
     @Test

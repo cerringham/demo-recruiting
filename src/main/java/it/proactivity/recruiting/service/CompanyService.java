@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,15 +54,20 @@ public class CompanyService {
     public ResponseEntity checkCompanyPresence() {
         List<Company> companiesBefore = companyRepository.findByIsActive(true);
         if (companiesBefore.size() > 4) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(400).build();
         }
-        companyUtility.validCompany("Fortitude");
-        companyUtility.validCompany("Proactivity");
-        companyUtility.validCompany("Bitrock");
-        companyUtility.validCompany("RadicalBit");
-
+        List<String> allowedNames = Arrays.asList("Fortitude", "Proactivity", "Bitrock", "RadicalBit");
+        for (String name : allowedNames) {
+            companyUtility.validCompany(name);
+        }
         List<Company> companiesAfter = companyRepository.findByIsActive(true);
-        if (companiesBefore == companiesAfter) {
+        List<String> actualCompanies = companiesAfter.stream()
+                .map(Company::getName)
+                .toList();
+        if (!actualCompanies.containsAll(allowedNames) || actualCompanies.size() != 4) {
+            return ResponseEntity.status(400).build();
+        }
+        if (companiesBefore.equals(companiesAfter)) {
             return ResponseEntity.status(200).build();
         } else {
             return ResponseEntity.status(201).build();
