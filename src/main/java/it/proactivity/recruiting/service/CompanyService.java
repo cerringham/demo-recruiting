@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
-import java.util.Arrays;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,7 +23,9 @@ public class CompanyService {
 
     @Value("${recruiting.maxCompanies}")
     private int maxCompanies;
-    private static List<String> EXPECTED_COMPANIES = Arrays.asList("Bitrock", "Fortitude", "Proactivity", "Radicalbit");
+
+    @Value("${EXPECTED_COMPANIES}")
+    private List<String> EXPECTED_COMPANIES;
     @Autowired
     CompanyRepository companyRepository;
 

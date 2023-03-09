@@ -4,7 +4,6 @@ import it.proactivity.recruiting.model.Company;
 import it.proactivity.recruiting.model.dto.CompanyDto;
 import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.service.CompanyService;
-import it.proactivity.recruiting.utility.CompanyUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    void checkCompanyPresenceNoMissingCompaniesPositiveTest() {
+    void checkCompanyPresencePositiveTestStatus200() {
 
         ResponseEntity response = companyService.checkCompanyPresence();
 
@@ -51,7 +50,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    void checkCompanyPresenceCompaniesNotActive() {
+    void checkCompanyPresenceLogicalDeleteTestStatus201() {
         logicalDeleteCompany("RadicalBit");
         logicalDeleteCompany("Bitrock");
 
@@ -63,8 +62,8 @@ public class CompanyServiceTest {
     }
 
     @Test
-    void checkCompanyPresenceCompaniesNotPresence() {
-        deleteCompany("RadicalBit");
+    void checkCompanyPresenceRealDeleteTestStatus201() {
+        deleteCompany("Proactivity");
         deleteCompany("Bitrock");
 
         ResponseEntity response = companyService.checkCompanyPresence();
