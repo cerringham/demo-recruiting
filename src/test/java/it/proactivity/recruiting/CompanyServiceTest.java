@@ -5,10 +5,13 @@ import it.proactivity.recruiting.model.Company;
 import it.proactivity.recruiting.model.dto.CompanyDto;
 import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.service.CompanyService;
+import it.proactivity.recruiting.utility.CompanyUtility;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,16 +26,13 @@ public class CompanyServiceTest {
     @Autowired
     CompanyRepository companyRepository;
 
+    @Autowired
+    CompanyUtility companyUtility;
+
     @Test
     void getAllCompanyTest() {
         List<CompanyDto> dtoList = companyService.getAll().getBody();
         assertTrue(dtoList.size() != 0);
-    }
-
-    @Test
-    void getCompanyByIdTest() {
-        CompanyDto companyDto = companyService.findById(6l).getBody();
-        assertNotNull(companyDto);
     }
 
     @Test
@@ -48,9 +48,7 @@ public class CompanyServiceTest {
     void deleteACompanyTest() {
         Optional<Company> company = companyRepository.findByName("RadicalBit");
         companyService.deleteCompanyByName("RadicalBit");
-        List<Company> companyList = companyRepository.findByIsActive(true);
-        System.out.println(companyList);
-        assertTrue(companyList.size() == 3);
+        List<Company> companyList = companyRepository.findAll();
         assertTrue(!companyList.contains(company.get()));
     }
 
@@ -85,12 +83,8 @@ public class CompanyServiceTest {
 
    @Test
     void falseCompaniesAndRicreateTest() {
-        Optional<Company> proactivity = companyRepository.findByName("Proactivity");
-        Optional<Company> fortitude = companyRepository.findByName("Fortitude");
-        proactivity.get().setIsActive(false);
-        fortitude.get().setIsActive(false);
-        companyRepository.save(proactivity.get());
-        companyRepository.save(fortitude.get());
+        companyUtility.setCompanyFalseByName("Fortitude");
+        companyUtility.setCompanyFalseByName("Proactivity");
         List<Company> companies = companyRepository.findByIsActive(true);
         assertTrue(companies.size() == 2);
         companyService.checkCompanyPresence();

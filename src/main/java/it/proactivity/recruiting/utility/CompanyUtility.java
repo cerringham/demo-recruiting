@@ -9,7 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class CompanyUtility {
@@ -27,19 +29,40 @@ public class CompanyUtility {
                 .build();
     }
 
-    public Company validCompany(String companyName) {
-        Optional<Company> company = companyRepository.findByName(companyName);
+    public Company getCompanyIfExistsOrCreate(String companyName) {
+        Optional<Company> company = companyRepository.findByNameAndIsActive(companyName, true);
         if (company.isPresent()) {
             if (!company.get().getIsActive()) {
                 company.get().setIsActive(true);
-                companyRepository.save(company.get());
-                return company.get();
+                return companyRepository.save(company.get());
             }
             return company.get();
         } else {
             Company newCompany = CompanyBuilder.newBuilder(companyName).isActive(true).build();
-            companyRepository.save(newCompany);
-            return newCompany;
+            return companyRepository.save(newCompany);
         }
+    }
+
+    public void setCompanyFalseByName(String name) {
+        Optional<Company> company = companyRepository.findByName(name);
+        if (company.isPresent()) {
+            company.get().setIsActive(false);
+            companyRepository.save(company.get());
+        }
+    }
+
+    public List<String> getActiveCompanies() {
+        return companyRepository.findByIsActive(true).stream()
+                .map(Company::getName)
+                .collect(Collectors.toList());
+    }
+
+    public boolean onlyAllowedCompanies(List<String> active, List<String> allowedNames, int maxCompanies) {
+        List<String> notAllowed = active.stream().filter(name -> !allowedNames.contains(name)).collect(Collectors.toList());
+        if (!notAllowed.isEmpty()) {
+            List<Company> companiesToDelete = companyRepository.findByNameList(notAllowed);
+            companyRepository.deleteAll(companiesToDelete);
+        }
+        return active.containsAll(allowedNames);
     }
 }

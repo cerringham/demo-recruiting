@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -56,31 +57,24 @@ public class CompanyService {
         return ResponseEntity.ok(companyUtility.createCompanyDto(company.get().getName(), company.get().getIsActive()));
     }
     public ResponseEntity checkCompanyPresence() {
-        List<Company> companiesBefore = companyRepository.findByIsActive(true);
-        int maxCompanies = environment.getProperty("recruiting.maxCompanies", Integer.class);
-        if (companiesBefore.size() > maxCompanies) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
         List<String> allowedNames = Arrays.asList(environment.getProperty("recruiting.allowedNames").split(","));
+        int maxCompanies = environment.getProperty("recruiting.maxCompanies", Integer.class);
+        List<Company> actual = companyRepository.findByIsActive(true);
+        List<Company> newCompanies = new ArrayList<>();
         for (String name : allowedNames) {
-            companyUtility.validCompany(name);
+            Company company = companyUtility.getCompanyIfExistsOrCreate(name);
+            newCompanies.add(company);
         }
-        List<Company> companiesAfter = companyRepository.findByIsActive(true);
-        List<String> actualCompanies = companiesAfter.stream()
-                .map(Company::getName)
-                .toList();
-        if (!actualCompanies.containsAll(allowedNames) || actualCompanies.size() != 4) {
-            List<String> notAllowed = actualCompanies.stream().filter(name -> !allowedNames.contains(name)).toList();
-            if (!notAllowed.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        if (companiesBefore.equals(companiesAfter)) {
+        if (newCompanies.equals(actual)) {
             return ResponseEntity.status(HttpStatus.OK).build();
-        } else {
+        }else if (!newCompanies.equals(actual)){
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
+        List<String> activeCompanies = companyUtility.getActiveCompanies();
+        if (!companyUtility.onlyAllowedCompanies(activeCompanies, allowedNames, maxCompanies)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     public ResponseEntity deleteCompanyByName(String name) {

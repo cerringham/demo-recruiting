@@ -22,4 +22,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     Optional<Company> findByName(String name);
 
     Optional<Company> findByNameAndIsActive(String companyName, boolean isActive);
+
+    @Query("SELECT c FROM Company c WHERE c.name IN ?1")
+    List<Company> findByNameList(List<String> nameList);
 }
