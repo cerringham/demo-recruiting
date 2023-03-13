@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @SpringBootTest
-public class CurriculumServiceTest {
+ class CurriculumServiceTest {
 
     @Autowired
     CurriculumService curriculumService;
@@ -25,7 +25,7 @@ public class CurriculumServiceTest {
 
     @Test
     void getCurriculumByIdTest() {
-        CurriculumDto curriculumDto = curriculumService.findById(1l).getBody();
+        CurriculumDto curriculumDto = curriculumService.findById(1L).getBody();
         assertNotNull(curriculumDto);
         System.out.println(curriculumDto);
     }

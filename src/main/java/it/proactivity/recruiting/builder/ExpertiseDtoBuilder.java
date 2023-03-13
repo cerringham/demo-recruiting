@@ -4,7 +4,7 @@ import it.proactivity.recruiting.model.dto.ExpertiseDto;
 
 public class ExpertiseDtoBuilder {
 
-    private String name;
+    private final String name;
 
     private Boolean isActive;
 

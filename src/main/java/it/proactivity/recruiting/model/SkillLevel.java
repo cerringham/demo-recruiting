@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "skill_level")
 @Getter
@@ -29,4 +31,18 @@ public class SkillLevel {
 
     @ManyToOne
     private JobPosition jobPosition;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SkillLevel that = (SkillLevel) o;
+        return Objects.equals(id, that.id) && Objects.equals(isActive, that.isActive) && level == that.level &&
+                Objects.equals(skill, that.skill) && Objects.equals(jobPosition, that.jobPosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, isActive, level, skill, jobPosition);
+    }
 }

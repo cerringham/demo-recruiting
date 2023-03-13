@@ -4,7 +4,7 @@ import it.proactivity.recruiting.model.dto.CompanyDto;
 
 public class CompanyDtoBuilder {
 
-    private String name;
+    private final String name;
 
     private Boolean isActive;
 

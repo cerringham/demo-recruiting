@@ -1,11 +1,11 @@
 package it.proactivity.recruiting.builder;
 
 import it.proactivity.recruiting.model.Skill;
-import it.proactivity.recruiting.model.dto.SkillDto;
+
 
 public class SkillBuilder {
 
-    private String name;
+    private final String name;
 
     private Boolean isActive;
 

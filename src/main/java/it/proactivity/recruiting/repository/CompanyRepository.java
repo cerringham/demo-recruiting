@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
     List<Company> findByIsActive(boolean isActive);
@@ -18,5 +19,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     @Query("SELECT c.cooId FROM Company c WHERE c.id = ?1")
     Long checkIfCooExists(Long companyId);
+
+    Optional<Company> findByName(String companyName);
 
 }

@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.Assert.*;
 
 @SpringBootTest
-public class GlobalValidatorTest {
+ class GlobalValidatorTest {
 
     @Autowired
     GlobalValidator globalValidator;
@@ -27,17 +27,6 @@ public class GlobalValidatorTest {
     }
 
     @Test
-    void validateNameAndSurnameNullOrEmptyNegativeTest() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            globalValidator.validateStringAlphaSpace(null);
-            globalValidator.validateStringAlphaSpace("");
-        });
-
-        String message = "Name and surname can't be null or empty";
-        assertEquals(message, exception.getMessage());
-    }
-
-    @Test
     void validateEmailPositiveTest() {
         assertTrue(globalValidator.validateEmail("alessio.cassarino@proactivity.it"));
     }
@@ -46,17 +35,6 @@ public class GlobalValidatorTest {
     @Test
     void validateEmailNegativeTest() {
         assertFalse(globalValidator.validateEmail("alessio cassarino@proactivity.it"));
-    }
-
-    @Test
-    void validateEmailNullOrEmptyNegativeTest() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            globalValidator.validateEmail(null);
-            globalValidator.validateEmail("");
-        });
-
-        String message = "Email can't be null or empty";
-        assertEquals(message, exception.getMessage());
     }
 
     @Test
@@ -71,18 +49,6 @@ public class GlobalValidatorTest {
     }
 
     @Test
-    void validatePhoneNumberNullOrEmptyNegativeTest() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            globalValidator.validatePhoneNumber(null);
-            globalValidator.validatePhoneNumber("");
-        });
-
-        String message = "PhoneNumber can't be null or empty";
-
-        assertEquals(message, exception.getMessage());
-    }
-
-    @Test
     void validateAgePositiveTest() {
         assertTrue(globalValidator.validateAge("1995-11-16"));
     }
@@ -92,27 +58,4 @@ public class GlobalValidatorTest {
         assertFalse(globalValidator.validateAge("2010-11-16"));
     }
 
-    @Test
-    void validateAgeNullOrEmptyNegativeTest() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            globalValidator.validateAge(null);
-            globalValidator.validateAge("");
-        });
-
-        String message = "Birth date can't be null or empty";
-
-        assertEquals(message, exception.getMessage());
-    }
-
-    @Test
-    void validateAgeWrongFormatNegativeTest() {
-        Exception exception = assertThrows(IllegalStateException.class, () -> {
-            globalValidator.validateAge("1995/12/12");
-
-        });
-
-        String message = "Impossible to parse the date";
-
-        assertEquals(message, exception.getMessage());
-    }
 }

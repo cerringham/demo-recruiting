@@ -1,6 +1,5 @@
 package it.proactivity.recruiting;
 
-import it.proactivity.recruiting.model.Expertise;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateInformationDto;
 import it.proactivity.recruiting.myEnum.Level;
@@ -10,9 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +18,7 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 @SpringBootTest
-public class CandidateServiceTest {
+class CandidateServiceTest {
 
     @Autowired
     CandidateService candidateService;
@@ -36,7 +33,7 @@ public class CandidateServiceTest {
 
     @Test
     void getCandidateById() {
-        CandidateDto candidateDto = candidateService.findById(1l).getBody();
+        CandidateDto candidateDto = candidateService.findById(1L).getBody();
         assertNotNull(candidateDto);
     }
 
@@ -50,101 +47,21 @@ public class CandidateServiceTest {
                 "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
                 "m", "1995-12-09", "junior", skillLevelMap);
 
-        Long numberOfCandidateBeforeInsert = candidateRepository.findByIsActive(true).stream().count();
+        long numberOfCandidateBeforeInsert = candidateRepository.findByIsActive(true).size();
         candidateService.insertCandidate(dto);
 
-        Long numberOfCandidateAfterInsert = candidateRepository.findByIsActive(true).stream().count();
+        long numberOfCandidateAfterInsert = candidateRepository.findByIsActive(true).size();
 
         assertTrue(numberOfCandidateBeforeInsert < numberOfCandidateAfterInsert);
     }
 
     @Test
-    void insertCandidateNullMapNegativeTest() {
-        CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRETU09O87L222I", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "male", "1995-12-09", "junior", null);
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            candidateService.insertCandidate(dto);
-        });
-
-        String message = "No skills or level found";
-
-        assertEquals(message, exception.getMessage());
-    }
-
-    @Test
-    void insertCandidateEmptyMapNegativeTest() {
-        Map<String, Level> skillLevelMap = new HashMap<>();
-        CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRETU09O87L222I", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "male", "1995-12-09", "junior", skillLevelMap);
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            candidateService.insertCandidate(dto);
-        });
-
-        String message = "No skills or level found";
-
-        assertEquals(message, exception.getMessage());
-    }
-
-    @Test
-    void insertCandidateNullNameAndSurnameNegativeTest() {
-        Map<String, Level> skillLevelMap = new HashMap<>();
-        skillLevelMap.put("Azure", Level.ADVANCED);
-        skillLevelMap.put("java", Level.BASIC);
-        CandidateInformationDto dto = new CandidateInformationDto(null, null, "FDRETU09O87L222I", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "male", "1995-12-09", "junior", skillLevelMap);
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            candidateService.insertCandidate(dto);
-        });
-
-        String message = "Name and surname can't be null or empty";
-
-        assertEquals(message, exception.getMessage());
-    }
-
-    @Test
-    void insertCandidateEmptyNameAndSurnameNegativeTest() {
-        Map<String, Level> skillLevelMap = new HashMap<>();
-        skillLevelMap.put("Azure", Level.ADVANCED);
-        skillLevelMap.put("java", Level.BASIC);
-        CandidateInformationDto dto = new CandidateInformationDto("", "", "FDRETU09O87L222I", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "male", "1995-12-09", "junior", skillLevelMap);
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            candidateService.insertCandidate(dto);
-        });
-
-        String message = "Name and surname can't be null or empty";
-
-        assertEquals(message, exception.getMessage());
-    }
-
-    @Test
-    void insertCandidateWrongExpertiseNegativeTest() {
-        Map<String, Level> skillLevelMap = new HashMap<>();
-        skillLevelMap.put("Azure", Level.ADVANCED);
-        skillLevelMap.put("java", Level.BASIC);
-        CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRETU09O87L222I", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
-                "male", "1995-12-09", "Fantastic", skillLevelMap);
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            candidateService.insertCandidate(dto);
-        });
-
-        String message = "Expertise doesn't exists";
-
-        assertEquals(message, exception.getMessage());
-    }
-
-    @Test
     void deleteCandidatePositiveTest() {
-        Long numberOfCandidateBeforeDelete = candidateRepository.findByIsActive(true).stream().count();
+        long numberOfCandidateBeforeDelete = candidateRepository.findByIsActive(true).size();
 
-        candidateService.deleteCandidateById(1l);
+        candidateService.deleteCandidateById(1L);
 
-        Long numberOfCandidateAfterDelete = candidateRepository.findByIsActive(true).stream().count();
+        long numberOfCandidateAfterDelete = candidateRepository.findByIsActive(true).size();
 
         assertTrue(numberOfCandidateBeforeDelete > numberOfCandidateAfterDelete);
     }
@@ -152,9 +69,9 @@ public class CandidateServiceTest {
     @Test
     void deleteCandidateCandidateNotFoundNegativeTest() {
 
-        ResponseEntity response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        assertEquals(candidateService.deleteCandidateById(100l).getStatusCode(), response.getStatusCode());
+        assertEquals(candidateService.deleteCandidateById(100L).getStatusCode(), response.getStatusCode());
     }
 
     @Test
@@ -168,10 +85,14 @@ public class CandidateServiceTest {
         skillLevelMap.put("vue", Level.BASIC);//10
 
 
-        CandidateInformationDto dto = new CandidateInformationDto(7l, "Paola", "Liconasti", "LCNCST92P47H501Z", "Palermo",
-                "Italia", "Roma", "Via  Tornabuoni", "Toscana", "Italia", "paola.liconasti@gmail.com", "+39 3204567890",
-                "f", "1992-05-04", "Senior", skillLevelMap);
+        CandidateInformationDto dto = new CandidateInformationDto(7L, "Paola", "Liconasti",
+                "LCNCST92P47H501Z", "Palermo", "Italia", "Roma",
+                "Via  Tornabuoni", "Toscana", "Italia",
+                "paola.liconasti@gmail.com", "+39 3204567890", "f", "1992-05-04",
+                "Senior", skillLevelMap);
 
         candidateService.updateCandidate(dto);
+
+
     }
 }

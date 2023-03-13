@@ -15,32 +15,21 @@ public class GlobalValidator {
     ParsingUtility parsingUtility;
 
     public Boolean validateId(Long id) {
-        if (id == null) {
-            return false;
-        }
-        return true;
+        return id != null;
     }
 
     public Boolean validateStringAlphaNumericSpace(String name) {
         if (StringUtils.isEmpty(name)) {
             return false;
         }
-        if (StringUtils.isAlphanumericSpace(name)) {
-            return true;
-        } else {
-            return false;
-        }
+        return StringUtils.isAlphanumericSpace(name);
     }
 
     public Boolean validateStringAlphaSpace(String s) {
         if (StringUtils.isEmpty(s)) {
             return false;
         }
-        if (StringUtils.isAlphaSpace(s)) {
-            return true;
-        } else {
-            return false;
-        }
+        return StringUtils.isAlphaSpace(s);
     }
 
     public Boolean validateEmail(String email) {
@@ -58,10 +47,7 @@ public class GlobalValidator {
         if (StringUtils.startsWith(phoneNumber, "+")) {
             phoneNumber = phoneNumber.replace("+", "");
         }
-        if (StringUtils.isNumericSpace(phoneNumber)) {
-            return true;
-        }
-        return false;
+        return StringUtils.isNumericSpace(phoneNumber);
     }
 
     public Boolean validateAge(String birthDate) {
@@ -74,11 +60,8 @@ public class GlobalValidator {
             return false;
         }
         Period period = Period.between(parsedBirthDate, LocalDate.now());
-        Integer eta = period.getYears();
+        int eta = period.getYears();
 
-        if (eta < 18) {
-            return false;
-        }
-        return true;
+        return eta >= 18;
     }
 }

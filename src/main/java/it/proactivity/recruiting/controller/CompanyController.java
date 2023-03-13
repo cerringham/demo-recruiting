@@ -18,11 +18,17 @@ public class CompanyController {
 
     @GetMapping("/get-all-companies")
     public ResponseEntity<List<CompanyDto>> getAll() {
-        return companyService.getdAll();
+        return companyService.getAll();
     }
 
     @GetMapping("/get-company/{id}")
     public ResponseEntity<CompanyDto> findById(@PathVariable Long id) {
         return companyService.findById(id);
     }
+
+    @GetMapping("/check-company-presence")
+    public ResponseEntity checkCompanyPresence() {
+        return companyService.checkCompanyPresence();
+    }
+
 }

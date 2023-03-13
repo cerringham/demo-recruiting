@@ -4,7 +4,7 @@ import it.proactivity.recruiting.model.dto.JobPositionDto;
 
 public class JobPositionDtoBuilder {
 
-    private String title;
+    private final String title;
 
     private String area;
 

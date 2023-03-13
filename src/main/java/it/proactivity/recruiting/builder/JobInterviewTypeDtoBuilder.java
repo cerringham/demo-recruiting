@@ -4,7 +4,7 @@ import it.proactivity.recruiting.model.dto.JobInterviewTypeDto;
 
 public class JobInterviewTypeDtoBuilder {
 
-    private String name;
+    private final String name;
 
     private JobInterviewTypeDtoBuilder(String name) {
         this.name = name;

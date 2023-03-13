@@ -76,7 +76,7 @@ public class CandidateService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         Set<String> skills = dto.getSkillLevelMap().keySet();
-        if (!candidateValidator.validateSkill(skills)) {
+        if (Boolean.FALSE.equals(candidateValidator.validateSkill(skills))) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The candidate must have at least one skill");
         }
         if (!globalValidator.validateStringAlphaSpace(dto.getName())) {

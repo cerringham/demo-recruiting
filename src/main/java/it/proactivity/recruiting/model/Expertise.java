@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -33,4 +34,20 @@ public class Expertise {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "expertise_id")
     private Set<Employee> employeeList;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Expertise expertise = (Expertise) o;
+        return Objects.equals(id, expertise.id) && Objects.equals(name, expertise.name) &&
+                Objects.equals(isActive, expertise.isActive) &&
+                Objects.equals(candidateList, expertise.candidateList) &&
+                Objects.equals(employeeList, expertise.employeeList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, isActive, candidateList, employeeList);
+    }
 }

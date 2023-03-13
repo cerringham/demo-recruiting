@@ -4,7 +4,7 @@ import it.proactivity.recruiting.model.dto.JobPositionStatusDto;
 
 public class JobPositionStatusDtoBuilder {
 
-    private String name;
+    private final String name;
 
     private Boolean isActive;
 

@@ -4,7 +4,7 @@ import it.proactivity.recruiting.model.dto.JobInterviewStatusDto;
 
 public class JobInterviewStatusDtoBuilder {
 
-    private String name;
+    private final String name;
 
     private String description;
 

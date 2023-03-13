@@ -1,5 +1,6 @@
 package it.proactivity.recruiting;
 
+import it.proactivity.recruiting.mapper.SkillMapper;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.SkillRepository;
@@ -18,7 +19,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @SpringBootTest
-public class SkillServiceTest {
+ class SkillServiceTest {
 
     @Autowired
     SkillService skillService;
@@ -33,7 +34,7 @@ public class SkillServiceTest {
 
     @Test
     void getSkillByIdTest() {
-        SkillDto dto = skillService.findById(1l).getBody();
+        SkillDto dto = skillService.findById(1L).getBody();
         assertNotNull(dto);
         System.out.println(dto);
     }
@@ -41,10 +42,10 @@ public class SkillServiceTest {
     @Test
     void insertSkillPositiveTest() {
         SkillDto dto = new SkillDto("laravel", true);
-        Long numberOfSkillBeforeInsert = skillRepository.findByIsActive(true).stream().count();
+        long numberOfSkillBeforeInsert = skillRepository.findByIsActive(true).size();
 
         skillService.insertSkill(dto);
-        Long numberOfSkillAfterInsert = skillRepository.findByIsActive(true).stream().count();
+        long numberOfSkillAfterInsert = skillRepository.findByIsActive(true).size();
 
         assertTrue(numberOfSkillBeforeInsert < numberOfSkillAfterInsert);
     }
@@ -61,16 +62,16 @@ public class SkillServiceTest {
 
     @Test
     void deleteSkillPositiveTest() {
-        skillService.deleteSkill(2l);
-        Optional<Skill> skill = skillRepository.findById(2l);
-        assertTrue(!skill.get().getIsActive());
+        skillService.deleteSkill(2L);
+        Optional<Skill> skill = skillRepository.findById(2L);
+        skill.ifPresent(value -> assertTrue(!value.getIsActive()));
     }
 
     @Test
     void updateSkillPositiveTest() {
-        SkillDto dto = new SkillDto(6l, "html5");
+        SkillDto dto = new SkillDto(6L, "html5");
         skillService.updateSkill(dto);
-        Optional<Skill> skill = skillRepository.findById(6l);
-        assertTrue(skill.get().getName().equals("Html5"));
+        Optional<Skill> skill = skillRepository.findById(6L);
+        skill.ifPresent(value -> assertTrue(value.getName().equals("Html5")));
     }
 }

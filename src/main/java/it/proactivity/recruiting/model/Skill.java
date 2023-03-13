@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "skill")
@@ -35,5 +36,20 @@ public class Skill {
     public Skill(String name, Boolean isActive) {
         this.name = name;
         this.isActive = isActive;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Skill skill = (Skill) o;
+        return Objects.equals(id, skill.id) && Objects.equals(name, skill.name) &&
+                Objects.equals(isActive, skill.isActive) &&
+                Objects.equals(candidateSkillList, skill.candidateSkillList) && Objects.equals(skillList, skill.skillList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, isActive, candidateSkillList, skillList);
     }
 }

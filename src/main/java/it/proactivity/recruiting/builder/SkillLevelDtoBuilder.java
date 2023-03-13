@@ -4,7 +4,7 @@ import it.proactivity.recruiting.model.dto.SkillLevelDto;
 
 public class SkillLevelDtoBuilder {
 
-    private Boolean isActive;
+    private final Boolean isActive;
 
     private String level;
 
