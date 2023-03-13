@@ -31,4 +31,14 @@ public class JobPositionController {
 
         return jobPositionService.insertJobPosition(dto);
     }
+
+    @PostMapping("/update-job-position")
+    public ResponseEntity updateJobPosition(@RequestBody JobPositionInsertionDto dto) {
+        return jobPositionService.updateJobPosition(dto);
+    }
+
+    @GetMapping("/delete-job-position/{id}")
+    public ResponseEntity deleteJobPosition(@PathVariable Long id) {
+        return jobPositionService.deleteJobPosition(id);
+    }
 }

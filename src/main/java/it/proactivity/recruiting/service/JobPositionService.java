@@ -2,12 +2,14 @@ package it.proactivity.recruiting.service;
 
 
 import it.proactivity.recruiting.model.JobPosition;
+import it.proactivity.recruiting.model.JobPositionStatus;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.SkillLevel;
 import it.proactivity.recruiting.model.dto.JobPositionInsertionDto;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.myEnum.Level;
 import it.proactivity.recruiting.repository.JobPositionRepository;
+import it.proactivity.recruiting.repository.JobPositionStatusRepository;
 import it.proactivity.recruiting.utility.GlobalUtility;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.JobPositionUtility;
@@ -38,6 +40,8 @@ public class JobPositionService {
 
     @Autowired
     GlobalUtility globalUtility;
+    @Autowired
+    private JobPositionStatusRepository jobPositionStatusRepository;
 
     public ResponseEntity<List<JobPositionDto>> getAll() {
         List<JobPosition> jobPositionList = jobPositionRepository.findByIsActive(true);
@@ -81,9 +85,9 @@ public class JobPositionService {
 
         //Creation of job position
         JobPosition jobPosition;
-        try{
+        try {
             jobPosition = jobPositionUtility.createJobPosition(dto);
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
@@ -94,5 +98,51 @@ public class JobPositionService {
         jobPositionRepository.save(jobPosition);
         return ResponseEntity.status(HttpStatus.OK).build();
 
+    }
+
+    public ResponseEntity updateJobPosition(JobPositionInsertionDto dto) {
+        if (dto == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if (!jobPositionValidator.validateJobPositionStatusName(dto.getJobPositionStatusName())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if (!globalValidator.validateId(dto.getId())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository
+                .findByNameAndIsActive(dto.getJobPositionStatusName(), true);
+
+        Optional<JobPosition> jobPosition = jobPositionRepository.findByIdAndIsActive(dto.getId(), true);
+
+        if (jobPositionStatus.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        if (jobPosition.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        jobPosition.get().setJobPositionStatus(jobPositionStatus.get());
+        jobPositionRepository.save(jobPosition.get());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    public ResponseEntity deleteJobPosition(Long id) {
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Optional<JobPosition> jobPosition = jobPositionRepository.findById(id);
+        if (jobPosition.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        jobPosition.get().setIsActive(false);
+        jobPositionRepository.save(jobPosition.get());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

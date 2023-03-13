@@ -119,10 +119,4 @@ public class Employee {
                 Objects.equals(jobInterviewList, employee.jobInterviewList);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence,
-                streetOfResidence, regionOfResidence, countryOfResidence, email, phoneNumber, gender, expertise,
-                companyRole, company, isActive, birthDate, jobInterviewList);
-    }
 }

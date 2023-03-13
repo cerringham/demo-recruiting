@@ -22,4 +22,5 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     Optional<Company> findByName(String companyName);
 
+    Optional<Company> findByNameAndIsActive(String capitalizeFully, boolean b);
 }

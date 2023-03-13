@@ -1,5 +1,6 @@
 package it.proactivity.recruiting;
 
+import it.proactivity.recruiting.model.JobPosition;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.model.dto.JobPositionInsertionDto;
 import it.proactivity.recruiting.myEnum.Level;
@@ -18,13 +19,15 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 @SpringBootTest
- class JobPositionServiceTest {
+class JobPositionServiceTest {
 
     @Autowired
     JobPositionService jobPositionService;
 
     @Autowired
     JobPositionRepository jobPositionRepository;
+
+    private final ResponseEntity POSITIVE_RESPONSE = ResponseEntity.status(HttpStatus.OK).build();
 
     @Test
     void getAllJobPositionTest() {
@@ -63,7 +66,7 @@ import static org.junit.Assert.*;
     void insertJobPositionWithOneExistenceSkillAndOneNewPositiveTest() {
         Map<String, Level> skillLevelMap = new HashMap<>();
         skillLevelMap.put("java", Level.ADVANCED);
-        skillLevelMap.put("c#", Level.INTERMEDIATE);
+        skillLevelMap.put("LaravelNova", Level.INTERMEDIATE);
 
         JobPositionInsertionDto dto = new JobPositionInsertionDto("Back End developer", "Software Developer",
                 "We are looking for Back end developer with one year experience", "Roma", "Lazio",
@@ -76,6 +79,28 @@ import static org.junit.Assert.*;
         long numberOfJobPositionAfterInsert = jobPositionRepository.findByIsActive(true).size();
 
         assertTrue(numberOfJobPositionBeforeInsert < numberOfJobPositionAfterInsert);
+    }
+
+    @Test
+    void updateJobPositionPositiveTest() {
+        JobPositionInsertionDto dto = new JobPositionInsertionDto(1L, "Closed");
+
+        jobPositionService.updateJobPosition(dto);
+
+        JobPosition jobPosition = jobPositionRepository.findById(1L).get();
+        assertTrue(jobPosition.getJobPositionStatus().getName().equals("Closed"));
+    }
+
+    @Test
+    void deleteJobPositionPositiveTest() {
+
+
+        ResponseEntity response = jobPositionService.deleteJobPosition(2L);
+
+        JobPosition jobPosition = jobPositionRepository.findById(2L).get();
+
+        assertTrue(!jobPosition.getIsActive());
+        assertEquals(POSITIVE_RESPONSE.getStatusCode(), response.getStatusCode());
     }
 
     @Test

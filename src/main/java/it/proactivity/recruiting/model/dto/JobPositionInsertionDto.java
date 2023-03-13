@@ -11,10 +11,11 @@ import java.util.Map;
 @Getter
 @Setter
 @NoArgsConstructor
-public class JobPositionInsertionDto extends JobPositionDto{
+public class JobPositionInsertionDto extends JobPositionDto {
 
+    private Long id;
+    private String jobPositionStatusName;
     private String companyName;
-
     private Map<String, Level> skillLevelMap = new HashMap<>();
 
     public JobPositionInsertionDto(String title, String area, String description, String city, String region, String country,
@@ -23,5 +24,10 @@ public class JobPositionInsertionDto extends JobPositionDto{
         super(title, area, description, city, region, country, isActive);
         this.companyName = companyName;
         this.skillLevelMap = skillLevelMap;
+    }
+
+    public JobPositionInsertionDto(Long id, String jobPositionStatusName) {
+        this.id = id;
+        this.jobPositionStatusName = jobPositionStatusName;
     }
 }

@@ -46,8 +46,4 @@ public class Expertise {
                 Objects.equals(employeeList, expertise.employeeList);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, isActive, candidateList, employeeList);
-    }
 }

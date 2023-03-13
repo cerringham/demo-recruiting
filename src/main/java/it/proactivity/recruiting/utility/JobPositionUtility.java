@@ -2,7 +2,6 @@ package it.proactivity.recruiting.utility;
 
 import it.proactivity.recruiting.builder.JobPositionBuilder;
 import it.proactivity.recruiting.builder.JobPositionDtoBuilder;
-import it.proactivity.recruiting.builder.SkillBuilder;
 import it.proactivity.recruiting.builder.SkillLevelBuilder;
 import it.proactivity.recruiting.model.*;
 import it.proactivity.recruiting.model.dto.JobPositionInsertionDto;
@@ -31,6 +30,11 @@ public class JobPositionUtility {
 
     @Autowired
     JobPositionStatusRepository jobPositionStatusRepository;
+
+    @Autowired
+    JobPositionValidator jobPositionValidator;
+
+
     public JobPositionDto createJobPositionDto(String title, String area, String description, String city, String region,
                                                String country, Boolean isActive) {
 
@@ -52,30 +56,24 @@ public class JobPositionUtility {
 
     public Boolean validateAllStringParametersForJobPositionInsertionDto(JobPositionInsertionDto dto) {
 
-        return globalValidator.validateStringAlphaSpace(dto.getTitle()) &&
-                globalValidator.validateStringAlphaSpace(dto.getArea()) &&
-                globalValidator.validateStringAlphaNumericSpace(dto.getDescription()) &&
-                globalValidator.validateStringAlphaSpace(dto.getCity()) &&
-                globalValidator.validateStringAlphaSpace(dto.getRegion()) &&
-                globalValidator.validateStringAlphaSpace(dto.getCountry()) &&
-                globalValidator.validateStringAlphaSpace(dto.getCompanyName());
-
+        return jobPositionValidator.validateTitle(dto.getTitle()) && jobPositionValidator.validateArea(dto.getArea()) &&
+                globalValidator.validateStringNotNullOrEmpty(dto.getDescription()) &&
+                jobPositionValidator.validateCity(dto.getCity()) &&
+                jobPositionValidator.validateRegion(dto.getRegion()) &&
+                jobPositionValidator.validateCountry(dto.getCountry()) &&
+                jobPositionValidator.validateCompanyName(dto.getCompanyName());
     }
 
     public JobPosition createJobPosition(JobPositionInsertionDto dto) {
 
         Optional<Company> company = companyRepository
-                .findByNameIgnoreCaseAndIsActive(WordUtils.capitalizeFully(dto.getCompanyName()), true);
+                .findByNameAndIsActive(WordUtils.capitalizeFully(dto.getCompanyName()), true);
 
-        Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository
-                .findByNameIgnoreCaseAndIsActive("new",true);
+        JobPositionStatus defaultJobPositionStatus = jobPositionStatusRepository
+                .findByNameAndIsActive("New", true).get();
 
         if (company.isEmpty()) {
             throw new IllegalArgumentException("Company not found");
-        }
-
-        if (jobPositionStatus.isEmpty()) {
-            throw new IllegalArgumentException("JobPositionStatus not found");
         }
 
         return JobPositionBuilder.newBuilder(dto.getTitle())
@@ -85,7 +83,7 @@ public class JobPositionUtility {
                 .region(dto.getRegion())
                 .country(dto.getCountry())
                 .company(company.get())
-                .jobPositionStatus(jobPositionStatus.get())
+                .jobPositionStatus(defaultJobPositionStatus)
                 .isActive(true)
                 .build();
     }
@@ -94,7 +92,7 @@ public class JobPositionUtility {
 
         List<SkillLevel> skillLevelList = new ArrayList<>();
 
-        skillLevelMap.entrySet().stream()
+        skillLevelMap.entrySet()
                 .forEach(e -> {
                     SkillLevel skillLevel = SkillLevelBuilder.newBuilder(e.getKey())
                             .level(e.getValue())

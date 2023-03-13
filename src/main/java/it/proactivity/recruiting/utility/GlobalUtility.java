@@ -19,52 +19,34 @@ public class GlobalUtility {
     @Autowired
     SkillRepository skillRepository;
 
-    @Autowired
-    PredicateUtility predicateUtility;
-
     public Map<Skill, Level> insertNewSkillsAndReturnSkillLevelMap(Map<String, Level> dtoMap) {
         Map<String, Level> dtoCapitalizeMap = new HashMap<>();
-        for (Map.Entry<String, Level> entry : dtoMap.entrySet()) {
-            dtoCapitalizeMap.put(WordUtils.capitalizeFully(entry.getKey()), entry.getValue());
-        }
+
+        dtoMap.forEach((key, value) -> dtoCapitalizeMap.put(WordUtils.capitalizeFully(key), value));
+
         Map<Skill, Level> skillLevelMap = new HashMap<>();
 
-        Set<String> dtoSkills = dtoMap.keySet();
+        Set<String> dtoSkills = dtoCapitalizeMap.keySet();
 
-        Set<Skill> skills = skillRepository.findByNameIgnoreCaseIn(dtoSkills);
-        //salvataggio delle skill non presenti nel db
+        Set<String> skills = skillRepository.findByNameIn(dtoSkills).stream().map(Skill::getName).collect(Collectors.toSet());
+
         if (skills.isEmpty()) {
             dtoSkills.forEach(s -> {
-                Skill skill = SkillBuilder.newBuilder(WordUtils.capitalizeFully(s)).isActive(true).build();
+                Skill skill = SkillBuilder.newBuilder(s).isActive(true).build();
                 skillLevelMap.put(skill, dtoCapitalizeMap.get(s));
                 skillRepository.save(skill);
             });
-        }
-
-        //controllo eventuale che nella mappa ci siano skill esistenti e non
-        if ((!skills.isEmpty()) && skills.size() != dtoSkills.size()) {
-
-            Set<String> nonExistentSkillsName = dtoSkills.stream()
-                    .filter(s -> predicateUtility.filterSkillsName(skills, s))
-                    .collect(Collectors.toSet());
-
-            skills.forEach(s -> skillLevelMap.put(s, dtoCapitalizeMap.get(s.getName())));
-
-            nonExistentSkillsName.forEach(s -> {
-                String correctSkillName = WordUtils.capitalizeFully(s);
-                Skill skill = SkillBuilder.newBuilder(correctSkillName).isActive(true).build();
-                skillLevelMap.put(skill, dtoCapitalizeMap.get(correctSkillName));
-                skillRepository.save(skill);
+        } else {
+            dtoSkills.forEach(s -> {
+                if (!skills.contains(s)) {
+                    Skill skill = SkillBuilder.newBuilder(s).isActive(true).build();
+                    skillLevelMap.put(skill, dtoCapitalizeMap.get(skill.getName()));
+                    skillRepository.save(skill);
+                } else {
+                    Skill skill = skillRepository.findByNameAndIsActive(s, true).get();
+                    skillLevelMap.put(skill, dtoCapitalizeMap.get(s));
+                }
             });
-        }
-
-        //Controllo che sulla mappa ci siano solo skill già esistenti
-        if (skills.size() == dtoSkills.size()) {
-
-            skills.stream()
-                    .forEach(s -> {
-                        skillLevelMap.put(s, dtoCapitalizeMap.get(s.getName()));
-                    });
         }
         return skillLevelMap;
     }
