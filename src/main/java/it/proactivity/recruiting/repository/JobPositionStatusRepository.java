@@ -12,4 +12,6 @@ public interface JobPositionStatusRepository extends JpaRepository<JobPositionSt
     List<JobPositionStatus> findByIsActive(boolean isActive);
 
     Optional<JobPositionStatus> findByIdAndIsActive(Long id, boolean isActive);
+
+    Optional<JobPositionStatus> findByNameIgnoreCaseAndIsActive(String name, Boolean isActive);
 }

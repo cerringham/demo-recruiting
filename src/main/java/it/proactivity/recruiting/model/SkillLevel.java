@@ -32,6 +32,13 @@ public class SkillLevel {
     @ManyToOne
     private JobPosition jobPosition;
 
+    public SkillLevel(Skill skill, Level level, JobPosition jobPosition, Boolean isActive) {
+        this.skill = skill;
+        this.level = level;
+        this.jobPosition = jobPosition;
+        this.isActive = isActive;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

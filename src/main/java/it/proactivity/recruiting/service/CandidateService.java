@@ -40,6 +40,9 @@ public class CandidateService {
     @Autowired
     CandidateUtility candidateUtility;
 
+    @Autowired
+    GlobalUtility globalUtility;
+
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
@@ -100,7 +103,7 @@ public class CandidateService {
         }
 
         //salvataggio ed inserimento delle nuove skill e creazione mappa skill level
-        Map<Skill, Level> skillLevelMap = candidateUtility.insertNewSkillsAndReturnSkillLevelMap(dto.getSkillLevelMap());
+        Map<Skill, Level> skillLevelMap = globalUtility.insertNewSkillsAndReturnSkillLevelMap(dto.getSkillLevelMap());
 
         //Creo il candidate e inserisco le skill che non sono presenti nel db
         Candidate candidate;
@@ -156,7 +159,7 @@ public class CandidateService {
         }
         candidate.get().setExpertise(expertise.get());
 
-        Map<Skill, Level> skillLevelMap = candidateUtility.insertNewSkillsAndReturnSkillLevelMap(dto.getSkillLevelMap());
+        Map<Skill, Level> skillLevelMap = globalUtility.insertNewSkillsAndReturnSkillLevelMap(dto.getSkillLevelMap());
 
         //creazione  lista di cv
         List<Curriculum> curriculumList = candidateUtility.createCurriculumList(skillLevelMap, candidate.get());

@@ -54,6 +54,19 @@ public class JobPosition {
     @JoinColumn(name = "job_position_id")
     private List<SkillLevel> skillList;
 
+    public JobPosition(String title, String area, String description, String city, String region, String country,
+                       Company company, JobPositionStatus jobPositionStatus, Boolean isActive) {
+        this.title = title;
+        this.area = area;
+        this.description = description;
+        this.city = city;
+        this.region = region;
+        this.country = country;
+        this.company = company;
+        this.jobPositionStatus = jobPositionStatus;
+        this.isActive = isActive;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
