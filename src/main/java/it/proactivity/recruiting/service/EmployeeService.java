@@ -134,15 +134,7 @@ public class EmployeeService {
         if (id == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id can't be null");
         }
-
-        Optional<Employee> employee = employeeRepository.findByIdAndIsActive(id, true);
-
-        if (employee.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
-        }
-
-        employee.get().setIsActive(false);
-        employeeRepository.save(employee.get());
+        employeeRepository.deleteEmployee(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

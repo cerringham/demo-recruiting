@@ -69,13 +69,7 @@ public class SkillService {
         if (id == null) {
             throw new IllegalArgumentException("Id can't be null");
         }
-        Optional<Skill> skill = skillRepository.findByIdAndIsActive(id, true);
-        if (skill.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        skill.get().setIsActive(false);
-        skillRepository.save(skill.get());
+        skillRepository.deleteSkill(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

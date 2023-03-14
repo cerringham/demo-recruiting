@@ -30,6 +30,11 @@ public class CompanyRole {
     @JoinColumn(name = "company_role_id")
     private Set<Employee> employeeList;
 
+    public CompanyRole(String name, Boolean isActive) {
+        this.name = name;
+        this.isActive = isActive;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

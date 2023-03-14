@@ -4,9 +4,7 @@ import it.proactivity.recruiting.model.dto.CompanyRoleDto;
 import it.proactivity.recruiting.service.CompanyRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,5 +22,20 @@ public class CompanyRoleController {
     @GetMapping("/get-companyRole/{id}")
     public ResponseEntity<CompanyRoleDto> findById(@PathVariable Long id) {
         return companyRoleService.findById(id);
+    }
+
+    @PostMapping("/insert-company-role")
+    public ResponseEntity insertCompanyRole(@RequestParam String name) {
+        return companyRoleService.insertCompanyRole(name);
+    }
+
+    @GetMapping("/delete-company-role/{id}")
+    public ResponseEntity deleteCompanyRole(@PathVariable Long id) {
+        return companyRoleService.deleteCompanyRole(id);
+    }
+
+    @GetMapping("/update-company-role")
+    public ResponseEntity updateCompanyRole(@RequestParam Long id, @RequestParam String name) {
+        return companyRoleService.updateCompanyRole(id, name);
     }
 }

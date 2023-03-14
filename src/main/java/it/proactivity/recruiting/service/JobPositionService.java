@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -133,12 +132,7 @@ public class JobPositionService {
         if (!globalValidator.validateId(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
-        try {
-            jobPositionRepository.deleteJobPosition(id);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        jobPositionRepository.deleteJobPosition(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

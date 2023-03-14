@@ -122,15 +122,10 @@ public class CandidateService {
     }
 
     public ResponseEntity deleteCandidateById(Long id) {
-        globalValidator.validateId(id);
-
-        Optional<Candidate> candidate = candidateRepository.findByIdAndIsActive(id, true);
-
-        if (candidate.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        candidate.get().setIsActive(false);
-        candidateRepository.save(candidate.get());
+        candidateRepository.deleteCandidate(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
