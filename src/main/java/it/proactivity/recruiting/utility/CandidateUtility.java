@@ -3,7 +3,6 @@ package it.proactivity.recruiting.utility;
 import it.proactivity.recruiting.builder.CandidateBuilder;
 import it.proactivity.recruiting.builder.CandidateDtoBuilder;
 import it.proactivity.recruiting.builder.CurriculumBuilder;
-import it.proactivity.recruiting.builder.SkillBuilder;
 import it.proactivity.recruiting.model.Candidate;
 import it.proactivity.recruiting.model.Curriculum;
 import it.proactivity.recruiting.model.Expertise;
@@ -14,12 +13,11 @@ import it.proactivity.recruiting.myEnum.Level;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
 import it.proactivity.recruiting.repository.SkillRepository;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Component
 public class CandidateUtility {

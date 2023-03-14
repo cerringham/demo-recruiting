@@ -21,8 +21,7 @@ import java.util.Set;
 @Service
 public class CompanyService {
 
-    @Value("${recruiting.maxCompanies}")
-    private int maxCompanies;
+    private static final int MAX_COMPANIES = 4;
 
     @Value("${recruiting.expectedCompany}")
     private List<String> expectedCompany;
@@ -65,12 +64,12 @@ public class CompanyService {
         List<String> companyNames = companies.stream().map(Company::getName).toList();
 
         //Check if the companies are more than 4
-        if (companies.size() > maxCompanies) {
+        if (companies.size() > MAX_COMPANIES) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         //Check if there are correct company
-            if (companies.size() == maxCompanies && Boolean.FALSE.equals(companyUtility.checkCompanyNames(companyNames,
+            if (companies.size() == MAX_COMPANIES && Boolean.FALSE.equals(companyUtility.checkCompanyNames(companyNames,
                     expectedCompany))) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -78,7 +77,7 @@ public class CompanyService {
 
         //If the companies are less than 4, I make the missing one with the flag set to true and set the flag to true for the
         //existence one
-        if (companies.size() < maxCompanies) {
+        if (companies.size() < MAX_COMPANIES) {
             Set<Company> missingCompanies = companyUtility.createMissingCompany(companies, expectedCompany);
 
             missingCompanies.forEach(c -> companyRepository.save(c));
@@ -99,7 +98,7 @@ public class CompanyService {
         If the companies are 4 and there are companies with the flag set to false , I set all the flag to true,
         else I return response ok
          */
-        if (companies.size() == maxCompanies && !companiesNotActive.isEmpty()) {
+        if (companies.size() == MAX_COMPANIES && !companiesNotActive.isEmpty()) {
             companyUtility.setIsActiveFlagToTrue(companies);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
