@@ -5,9 +5,7 @@ import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.service.JobPositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +23,15 @@ public class JobPositionController {
     @GetMapping("/get-JobPosition/{id}")
     public ResponseEntity<JobPositionDto> findById(@PathVariable Long id) {
         return jobPositionService.findById(id);
+    }
+
+    @PostMapping("/update-job-position")
+    public ResponseEntity updateJobPosition(@RequestParam Long id, @RequestParam String newStatus) {
+        return jobPositionService.updateJobPosition(id, newStatus);
+    }
+
+    @GetMapping("/delete-job-position")
+    public ResponseEntity deleteJobPosition(@RequestParam Long id) {
+        return jobPositionService.deleteJobPosition(id);
     }
 }
