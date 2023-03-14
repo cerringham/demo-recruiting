@@ -1,13 +1,19 @@
 package it.proactivity.recruiting.service;
 
 
+import it.proactivity.recruiting.builder.JobPositionBuilder;
+import it.proactivity.recruiting.model.Company;
 import it.proactivity.recruiting.model.JobPosition;
 import it.proactivity.recruiting.model.JobPositionStatus;
+import it.proactivity.recruiting.model.SkillLevel;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
+import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
+import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.repository.JobPositionRepository;
 import it.proactivity.recruiting.repository.JobPositionStatusRepository;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.JobPositionUtility;
+import it.proactivity.recruiting.utility.SkillLevelUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class JobPositionService {
@@ -30,6 +37,12 @@ public class JobPositionService {
 
     @Autowired
     JobPositionStatusRepository jobPositionStatusRepository;
+
+    @Autowired
+    CompanyRepository companyRepository;
+
+    @Autowired
+    SkillLevelUtility skillLevelUtility;
 
     public ResponseEntity<List<JobPositionDto>> getAll() {
         List<JobPosition> jobPositionList = jobPositionRepository.findByIsActive(true);
@@ -51,6 +64,33 @@ public class JobPositionService {
         return ResponseEntity.ok(jobPositionUtility.createJobPositionDto(jobPosition.get().getTitle(), jobPosition.get().getArea(),
                 jobPosition.get().getDescription(), jobPosition.get().getCity(), jobPosition.get().getRegion(),
                 jobPosition.get().getCountry(), jobPosition.get().getIsActive()));
+    }
+
+    public ResponseEntity<JobPositionWithSkillsDto> insertJobPosition(JobPositionWithSkillsDto jobPositionWithSkillsDto) {
+        if (!jobPositionUtility.validateParametersForInsert(jobPositionWithSkillsDto)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        Optional<Company> company = companyRepository.findByName(jobPositionWithSkillsDto.getCompanyName());
+        if (company.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository.findByName("New");
+        List<SkillLevel> skillLevels = jobPositionWithSkillsDto.getSkillLevelDtos().stream()
+                .map(s -> skillLevelUtility.createSkillLevelFromDto(s))
+                .collect(Collectors.toList());
+        JobPosition jobPosition = JobPositionBuilder.newBuilder(jobPositionWithSkillsDto.getTitle())
+                .area(jobPositionWithSkillsDto.getArea())
+                .description(jobPositionWithSkillsDto.getDescription())
+                .city(jobPositionWithSkillsDto.getCity())
+                .region(jobPositionWithSkillsDto.getRegion())
+                .country(jobPositionWithSkillsDto.getCountry())
+                .isActive(jobPositionWithSkillsDto.getIsActive())
+                .company(company.get())
+                .jobPositionStatus(jobPositionStatus.get())
+                .skillList(skillLevels)
+                .build();
+        jobPositionRepository.save(jobPosition);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     public ResponseEntity<JobPositionDto> updateJobPosition(Long id, String newStatus) {

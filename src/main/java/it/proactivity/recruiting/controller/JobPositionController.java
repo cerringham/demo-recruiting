@@ -2,6 +2,7 @@ package it.proactivity.recruiting.controller;
 
 
 import it.proactivity.recruiting.model.dto.JobPositionDto;
+import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
 import it.proactivity.recruiting.service.JobPositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,11 @@ public class JobPositionController {
     @GetMapping("/get-JobPosition/{id}")
     public ResponseEntity<JobPositionDto> findById(@PathVariable Long id) {
         return jobPositionService.findById(id);
+    }
+
+    @PostMapping("/insert-job-position")
+    public ResponseEntity<JobPositionWithSkillsDto> insertJobPosition (@RequestBody JobPositionWithSkillsDto jobPositionWithSkillsDto) {
+        return jobPositionService.insertJobPosition(jobPositionWithSkillsDto);
     }
 
     @PostMapping("/update-job-position")

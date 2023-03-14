@@ -26,6 +26,12 @@ public class SkillLevelDto {
         this.jobPositionTitle = jobPositionTitle;
     }
 
+    public SkillLevelDto (Boolean isActive, String level, String skillName) {
+        this.isActive = isActive;
+        this.level = level;
+        this.skillName = skillName;
+    }
+
     @Override
     public String toString() {
         return "SkillLevelDto{" +

@@ -2,6 +2,7 @@ package it.proactivity.recruiting.utility;
 
 import it.proactivity.recruiting.builder.JobPositionDtoBuilder;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
+import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -25,5 +26,16 @@ public class JobPositionUtility {
                 .country(country)
                 .isActive(isActive)
                 .build();
+    }
+
+    public Boolean validateParametersForInsert(JobPositionWithSkillsDto jobPositionWithSkillsDto) {
+        if (StringUtils.isEmpty(jobPositionWithSkillsDto.getTitle()) || StringUtils.isEmpty(jobPositionWithSkillsDto.getArea())
+        || StringUtils.isEmpty(jobPositionWithSkillsDto.getDescription()) || StringUtils.isEmpty(jobPositionWithSkillsDto.getCity())
+                || StringUtils.isEmpty(jobPositionWithSkillsDto.getRegion()) || StringUtils.isEmpty(jobPositionWithSkillsDto.getCountry())
+                || !jobPositionWithSkillsDto.getIsActive() || StringUtils.isEmpty(jobPositionWithSkillsDto.getCompanyName()) ||
+                jobPositionWithSkillsDto.getSkillLevelDtos().size() < 2) {
+            return false;
+        }
+        return true;
     }
 }
