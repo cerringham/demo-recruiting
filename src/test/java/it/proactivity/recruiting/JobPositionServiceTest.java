@@ -83,9 +83,8 @@ class JobPositionServiceTest {
 
     @Test
     void updateJobPositionPositiveTest() {
-        JobPositionInsertionDto dto = new JobPositionInsertionDto(1L, "Closed");
 
-        jobPositionService.updateJobPosition(dto);
+        jobPositionService.updateJobPosition(1L, "Closed");
 
         JobPosition jobPosition = jobPositionRepository.findById(1L).get();
         assertTrue(jobPosition.getJobPositionStatus().getName().equals("Closed"));
@@ -95,12 +94,18 @@ class JobPositionServiceTest {
     void deleteJobPositionPositiveTest() {
 
 
-        ResponseEntity response = jobPositionService.deleteJobPosition(2L);
+        ResponseEntity response = jobPositionService.deleteJobPosition(4L);
 
-        JobPosition jobPosition = jobPositionRepository.findById(2L).get();
+        JobPosition jobPosition = jobPositionRepository.findById(4L).get();
 
         assertTrue(!jobPosition.getIsActive());
         assertEquals(POSITIVE_RESPONSE.getStatusCode(), response.getStatusCode());
+    }
+
+    @Test
+    void deleteJobPositionNotExistenceNegativeTest() {
+        ResponseEntity response = jobPositionService.deleteJobPosition(400L);
+
     }
 
     @Test

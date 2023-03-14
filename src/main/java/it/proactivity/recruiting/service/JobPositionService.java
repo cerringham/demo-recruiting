@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -100,23 +101,20 @@ public class JobPositionService {
 
     }
 
-    public ResponseEntity updateJobPosition(JobPositionInsertionDto dto) {
-        if (dto == null) {
+    public ResponseEntity updateJobPosition(Long id, String value) {
+
+        if (!jobPositionValidator.validateJobPositionStatusName(value)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        if (!jobPositionValidator.validateJobPositionStatusName(dto.getJobPositionStatusName())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        if (!globalValidator.validateId(dto.getId())) {
+        if (!globalValidator.validateId(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository
-                .findByNameAndIsActive(dto.getJobPositionStatusName(), true);
+                .findByNameAndIsActive(value, true);
 
-        Optional<JobPosition> jobPosition = jobPositionRepository.findByIdAndIsActive(dto.getId(), true);
+        Optional<JobPosition> jobPosition = jobPositionRepository.findByIdAndIsActive(id, true);
 
         if (jobPositionStatus.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -136,13 +134,11 @@ public class JobPositionService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Optional<JobPosition> jobPosition = jobPositionRepository.findById(id);
-        if (jobPosition.isEmpty()) {
+        try {
+            jobPositionRepository.deleteJobPosition(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
-        jobPosition.get().setIsActive(false);
-        jobPositionRepository.save(jobPosition.get());
-        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

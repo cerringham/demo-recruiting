@@ -26,8 +26,4 @@ public class JobPositionInsertionDto extends JobPositionDto {
         this.skillLevelMap = skillLevelMap;
     }
 
-    public JobPositionInsertionDto(Long id, String jobPositionStatusName) {
-        this.id = id;
-        this.jobPositionStatusName = jobPositionStatusName;
-    }
 }
