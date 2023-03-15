@@ -26,6 +26,9 @@ public class CompanyRole {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "default_company_role")
+    private Boolean isDefault;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_role_id")
     private Set<Employee> employeeList;

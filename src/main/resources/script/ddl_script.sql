@@ -184,3 +184,16 @@ RENAME COLUMN date_formatted TO date;
 
 ALTER TABLE job_interview
 ALTER COLUMN date TYPE DATE USING date::DATE;
+
+
+CREATE TABLE IF NOT EXISTS application_constant(
+id SERIAL PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+value VARCHAR(255) NOT NULL);
+
+
+ALTER TABLE company
+ADD COLUMN default_company BOOLEAN;
+
+ALTER TABLE company_role
+ADD COLUMN default_company_role BOOLEAN;

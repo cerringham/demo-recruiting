@@ -41,7 +41,7 @@ class CompanyRoleServiceTest {
     @Test
     void insertCompanyRolePositiveTest() {
 
-        ResponseEntity response = companyRoleService.insertCompanyRole("backend developer");
+        ResponseEntity response = companyRoleService.insertCompanyRole("soap developer");
 
         assertEquals(POSITIVE_RESPONSE.getStatusCode(), response.getStatusCode());
 

@@ -3,6 +3,7 @@ package it.proactivity.recruiting.service;
 
 import it.proactivity.recruiting.model.Company;
 import it.proactivity.recruiting.model.dto.CompanyDto;
+import it.proactivity.recruiting.repository.ApplicationConstantRepository;
 import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.utility.CompanyUtility;
 import it.proactivity.recruiting.utility.GlobalValidator;
@@ -20,11 +21,6 @@ import java.util.Set;
 
 @Service
 public class CompanyService {
-
-    private static final int MAX_COMPANIES = 4;
-
-    @Value("${recruiting.expectedCompany}")
-    private List<String> expectedCompany;
     @Autowired
     CompanyRepository companyRepository;
 
@@ -33,6 +29,9 @@ public class CompanyService {
 
     @Autowired
     CompanyUtility companyUtility;
+
+    @Autowired
+    ApplicationConstantRepository applicationConstantRepository;
 
 
     public ResponseEntity<List<CompanyDto>> getAll() {
@@ -63,13 +62,16 @@ public class CompanyService {
         List<Company> companies = companyRepository.findAll();
         List<String> companyNames = companies.stream().map(Company::getName).toList();
 
+        int maxCompanies = Integer.parseInt(applicationConstantRepository.maxCompanies());
         //Check if the companies are more than 4
-        if (companies.size() > MAX_COMPANIES) {
+        if (companies.size() > maxCompanies) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
+        List<String> expectedCompany = companyRepository.findByIsDefault(true).stream().map(Company::getName).toList();
+
         //Check if there are correct company
-            if (companies.size() == MAX_COMPANIES && Boolean.FALSE.equals(companyUtility.checkCompanyNames(companyNames,
+            if (companies.size() == maxCompanies && Boolean.FALSE.equals(companyUtility.checkCompanyNames(companyNames,
                     expectedCompany))) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -77,7 +79,7 @@ public class CompanyService {
 
         //If the companies are less than 4, I make the missing one with the flag set to true and set the flag to true for the
         //existence one
-        if (companies.size() < MAX_COMPANIES) {
+        if (companies.size() < maxCompanies) {
             Set<Company> missingCompanies = companyUtility.createMissingCompany(companies, expectedCompany);
 
             missingCompanies.forEach(c -> companyRepository.save(c));
@@ -98,7 +100,7 @@ public class CompanyService {
         If the companies are 4 and there are companies with the flag set to false , I set all the flag to true,
         else I return response ok
          */
-        if (companies.size() == MAX_COMPANIES && !companiesNotActive.isEmpty()) {
+        if (companies.size() == maxCompanies && !companiesNotActive.isEmpty()) {
             companyUtility.setIsActiveFlagToTrue(companies);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {

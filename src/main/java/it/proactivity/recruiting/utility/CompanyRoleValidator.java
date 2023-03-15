@@ -1,19 +1,24 @@
 package it.proactivity.recruiting.utility;
 
+import it.proactivity.recruiting.repository.ApplicationConstantRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class CompanyRoleValidator {
 
-    private final int NAME_MAX_LENGTH = 30;
-
+    @Autowired
+    ApplicationConstantRepository attributeLengthLimitRepository;
 
     public Boolean validateName(String name) {
         if (StringUtils.isEmpty(name)) {
             return false;
         }
-        return StringUtils.isAlphaSpace(name) && name.length() < NAME_MAX_LENGTH;
+
+        int nameMaxLength = Integer.parseInt(attributeLengthLimitRepository.companyRoleNameMaxLength());
+
+        return StringUtils.isAlphaSpace(name) && name.length() < nameMaxLength;
     }
 }

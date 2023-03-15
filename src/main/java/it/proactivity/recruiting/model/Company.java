@@ -30,6 +30,9 @@ public class Company {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "default_company")
+    private Boolean isDefault;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id")
     private Set<Employee> employeeList;
