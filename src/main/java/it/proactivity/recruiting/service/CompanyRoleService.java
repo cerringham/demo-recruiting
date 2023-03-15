@@ -1,6 +1,7 @@
 package it.proactivity.recruiting.service;
 
 
+import it.proactivity.recruiting.builder.CompanyRoleBuilder;
 import it.proactivity.recruiting.model.CompanyRole;
 import it.proactivity.recruiting.model.dto.CompanyRoleDto;
 import it.proactivity.recruiting.repository.CompanyRoleRepository;
@@ -47,5 +48,21 @@ public class CompanyRoleService {
 
         return ResponseEntity.ok(companyRoleUtility.createCompanyRoleDto(companyRole.get().getName(),
                 companyRole.get().getIsActive()));
+    }
+
+    public ResponseEntity insertCompanyRole(CompanyRoleDto companyRoleDto) {
+        if (!companyRoleUtility.validParameters(companyRoleDto)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        Optional<CompanyRole> companyRole = companyRoleRepository.findByName(companyRoleDto.getName());
+        if (companyRole.isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }else {
+            CompanyRole newCompanyRole = CompanyRoleBuilder.newBuilder(companyRoleDto.getName())
+                    .isActive(true)
+                    .build();
+            companyRoleRepository.save(newCompanyRole);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
     }
 }
