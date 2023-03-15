@@ -36,6 +36,6 @@ public class SkillLevelDtoBuilder {
     }
 
     public SkillLevelDto build() {
-        return new SkillLevelDto(isActive, level, skillName, jobPositionTitle);
+        return new SkillLevelDto(isActive, level, skillName);
     }
 }

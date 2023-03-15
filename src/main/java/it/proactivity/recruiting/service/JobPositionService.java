@@ -74,7 +74,7 @@ public class JobPositionService {
         if (company.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository.findByName("New");
+        Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository.findByName(JobPosition.NEW_STATUS);
         List<SkillLevel> skillLevels = jobPositionWithSkillsDto.getSkillLevelDtos().stream()
                 .map(s -> skillLevelUtility.createSkillLevelFromDto(s))
                 .collect(Collectors.toList());
@@ -109,13 +109,10 @@ public class JobPositionService {
     }
 
     public ResponseEntity deleteJobPosition(Long id) {
-        globalValidator.validateId(id);
-        Optional<JobPosition> jobPosition = jobPositionRepository.findById(id);
-        if (jobPosition.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        jobPosition.get().setIsActive(false);
-        jobPositionRepository.save(jobPosition.get());
+        jobPositionRepository.inactivateJobPositionById(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

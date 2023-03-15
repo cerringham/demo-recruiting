@@ -15,6 +15,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class JobPosition {
 
+
+    public static String NEW_STATUS = "New";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

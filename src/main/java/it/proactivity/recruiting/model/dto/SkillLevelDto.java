@@ -17,15 +17,6 @@ public class SkillLevelDto {
 
     private String skillName;
 
-    private String jobPositionTitle;
-
-    public SkillLevelDto(Boolean isActive, String level, String skillName, String jobPositionTitle) {
-        this.isActive = isActive;
-        this.level = level;
-        this.skillName = skillName;
-        this.jobPositionTitle = jobPositionTitle;
-    }
-
     public SkillLevelDto (Boolean isActive, String level, String skillName) {
         this.isActive = isActive;
         this.level = level;
@@ -38,7 +29,6 @@ public class SkillLevelDto {
                 "isActive=" + isActive +
                 ", level='" + level + '\'' +
                 ", skillName='" + skillName + '\'' +
-                ", jobPositionTitle='" + jobPositionTitle + '\'' +
                 '}';
     }
 }

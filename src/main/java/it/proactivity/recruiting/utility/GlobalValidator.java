@@ -64,4 +64,11 @@ public class GlobalValidator {
 
         return eta >= 18;
     }
+
+    public Boolean validateDescription(String description) {
+        if (StringUtils.isEmpty(description)) {
+            return false;
+        }
+        return description.matches("[\\p{Alnum}\\s,.]+");
+    }
 }
