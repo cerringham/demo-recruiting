@@ -69,6 +69,6 @@ public class GlobalValidator {
         if (StringUtils.isEmpty(description)) {
             return false;
         }
-        return description.matches("[\\p{Alnum}\\s,.]+");
+        return true;
     }
 }

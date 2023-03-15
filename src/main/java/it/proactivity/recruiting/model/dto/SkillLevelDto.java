@@ -11,14 +11,11 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class SkillLevelDto {
 
-    private Boolean isActive;
-
     private String level;
 
     private String skillName;
 
-    public SkillLevelDto (Boolean isActive, String level, String skillName) {
-        this.isActive = isActive;
+    public SkillLevelDto (String level, String skillName) {
         this.level = level;
         this.skillName = skillName;
     }
@@ -26,7 +23,6 @@ public class SkillLevelDto {
     @Override
     public String toString() {
         return "SkillLevelDto{" +
-                "isActive=" + isActive +
                 ", level='" + level + '\'' +
                 ", skillName='" + skillName + '\'' +
                 '}';

@@ -41,7 +41,7 @@ public class SkillLevelUtility {
                     .build();
             skillRepository.save(skill.get());
         }
-        return SkillLevelBuilder.newBuilder(skillLevelDto.getIsActive())
+        return SkillLevelBuilder.newBuilder(true)
                     .skill(skill.get())
                     .level(Level.valueOf(skillLevelDto.getLevel()))
                     .build();

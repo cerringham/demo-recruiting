@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -112,7 +113,12 @@ public class JobPositionService {
         if (!globalValidator.validateId(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        jobPositionRepository.inactivateJobPositionById(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        Optional<JobPosition> jobPosition = jobPositionRepository.findById(id);
+        if (jobPosition.isPresent()) {
+            jobPositionRepository.inactivateJobPositionById(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }
