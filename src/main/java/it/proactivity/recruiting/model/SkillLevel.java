@@ -1,6 +1,6 @@
 package it.proactivity.recruiting.model;
 
-import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.project_enum.Level;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

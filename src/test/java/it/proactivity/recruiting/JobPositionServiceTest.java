@@ -3,7 +3,7 @@ package it.proactivity.recruiting;
 import it.proactivity.recruiting.model.JobPosition;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.model.dto.JobPositionInsertionDto;
-import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.project_enum.Level;
 import it.proactivity.recruiting.repository.JobPositionRepository;
 import it.proactivity.recruiting.service.JobPositionService;
 import org.junit.jupiter.api.Test;

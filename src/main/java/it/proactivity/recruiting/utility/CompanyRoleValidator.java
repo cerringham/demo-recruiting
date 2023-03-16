@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 public class CompanyRoleValidator {
 
     @Autowired
-    ApplicationConstantRepository attributeLengthLimitRepository;
+    ApplicationConstantRepository applicationConstantRepository;
 
     public Boolean validateName(String name) {
         if (StringUtils.isEmpty(name)) {
             return false;
         }
 
-        int nameMaxLength = Integer.parseInt(attributeLengthLimitRepository.companyRoleNameMaxLength());
+        int nameMaxLength = Integer.parseInt(applicationConstantRepository.companyRoleNameMaxLength());
 
         return StringUtils.isAlphaSpace(name) && name.length() < nameMaxLength;
     }

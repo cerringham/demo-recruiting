@@ -8,7 +8,6 @@ import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.utility.CompanyUtility;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

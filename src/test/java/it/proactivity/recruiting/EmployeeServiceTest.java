@@ -494,7 +494,7 @@ import static org.junit.Assert.*;
 
     @Test
     void updateEmployeeCompanyRoleNotFoundNegativeTest() {
-        EmployeeDto dto = new EmployeeDto(4l, "IJKUHG67J99Y111T", "Ludovico", "Brignani",
+        EmployeeDto dto = new EmployeeDto(4L, "IJKUHG67J99Y111T", "Ludovico", "Brignani",
                 "Siracusa", "Italia", "Siracusa", "via roma 123",
                 "Sicilia", "Italia", "ludovico.brignani@email.it",
                 "+39 2229987654", "m", true, "1985-08-12", "junior",

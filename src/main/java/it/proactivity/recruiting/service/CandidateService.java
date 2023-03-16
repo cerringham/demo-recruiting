@@ -6,7 +6,7 @@ import it.proactivity.recruiting.model.Expertise;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateInformationDto;
-import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.project_enum.Level;
 import it.proactivity.recruiting.repository.CandidateRepository;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
 import it.proactivity.recruiting.utility.*;
@@ -102,10 +102,10 @@ public class CandidateService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The candidate phoneNumber is wrong");
         }
 
-        //salvataggio ed inserimento delle nuove skill e creazione mappa skill level
+        //create and save new skill and return map of skill level
         Map<Skill, Level> skillLevelMap = globalUtility.insertNewSkillsAndReturnSkillLevelMap(dto.getSkillLevelMap());
 
-        //Creo il candidate e inserisco le skill che non sono presenti nel db
+
         Candidate candidate;
         try {
             candidate = candidateUtility.createCandidate(dto);
@@ -113,7 +113,7 @@ public class CandidateService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
-        //creazione lista di cv associate al candidate
+        //Creation curriculum list associated to candidate
         List<Curriculum> curriculumList = candidateUtility.createCurriculumList(skillLevelMap, candidate);
         candidate.setCandidateSkillList(curriculumList);
         candidateRepository.save(candidate);
@@ -143,7 +143,7 @@ public class CandidateService {
         if (parsedDate == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The Impossible to parse the date");
         }
-        //Setto tutti gli attributi di tipo stringa per il candidate
+        //Set all string parameters for candidate
         candidateUtility.setAllStringParametersForCandidate(dto, candidate.get());
 
         candidate.get().setBirthDate(parsedDate);
@@ -156,7 +156,7 @@ public class CandidateService {
 
         Map<Skill, Level> skillLevelMap = globalUtility.insertNewSkillsAndReturnSkillLevelMap(dto.getSkillLevelMap());
 
-        //creazione  lista di cv
+        //Creation of curriculum list
         List<Curriculum> curriculumList = candidateUtility.createCurriculumList(skillLevelMap, candidate.get());
 
         candidate.get().setCandidateSkillList(curriculumList);

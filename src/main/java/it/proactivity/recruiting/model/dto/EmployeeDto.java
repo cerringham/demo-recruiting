@@ -6,7 +6,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class EmployeeDto extends AnagraficalDto {
 
     private String companyName;
@@ -41,10 +40,10 @@ public class EmployeeDto extends AnagraficalDto {
 
     @Override
     public String toString() {
-        return super.getName() + " " + super.getSurname() + " nato a : " + super.getCityOfBirth() + "\n"
-                + "Residente a : " + super.getCityOfResidence() + " all'indirizzo : " + super.getStreetOfResidence() +
-                " nella regione: " + super.getRegionOfResidence() + " (" + super.getCountryOfResidence() + ")" + "\n" + "email : " +
-                super.getEmail() + " phoneNumber : " + super.getPhoneNumber() + " gender : " + super.getGender() + " data di nascita : " +
+        return super.getName() + " " + super.getSurname() + " born to : " + super.getCityOfBirth() + "\n"
+                + "Resident to : " + super.getCityOfResidence() + " address : " + super.getStreetOfResidence() +
+                " region: " + super.getRegionOfResidence() + " (" + super.getCountryOfResidence() + ")" + "\n" + "email : " +
+                super.getEmail() + " phoneNumber : " + super.getPhoneNumber() + " gender : " + super.getGender() + " date of birth : " +
                 super.getBirthDate();
     }
 }

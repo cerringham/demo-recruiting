@@ -1,9 +1,16 @@
 package it.proactivity.recruiting.model;
 
+
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "application_constant")
+@Getter
+@Setter
+@NoArgsConstructor
 public class ApplicationConstant {
 
     @Id
@@ -15,4 +22,6 @@ public class ApplicationConstant {
 
     @Column(name = "value")
     private String value;
+
+
 }

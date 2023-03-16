@@ -1,6 +1,6 @@
 package it.proactivity.recruiting.model.dto;
 
-import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.project_enum.Level;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -3,7 +3,7 @@ package it.proactivity.recruiting.builder;
 import it.proactivity.recruiting.model.JobPosition;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.SkillLevel;
-import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.project_enum.Level;
 
 
 public class SkillLevelBuilder {
@@ -12,7 +12,7 @@ public class SkillLevelBuilder {
 
     private Level level;
 
-    private Skill skill;
+    private final Skill skill;
 
     private JobPosition jobPosition;
 

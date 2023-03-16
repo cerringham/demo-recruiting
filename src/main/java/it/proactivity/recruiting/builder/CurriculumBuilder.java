@@ -3,7 +3,7 @@ package it.proactivity.recruiting.builder;
 import it.proactivity.recruiting.model.Candidate;
 import it.proactivity.recruiting.model.Curriculum;
 import it.proactivity.recruiting.model.Skill;
-import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.project_enum.Level;
 
 public class CurriculumBuilder {
 

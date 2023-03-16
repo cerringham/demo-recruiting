@@ -62,9 +62,9 @@ public class CandidateDto {
     @Override
     public String toString() {
         return name + " " + surname + " nato a : " + cityOfBirth + "\n"
-                + "Residente a : " + cityOfResidence + " all'indirizzo : " + streetOfResidence + " nella regione: " +
+                + "Resident to : " + cityOfResidence + " address : " + streetOfResidence + " region : " +
                 regionOfResidence + " (" + countryOfResidence + ")" + "\n"
-                + "email : " + email + " phoneNumber : " + phoneNumber + " gender : " + gender + " data di nascita : " +
+                + "email : " + email + " phoneNumber : " + phoneNumber + " gender : " + gender + " date of birth : " +
                 birthDate;
     }
 }

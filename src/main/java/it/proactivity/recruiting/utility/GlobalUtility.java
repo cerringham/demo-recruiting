@@ -2,7 +2,7 @@ package it.proactivity.recruiting.utility;
 
 import it.proactivity.recruiting.builder.SkillBuilder;
 import it.proactivity.recruiting.model.Skill;
-import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.project_enum.Level;
 import it.proactivity.recruiting.repository.SkillRepository;
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;

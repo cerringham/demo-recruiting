@@ -112,7 +112,7 @@ public class EmployeeService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The Employee's role can't be null or empty");
         }
 
-        //Controllo se gli employee hanno già un ceo oppure se ogni compagnia ha un coo.
+        //Check if Employee contains a ceo and every company has a coo
         if (!employeeUtility.checkIfExistCeoOrCoo(dto.getCompanyRoleName(), dto.getCompanyName())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

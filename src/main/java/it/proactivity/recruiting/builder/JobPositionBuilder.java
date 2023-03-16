@@ -7,7 +7,7 @@ import it.proactivity.recruiting.model.JobPositionStatus;
 
 public class JobPositionBuilder {
 
-    private String title;
+    private final String title;
 
     private String area;
 

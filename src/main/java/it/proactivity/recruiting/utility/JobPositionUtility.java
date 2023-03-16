@@ -6,7 +6,7 @@ import it.proactivity.recruiting.builder.SkillLevelBuilder;
 import it.proactivity.recruiting.model.*;
 import it.proactivity.recruiting.model.dto.JobPositionInsertionDto;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
-import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.project_enum.Level;
 import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.repository.JobPositionStatusRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -92,15 +92,14 @@ public class JobPositionUtility {
 
         List<SkillLevel> skillLevelList = new ArrayList<>();
 
-        skillLevelMap.entrySet()
-                .forEach(e -> {
-                    SkillLevel skillLevel = SkillLevelBuilder.newBuilder(e.getKey())
-                            .level(e.getValue())
-                            .jobPosition(jobPosition)
-                            .isActive(true)
-                            .build();
-                    skillLevelList.add(skillLevel);
-                });
+        skillLevelMap.forEach((key, value) -> {
+            SkillLevel skillLevel = SkillLevelBuilder.newBuilder(key)
+                    .level(value)
+                    .jobPosition(jobPosition)
+                    .isActive(true)
+                    .build();
+            skillLevelList.add(skillLevel);
+        });
         return skillLevelList;
     }
 }

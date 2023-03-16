@@ -1,4 +1,4 @@
-package it.proactivity.recruiting.myEnum;
+package it.proactivity.recruiting.project_enum;
 
 public enum Level {
 

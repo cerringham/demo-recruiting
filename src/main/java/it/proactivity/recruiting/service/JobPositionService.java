@@ -7,7 +7,7 @@ import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.SkillLevel;
 import it.proactivity.recruiting.model.dto.JobPositionInsertionDto;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
-import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.project_enum.Level;
 import it.proactivity.recruiting.repository.JobPositionRepository;
 import it.proactivity.recruiting.repository.JobPositionStatusRepository;
 import it.proactivity.recruiting.utility.GlobalUtility;
@@ -41,14 +41,14 @@ public class JobPositionService {
     @Autowired
     GlobalUtility globalUtility;
     @Autowired
-    private JobPositionStatusRepository jobPositionStatusRepository;
+    JobPositionStatusRepository jobPositionStatusRepository;
 
     public ResponseEntity<List<JobPositionDto>> getAll() {
         List<JobPosition> jobPositionList = jobPositionRepository.findByIsActive(true);
 
         List<JobPositionDto> dtoList = jobPositionList.stream()
-                .map(j -> jobPositionUtility.createJobPositionDto(j.getTitle(), j.getArea(), j.getDescription(), j.getCity(), j.getRegion(),
-                        j.getCountry(), j.getIsActive())).toList();
+                .map(j -> jobPositionUtility.createJobPositionDto(j.getTitle(), j.getArea(), j.getDescription(),
+                        j.getCity(), j.getRegion(), j.getCountry(), j.getIsActive())).toList();
 
         return ResponseEntity.ok(dtoList);
     }
@@ -60,9 +60,9 @@ public class JobPositionService {
         if (jobPosition.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(jobPositionUtility.createJobPositionDto(jobPosition.get().getTitle(), jobPosition.get().getArea(),
-                jobPosition.get().getDescription(), jobPosition.get().getCity(), jobPosition.get().getRegion(),
-                jobPosition.get().getCountry(), jobPosition.get().getIsActive()));
+        return ResponseEntity.ok(jobPositionUtility.createJobPositionDto(jobPosition.get().getTitle(),
+                jobPosition.get().getArea(), jobPosition.get().getDescription(), jobPosition.get().getCity(),
+                jobPosition.get().getRegion(), jobPosition.get().getCountry(), jobPosition.get().getIsActive()));
     }
 
     public ResponseEntity insertJobPosition(JobPositionInsertionDto dto) {

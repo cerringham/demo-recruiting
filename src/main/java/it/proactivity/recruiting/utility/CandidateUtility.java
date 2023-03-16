@@ -9,9 +9,8 @@ import it.proactivity.recruiting.model.Expertise;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateInformationDto;
-import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.project_enum.Level;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
-import it.proactivity.recruiting.repository.SkillRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,11 +27,6 @@ public class CandidateUtility {
     @Autowired
     ExpertiseRepository expertiseRepository;
 
-    @Autowired
-    SkillRepository skillRepository;
-
-    @Autowired
-    PredicateUtility predicateUtility;
 
     public void setAllStringParametersForCandidate(CandidateInformationDto dto, Candidate candidate) {
         candidate.setName(dto.getName());

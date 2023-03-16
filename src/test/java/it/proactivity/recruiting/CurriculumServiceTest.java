@@ -27,6 +27,6 @@ import static org.junit.Assert.assertTrue;
     void getCurriculumByIdTest() {
         CurriculumDto curriculumDto = curriculumService.findById(1L).getBody();
         assertNotNull(curriculumDto);
-        System.out.println(curriculumDto);
+
     }
 }

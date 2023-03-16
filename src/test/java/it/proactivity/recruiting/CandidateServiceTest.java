@@ -2,7 +2,7 @@ package it.proactivity.recruiting;
 
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateInformationDto;
-import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.project_enum.Level;
 import it.proactivity.recruiting.repository.CandidateRepository;
 import it.proactivity.recruiting.service.CandidateService;
 import org.junit.jupiter.api.Test;
