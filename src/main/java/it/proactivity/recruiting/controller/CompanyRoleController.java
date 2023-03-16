@@ -28,4 +28,14 @@ public class CompanyRoleController {
     public ResponseEntity insertCompanyRole(@RequestBody CompanyRoleDto companyRoleDto) {
         return companyRoleService.insertCompanyRole(companyRoleDto);
     }
+
+    @PostMapping("/update-company-role")
+    public ResponseEntity updateCompanyRole(@RequestBody CompanyRoleDto companyRoleDto) {
+        return companyRoleService.updateCompanyRole(companyRoleDto);
+    }
+
+    @PostMapping("/delete-company-role")
+    public ResponseEntity deleteCompanyRole(@RequestParam Long id) {
+        return companyRoleService.deleteCompanyRole(id);
+    }
 }

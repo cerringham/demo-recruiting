@@ -18,5 +18,5 @@ public interface JobPositionRepository extends JpaRepository<JobPosition, Long> 
     @Transactional
     @Modifying
     @Query("UPDATE JobPosition j SET j.isActive = false WHERE j.id = ?1")
-    void inactivateJobPositionById(Long id);
+    int inactivateJobPositionById(Long id);
 }

@@ -51,18 +51,53 @@ public class CompanyRoleService {
     }
 
     public ResponseEntity insertCompanyRole(CompanyRoleDto companyRoleDto) {
-        if (!companyRoleUtility.validParameters(companyRoleDto)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        Optional<CompanyRole> companyRole = companyRoleRepository.findByName(companyRoleDto.getName());
+        String companyRoleName = companyRoleUtility.validCompanyRole(companyRoleDto.getName());
+        Optional<CompanyRole> companyRole = companyRoleRepository.findByName(companyRoleName);
         if (companyRole.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }else {
-            CompanyRole newCompanyRole = CompanyRoleBuilder.newBuilder(companyRoleDto.getName())
+            CompanyRole newCompanyRole = CompanyRoleBuilder.newBuilder(companyRoleName)
                     .isActive(true)
                     .build();
             companyRoleRepository.save(newCompanyRole);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
+    }
+
+    public ResponseEntity updateCompanyRole(CompanyRoleDto companyRoleDto) {
+        if (!globalValidator.validateId(companyRoleDto.getId())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        String oldCompanyRoleName = companyRoleUtility.validCompanyRole(companyRoleDto.getName());
+        String newCompanyRoleName = companyRoleUtility.validCompanyRole(companyRoleDto.getNewName());
+        if(companyRoleUtility.checkIfDefaultRole(oldCompanyRoleName) || companyRoleUtility.checkIfDefaultRole(newCompanyRoleName)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        Optional<CompanyRole> companyRole = companyRoleRepository.findById(companyRoleDto.getId());
+        if (companyRole.isPresent()) {
+            companyRole.get().setName(newCompanyRoleName);
+            companyRole.get().setIsActive(companyRoleDto.getIsActive());
+            companyRoleRepository.save(companyRole.get());
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    public ResponseEntity deleteCompanyRole(Long id) {
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        Optional<CompanyRole> companyRole = companyRoleRepository.findById(id);
+        if (companyRole.isPresent()) {
+            if (companyRoleUtility.checkIfDefaultRole(companyRole.get().getName())){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            int deleted = companyRoleRepository.inactivateCompanyRoleById(id);
+            if (deleted == 0) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

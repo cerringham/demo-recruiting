@@ -4,12 +4,21 @@ import it.proactivity.recruiting.builder.CompanyRoleBuilder;
 import it.proactivity.recruiting.builder.CompanyRoleDtoBuilder;
 import it.proactivity.recruiting.model.CompanyRole;
 import it.proactivity.recruiting.model.dto.CompanyRoleDto;
+import it.proactivity.recruiting.repository.CompanyRoleRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CompanyRoleUtility {
+
+    @Value("${recruiting.defaultRoles}")
+    private List<String> defaultRoles;
 
     public CompanyRoleDto createCompanyRoleDto(String name, Boolean isActive) {
         if (StringUtils.isEmpty(name) || isActive == null) {
@@ -21,12 +30,16 @@ public class CompanyRoleUtility {
                 .build();
     }
 
-    public Boolean validParameters(CompanyRoleDto companyRoleDto) {
-        if (StringUtils.isEmpty(companyRoleDto.getName()) || companyRoleDto.getIsActive() == null) {
-            return false;
+    public String validCompanyRole(String companyRoleName) {
+        if (StringUtils.isEmpty(companyRoleName)) {
+            throw new NullPointerException();
         }
-        String capitalize = WordUtils.capitalizeFully(companyRoleDto.getName());
-        if (capitalize.equals(companyRoleDto.getName())) {
+        String name = WordUtils.capitalizeFully(companyRoleName);
+        return name;
+    }
+
+    public Boolean checkIfDefaultRole(String companyName) {
+        if (defaultRoles.contains(companyName)) {
             return true;
         }
         return false;

@@ -113,12 +113,10 @@ public class JobPositionService {
         if (!globalValidator.validateId(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        Optional<JobPosition> jobPosition = jobPositionRepository.findById(id);
-        if (jobPosition.isPresent()) {
-            jobPositionRepository.inactivateJobPositionById(id);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }else {
+        int deleted = jobPositionRepository.inactivateJobPositionById(id);
+        if (deleted == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -36,7 +36,7 @@ public class JobPositionController {
         return jobPositionService.updateJobPosition(id, newStatus);
     }
 
-    @GetMapping("/delete-job-position")
+    @PostMapping("/delete-job-position")
     public ResponseEntity deleteJobPosition(@RequestParam Long id) {
         return jobPositionService.deleteJobPosition(id);
     }
