@@ -4,15 +4,12 @@ import it.proactivity.recruiting.builder.CompanyRoleBuilder;
 import it.proactivity.recruiting.builder.CompanyRoleDtoBuilder;
 import it.proactivity.recruiting.model.CompanyRole;
 import it.proactivity.recruiting.model.dto.CompanyRoleDto;
-import it.proactivity.recruiting.repository.CompanyRoleRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class CompanyRoleUtility {
@@ -30,7 +27,7 @@ public class CompanyRoleUtility {
                 .build();
     }
 
-    public String validCompanyRole(String companyRoleName) {
+    public String transformCompanyRoleName(String companyRoleName) {
         if (StringUtils.isEmpty(companyRoleName)) {
             throw new NullPointerException();
         }

@@ -12,8 +12,6 @@ import lombok.Setter;
 public class CompanyRoleDto {
     private Long id;
     private String name;
-    private String newName;
-
     private Boolean isActive;
 
     public CompanyRoleDto(String name, Boolean isActive) {
@@ -21,10 +19,9 @@ public class CompanyRoleDto {
         this.isActive = isActive;
     }
 
-    public CompanyRoleDto(String name, String newName, Boolean isActive) {
+    public CompanyRoleDto(Long id, String name) {
+        this.id = id;
         this.name = name;
-        this.newName = newName;
-        this.isActive = isActive;
     }
 
     @Override

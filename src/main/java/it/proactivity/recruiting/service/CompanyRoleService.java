@@ -51,7 +51,7 @@ public class CompanyRoleService {
     }
 
     public ResponseEntity insertCompanyRole(CompanyRoleDto companyRoleDto) {
-        String companyRoleName = companyRoleUtility.validCompanyRole(companyRoleDto.getName());
+        String companyRoleName = companyRoleUtility.transformCompanyRoleName(companyRoleDto.getName());
         Optional<CompanyRole> companyRole = companyRoleRepository.findByName(companyRoleName);
         if (companyRole.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -68,19 +68,19 @@ public class CompanyRoleService {
         if (!globalValidator.validateId(companyRoleDto.getId())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        String oldCompanyRoleName = companyRoleUtility.validCompanyRole(companyRoleDto.getName());
-        String newCompanyRoleName = companyRoleUtility.validCompanyRole(companyRoleDto.getNewName());
-        if(companyRoleUtility.checkIfDefaultRole(oldCompanyRoleName) || companyRoleUtility.checkIfDefaultRole(newCompanyRoleName)) {
+        String companyRoleName = companyRoleUtility.transformCompanyRoleName(companyRoleDto.getName());
+        Optional<CompanyRole> companyRole = companyRoleRepository.findById(companyRoleDto.getId());
+        if (companyRoleUtility.checkIfDefaultRole(companyRoleName) ||
+                companyRoleUtility.checkIfDefaultRole(companyRole.get().getName())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        Optional<CompanyRole> companyRole = companyRoleRepository.findById(companyRoleDto.getId());
         if (companyRole.isPresent()) {
-            companyRole.get().setName(newCompanyRoleName);
-            companyRole.get().setIsActive(companyRoleDto.getIsActive());
+            companyRole.get().setName(companyRoleName);
+            companyRole.get().setIsActive(true);
             companyRoleRepository.save(companyRole.get());
             return ResponseEntity.status(HttpStatus.OK).build();
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     public ResponseEntity deleteCompanyRole(Long id) {
