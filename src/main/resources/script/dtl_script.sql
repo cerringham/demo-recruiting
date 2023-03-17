@@ -31,3 +31,39 @@ INSERT INTO job_interview_type (name, is_active) VALUES ('Contract proposal', tr
 INSERT INTO job_position_status (name, is_active) VALUES ('New', true);
 INSERT INTO job_position_status (name, is_active) VALUES ('Closed', true);
 INSERT INTO job_position_status (name, is_active) VALUES ('Urgent', true);
+
+
+
+INSERT INTO job_position (title, area, description, city, region, country, company_id, job_position_status_id, is_active)
+VALUES ('Software Engineer', 'Sviluppo software', 'Cerchiamo uno sviluppatore software con esperienza', 'Milano', 'Lombardia', 'Italia', 1, 1, true);
+
+INSERT INTO job_position (title, area, description, city, region, country, company_id, job_position_status_id, is_active)
+VALUES ('Software Engineer', 'Sviluppo software', 'Cerchiamo uno sviluppatore software con esperienza', 'Roma', 'Lazio', 'Italia', 2, 1, true);
+
+INSERT INTO job_position (title, area, description, city, region, country, company_id, job_position_status_id, is_active)
+VALUES ('Software Engineer', 'Sviluppo software', 'Cerchiamo uno sviluppatore software con esperienza', 'Napoli', 'Campania', 'Italia', 3, 1, true);
+
+INSERT INTO job_position (title, area, description, city, region, country, company_id, job_position_status_id, is_active)
+VALUES ('Senior Software Engineer', 'IT', 'We are looking for a Senior Software Engineer to join our team and help us develop innovative solutions for our clients.', 'San Francisco', 'California', 'USA', 1, 1, true);
+
+INSERT INTO job_position (title, area, description, city, region, country, company_id, job_position_status_id, is_active)
+VALUES ('Marketing Manager', 'Marketing', 'We are seeking a Marketing Manager to lead our marketing team and develop creative campaigns to promote our products and services.', 'London', 'England', 'UK', 2, 2, true);
+
+INSERT INTO job_position (title, area, description, city, region, country, company_id, job_position_status_id, is_active)
+VALUES ('Sviluppatore Front-end', 'Sviluppatore', 'We are looking for a talented Front_end developer to help us to create beutiful ui experience', 'New York', 'New York', 'USA', 3, 1, true);
+
+INSERT INTO job_position (title, area, description, city, region, country, company_id, job_position_status_id, is_active)
+VALUES ('Java developer', 'Back-end', 'We are looking for a talented Java developer to help us develop software', 'Milano', 'Lombardia', 'Italia', 4, 1, true);
+
+
+INSERT INTO job_position (title, area, description, city, region, country, company_id, job_position_status_id, is_active)
+VALUES ('Senior Software Engineer', 'IT', 'We are looking for a Senior Software Engineer to join our team and help us develop innovative solutions for our clients.', 'San Francisco', 'California', 'USA', 1, 3, true);
+
+INSERT INTO job_position (title, area, description, city, region, country, company_id, job_position_status_id, is_active)
+VALUES ('Marketing Manager', 'Marketing', 'We are seeking a Marketing Manager to lead our marketing team and develop creative campaigns to promote our products and services.', 'London', 'England', 'UK', 2, 3, true);
+
+INSERT INTO job_position (title, area, description, city, region, country, company_id, job_position_status_id, is_active)
+VALUES ('Sviluppatore Front-end', 'Sviluppatore', 'We are looking for a talented Front_end developer to help us to create beutiful ui experience', 'New York', 'New York', 'USA', 3, 3, true);
+
+INSERT INTO job_position (title, area, description, city, region, country, company_id, job_position_status_id, is_active)
+VALUES ('Java developer', 'Back-end', 'We are looking for a talented Java developer to help us develop software', 'Milano', 'Lombardia', 'Italia', 4, 3, true);
