@@ -3,6 +3,7 @@ package it.proactivity.recruiting.controller;
 
 import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
+import it.proactivity.recruiting.model.dto.NewAndUrgentJobPositionDto;
 import it.proactivity.recruiting.service.JobPositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class JobPositionController {
     }
 
     @PostMapping("/insert-job-position")
-    public ResponseEntity<JobPositionWithSkillsDto> insertJobPosition (@RequestBody JobPositionWithSkillsDto jobPositionWithSkillsDto) {
+    public ResponseEntity<JobPositionWithSkillsDto> insertJobPosition(@RequestBody JobPositionWithSkillsDto jobPositionWithSkillsDto) {
         return jobPositionService.insertJobPosition(jobPositionWithSkillsDto);
     }
 
@@ -39,5 +40,10 @@ public class JobPositionController {
     @PostMapping("/delete-job-position")
     public ResponseEntity deleteJobPosition(@RequestParam Long id) {
         return jobPositionService.deleteJobPosition(id);
+    }
+
+    @GetMapping("/show-job-position-active")
+    public ResponseEntity<List<NewAndUrgentJobPositionDto>> showJobPositionActive() {
+        return jobPositionService.showJobPositionActive();
     }
 }

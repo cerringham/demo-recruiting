@@ -2,12 +2,15 @@ package it.proactivity.recruiting.service;
 
 
 import it.proactivity.recruiting.builder.JobPositionBuilder;
+import it.proactivity.recruiting.builder.NewAndUrgentJobPositionDtoBuilder;
+import it.proactivity.recruiting.comparator.JobPositionComparatorSortByStatus;
 import it.proactivity.recruiting.model.Company;
 import it.proactivity.recruiting.model.JobPosition;
 import it.proactivity.recruiting.model.JobPositionStatus;
 import it.proactivity.recruiting.model.SkillLevel;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
+import it.proactivity.recruiting.model.dto.NewAndUrgentJobPositionDto;
 import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.repository.JobPositionRepository;
 import it.proactivity.recruiting.repository.JobPositionStatusRepository;
@@ -20,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -44,6 +46,9 @@ public class JobPositionService {
 
     @Autowired
     SkillLevelUtility skillLevelUtility;
+
+    @Autowired
+    JobPositionComparatorSortByStatus jobPositionComparatorSortByStatus;
 
     public ResponseEntity<List<JobPositionDto>> getAll() {
         List<JobPosition> jobPositionList = jobPositionRepository.findByIsActive(true);
@@ -118,5 +123,18 @@ public class JobPositionService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    public ResponseEntity<List<NewAndUrgentJobPositionDto>> showJobPositionActive() {
+        List<JobPosition> jobPositionList = jobPositionRepository.findByIsActive(true);
+
+        //Sorting the list with comparator
+        jobPositionList.sort(jobPositionComparatorSortByStatus);
+
+        List<NewAndUrgentJobPositionDto> dtoList = jobPositionList.stream()
+                .map(j -> jobPositionUtility.createNewAndUrgentJobPositionDto(j))
+                .toList();
+
+        return ResponseEntity.status(HttpStatus.OK).body(dtoList);
     }
 }

@@ -1,15 +1,18 @@
 package it.proactivity.recruiting;
 
 import it.proactivity.recruiting.builder.SkillLevelDtoBuilder;
+import it.proactivity.recruiting.comparator.JobPositionComparatorSortByStatus;
 import it.proactivity.recruiting.model.JobPosition;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
+import it.proactivity.recruiting.model.dto.NewAndUrgentJobPositionDto;
 import it.proactivity.recruiting.model.dto.SkillLevelDto;
 import it.proactivity.recruiting.repository.JobPositionRepository;
 import it.proactivity.recruiting.service.JobPositionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -20,13 +23,15 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @SpringBootTest
- class JobPositionServiceTest {
+class JobPositionServiceTest {
 
     @Autowired
     JobPositionService jobPositionService;
 
     @Autowired
     JobPositionRepository jobPositionRepository;
+
+    private final ResponseEntity POSITIVE_RESPONSE = ResponseEntity.status(HttpStatus.OK).build();
 
     @Test
     void getAllJobPositionTest() {
@@ -38,7 +43,7 @@ import static org.junit.Assert.*;
     void getJobPositionByIdTest() {
         JobPositionDto dto = jobPositionService.findById(11L).getBody();
         assertNotNull(dto);
-        System.out.println(dto);
+
     }
 
     @Test
@@ -79,7 +84,7 @@ import static org.junit.Assert.*;
         skillLevels.add(skill2);
 
         JobPositionWithSkillsDto jobPositionWithSkillsDto = new JobPositionWithSkillsDto("Python Developer",
-                "Software Development","Description description description", "Milan", "Lombardy", "IT", true, "Fortitude",
+                "Software Development", "Description description description", "Milan", "Lombardy", "IT", true, "Fortitude",
                 skillLevels);
         ResponseEntity response = jobPositionService.insertJobPosition(jobPositionWithSkillsDto);
 
@@ -91,7 +96,7 @@ import static org.junit.Assert.*;
         List<SkillLevelDto> skillLevels = new ArrayList<>();
 
         JobPositionWithSkillsDto jobPositionWithSkillsDto = new JobPositionWithSkillsDto("Python Developer",
-                "Software Development","Description description description", "Milan", "Lombardy", "IT", true, "Fortitude",
+                "Software Development", "Description description description", "Milan", "Lombardy", "IT", true, "Fortitude",
                 skillLevels);
         ResponseEntity response = jobPositionService.insertJobPosition(jobPositionWithSkillsDto);
 
@@ -106,12 +111,22 @@ import static org.junit.Assert.*;
         skillLevels.add(skill1);
         skillLevels.add(skill2);
 
-        JobPositionWithSkillsDto jobPositionWithSkillsDto = new JobPositionWithSkillsDto(null ,"Software Development",null,
+        JobPositionWithSkillsDto jobPositionWithSkillsDto = new JobPositionWithSkillsDto(null, "Software Development", null,
                 "Milan", "Lombardy", "IT", true, "Fortitude",
                 skillLevels);
         ResponseEntity response = jobPositionService.insertJobPosition(jobPositionWithSkillsDto);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    void showJobPositionActivePositiveTest() {
+        ResponseEntity<List<NewAndUrgentJobPositionDto>> response = jobPositionService.showJobPositionActive();
+        assertEquals(POSITIVE_RESPONSE.getStatusCode(), response.getStatusCode());
+
+        List<NewAndUrgentJobPositionDto> dtoList = response.getBody();
+        assertNotNull(dtoList);
+        assertTrue(dtoList.size() != 0);
     }
 
 }
