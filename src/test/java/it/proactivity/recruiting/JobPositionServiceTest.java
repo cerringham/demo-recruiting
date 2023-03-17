@@ -1,12 +1,16 @@
 package it.proactivity.recruiting;
 
+import it.proactivity.recruiting.builder.SimpleJobPositionDtoBuilder;
 import it.proactivity.recruiting.builder.SkillLevelDtoBuilder;
 import it.proactivity.recruiting.model.JobPosition;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
+import it.proactivity.recruiting.model.dto.SimpleJobPositionDto;
 import it.proactivity.recruiting.model.dto.SkillLevelDto;
 import it.proactivity.recruiting.repository.JobPositionRepository;
 import it.proactivity.recruiting.service.JobPositionService;
+import it.proactivity.recruiting.utility.JobPositionUtility;
+import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +31,9 @@ import static org.junit.Assert.*;
 
     @Autowired
     JobPositionRepository jobPositionRepository;
+
+    @Autowired
+    JobPositionUtility jobPositionUtility;
 
     @Test
     void getAllJobPositionTest() {
@@ -112,6 +119,24 @@ import static org.junit.Assert.*;
         ResponseEntity response = jobPositionService.insertJobPosition(jobPositionWithSkillsDto);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    void createSimpleJobPositionDtoTest() {
+        Optional<JobPosition> jobPosition = jobPositionRepository.findById(21l);
+        assertTrue(jobPosition.isPresent());
+        SimpleJobPositionDto simpleJobPositionDto = jobPositionUtility.createSimpleJobPositionDto(jobPosition.get());
+
+        assertTrue(simpleJobPositionDto.getStatus().equals("Urgent"));
+    }
+
+    @Test
+    void showJobPositionActiveTest() {
+        ResponseEntity<List<SimpleJobPositionDto>> response = jobPositionService.showJobPositionActive();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response);
+        assertNotEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
 }

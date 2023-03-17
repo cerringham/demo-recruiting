@@ -8,6 +8,7 @@ import it.proactivity.recruiting.model.JobPositionStatus;
 import it.proactivity.recruiting.model.SkillLevel;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
+import it.proactivity.recruiting.model.dto.SimpleJobPositionDto;
 import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.repository.JobPositionRepository;
 import it.proactivity.recruiting.repository.JobPositionStatusRepository;
@@ -19,8 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -118,5 +119,15 @@ public class JobPositionService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    public ResponseEntity<List<SimpleJobPositionDto>> showJobPositionActive() {
+        List<JobPosition> jobPositionList = jobPositionRepository.findByIsActive(true);
+        List<SimpleJobPositionDto> sortedList = jobPositionList.stream()
+                .map(j -> jobPositionUtility.createSimpleJobPositionDto(j))
+                .filter(s -> s.getStatus().equals("Urgent") || s.getStatus().equals("New"))
+                .sorted(Comparator.comparing(SimpleJobPositionDto::getStatus).reversed())
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(sortedList);
     }
 }

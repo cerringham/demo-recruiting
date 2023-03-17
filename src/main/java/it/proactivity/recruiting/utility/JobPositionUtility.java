@@ -1,11 +1,13 @@
 package it.proactivity.recruiting.utility;
 
 import it.proactivity.recruiting.builder.JobPositionDtoBuilder;
+import it.proactivity.recruiting.builder.SimpleJobPositionDtoBuilder;
+import it.proactivity.recruiting.model.JobPosition;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
+import it.proactivity.recruiting.model.dto.SimpleJobPositionDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,6 +45,15 @@ public class JobPositionUtility {
                 .region(region)
                 .country(country)
                 .isActive(isActive)
+                .build();
+    }
+
+    public SimpleJobPositionDto createSimpleJobPositionDto(JobPosition jobPosition) {
+        return SimpleJobPositionDtoBuilder.newBuilder(jobPosition.getJobPositionStatus().getName())
+                .companyName(jobPosition.getCompany().getName())
+                .area(jobPosition.getArea())
+                .title(jobPosition.getTitle())
+                .description(jobPosition.getDescription())
                 .build();
     }
 
