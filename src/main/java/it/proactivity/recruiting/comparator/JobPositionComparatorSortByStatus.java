@@ -9,8 +9,8 @@ import java.util.Comparator;
 public class JobPositionComparatorSortByStatus implements Comparator<JobPosition> {
     @Override
     public int compare(JobPosition j1, JobPosition j2) {
-        String status1 = j1.getJobPositionStatus().getName();
-        String status2 = j2.getJobPositionStatus().getName();
-        return status2.compareTo(status1);
+        Integer priority1 = j1.getJobPositionStatus().getPriority();
+        Integer priority2 = j2.getJobPositionStatus().getPriority();
+        return Integer.compare(priority1, priority2);
     }
 }

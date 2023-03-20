@@ -25,6 +25,9 @@ public class JobPositionStatus {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "priority")
+    private Integer priority;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "job_position_status_id")
     private List<JobPosition> jobPositionList;

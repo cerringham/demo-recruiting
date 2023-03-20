@@ -184,3 +184,6 @@ RENAME COLUMN date_formatted TO date;
 
 ALTER TABLE job_interview
 ALTER COLUMN date TYPE DATE USING date::DATE;
+
+ALTER TABLE job_position_status
+ADD COLUMN priority INT;

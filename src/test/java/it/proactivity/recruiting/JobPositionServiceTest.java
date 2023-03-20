@@ -126,11 +126,7 @@ class JobPositionServiceTest {
 
         List<NewAndUrgentJobPositionDto> dtoList = response.getBody();
         assertNotNull(dtoList);
-        assertTrue(dtoList.size() != 0);
-
-        dtoList.forEach(j -> {
-            System.out.println(j.getStatus());
-        });
+        assertTrue(dtoList.get(0).getStatus().equals("Urgent"));
     }
 
 }

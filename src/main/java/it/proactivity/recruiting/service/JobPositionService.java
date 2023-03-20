@@ -2,7 +2,6 @@ package it.proactivity.recruiting.service;
 
 
 import it.proactivity.recruiting.builder.JobPositionBuilder;
-import it.proactivity.recruiting.builder.NewAndUrgentJobPositionDtoBuilder;
 import it.proactivity.recruiting.comparator.JobPositionComparatorSortByStatus;
 import it.proactivity.recruiting.model.Company;
 import it.proactivity.recruiting.model.JobPosition;
