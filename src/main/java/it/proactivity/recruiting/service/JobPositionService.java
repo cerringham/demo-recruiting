@@ -13,7 +13,7 @@ import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.repository.JobPositionRepository;
 import it.proactivity.recruiting.repository.JobPositionStatusRepository;
 import it.proactivity.recruiting.utility.GlobalValidator;
-import it.proactivity.recruiting.utility.SimpleJobPositionStatusComparator;
+import it.proactivity.recruiting.utility.JobPositionStatusComparator;
 import it.proactivity.recruiting.utility.JobPositionUtility;
 import it.proactivity.recruiting.utility.SkillLevelUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class JobPositionService {
     SkillLevelUtility skillLevelUtility;
 
     @Autowired
-    SimpleJobPositionStatusComparator simpleJobPositionStatusComparator;
+    JobPositionStatusComparator jobPositionStatusComparator;
 
     public ResponseEntity<List<JobPositionDto>> getAll() {
         List<JobPosition> jobPositionList = jobPositionRepository.findByIsActive(true);
@@ -126,9 +127,10 @@ public class JobPositionService {
 
     public ResponseEntity<List<SimpleJobPositionDto>> showJobPositionActive() {
         List<JobPosition> jobPositionList = jobPositionRepository.findByIsActive(true);
+
         List<SimpleJobPositionDto> sortedList = jobPositionList.stream()
+                .sorted(Comparator.comparing(j -> j.getJobPositionStatus(), jobPositionStatusComparator))
                 .map(j -> jobPositionUtility.createSimpleJobPositionDto(j))
-                .sorted(simpleJobPositionStatusComparator)
                 .filter(j -> j.getStatus().equals("Urgent") || j.getStatus().equals("New"))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(sortedList);
