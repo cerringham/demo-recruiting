@@ -1,6 +1,5 @@
 package it.proactivity.recruiting;
 
-import it.proactivity.recruiting.builder.SimpleJobPositionDtoBuilder;
 import it.proactivity.recruiting.builder.SkillLevelDtoBuilder;
 import it.proactivity.recruiting.model.JobPosition;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
@@ -10,7 +9,6 @@ import it.proactivity.recruiting.model.dto.SkillLevelDto;
 import it.proactivity.recruiting.repository.JobPositionRepository;
 import it.proactivity.recruiting.service.JobPositionService;
 import it.proactivity.recruiting.utility.JobPositionUtility;
-import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -135,8 +133,19 @@ import static org.junit.Assert.*;
         ResponseEntity<List<SimpleJobPositionDto>> response = jobPositionService.showJobPositionActive();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response);
         assertNotEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        //job position closed
+        Optional<JobPosition> jobPosition = jobPositionRepository.findById(15l);
+        SimpleJobPositionDto simpleJobPositionDto = jobPositionUtility.createSimpleJobPositionDto(jobPosition.get());
+
+        List<SimpleJobPositionDto> responseBody = response.getBody();
+
+        assertNotNull(responseBody);
+        assertTrue(!responseBody.contains(simpleJobPositionDto));
+        assertTrue(responseBody.size() == 11);
+        assertTrue(responseBody.get(0).getStatus().equals("Urgent"));
+        assertTrue(responseBody.get(10).getStatus().equals("New"));
     }
 
 }
