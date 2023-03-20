@@ -1,8 +1,7 @@
 package it.proactivity.recruiting.utility;
 
-import it.proactivity.recruiting.builder.CompanyRoleBuilder;
+
 import it.proactivity.recruiting.builder.CompanyRoleDtoBuilder;
-import it.proactivity.recruiting.model.CompanyRole;
 import it.proactivity.recruiting.model.dto.CompanyRoleDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
@@ -31,23 +30,10 @@ public class CompanyRoleUtility {
         if (StringUtils.isEmpty(companyRoleName)) {
             throw new NullPointerException();
         }
-        String name = WordUtils.capitalizeFully(companyRoleName);
-        return name;
+        return WordUtils.capitalizeFully(companyRoleName);
     }
 
     public Boolean checkIfDefaultRole(String companyName) {
-        if (defaultRoles.contains(companyName)) {
-            return true;
-        }
-        return false;
-    }
-
-    public CompanyRole createCompanyRoleFromDto(String name, Boolean isActive) {
-        if (StringUtils.isEmpty(name) || isActive == null) {
-            throw new IllegalArgumentException("the parameters for creating the company role can't be null or empty");
-        }
-        return CompanyRoleBuilder.newBuilder(name)
-                .isActive(isActive)
-                .build();
+        return defaultRoles.contains(companyName);
     }
 }

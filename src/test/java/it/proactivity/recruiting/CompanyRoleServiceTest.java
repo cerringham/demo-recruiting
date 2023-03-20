@@ -47,7 +47,7 @@ import static org.junit.Assert.*;
 
     @Test
     void updateCompanyRolePositiveTest() {
-        CompanyRoleDto companyRoleDto = new CompanyRoleDto(7l, "New role");
+        CompanyRoleDto companyRoleDto = new CompanyRoleDto(7L, "New role");
         ResponseEntity response = companyRoleService.updateCompanyRole(companyRoleDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -55,10 +55,10 @@ import static org.junit.Assert.*;
 
     @Test
     void updateCompanyRoleNegativeTest() {
-        CompanyRoleDto companyRoleDto = new CompanyRoleDto(1l, "New role");
+        CompanyRoleDto companyRoleDto = new CompanyRoleDto(1L, "New role");
         ResponseEntity response1 = companyRoleService.updateCompanyRole(companyRoleDto);
 
-        CompanyRoleDto companyRoleDto2 = new CompanyRoleDto(3l, "Administration");
+        CompanyRoleDto companyRoleDto2 = new CompanyRoleDto(3L, "Administration");
         ResponseEntity response2 = companyRoleService.updateCompanyRole(companyRoleDto2);
 
         assertEquals(HttpStatus.BAD_REQUEST, response1.getStatusCode());

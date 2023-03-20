@@ -66,9 +66,6 @@ public class GlobalValidator {
     }
 
     public Boolean validateDescription(String description) {
-        if (StringUtils.isEmpty(description)) {
-            return false;
-        }
-        return true;
+        return !StringUtils.isEmpty(description);
     }
 }

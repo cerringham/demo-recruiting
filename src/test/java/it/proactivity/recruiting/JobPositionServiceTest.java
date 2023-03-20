@@ -48,7 +48,7 @@ class JobPositionServiceTest {
 
     @Test
     void deleteJobPositionPositiveTest() {
-        Optional<JobPosition> jobPosition = jobPositionRepository.findById(16l);
+        Optional<JobPosition> jobPosition = jobPositionRepository.findById(1L);
         ResponseEntity response = jobPositionService.deleteJobPosition(jobPosition.get().getId());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -56,21 +56,21 @@ class JobPositionServiceTest {
 
     @Test
     void deleteJobPositionNegativeTest() {
-        ResponseEntity response = jobPositionService.deleteJobPosition(51l);
+        ResponseEntity response = jobPositionService.deleteJobPosition(51L);
 
         assertNotEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void updateJobPositionPositiveTest() {
-        ResponseEntity response = jobPositionService.updateJobPosition(15l, "Closed");
+        ResponseEntity response = jobPositionService.updateJobPosition(5L, "Closed");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void updateJobPositionNegativeTest() {
-        ResponseEntity response = jobPositionService.updateJobPosition(15l, "Abierto");
+        ResponseEntity response = jobPositionService.updateJobPosition(15L, "Abierto");
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }

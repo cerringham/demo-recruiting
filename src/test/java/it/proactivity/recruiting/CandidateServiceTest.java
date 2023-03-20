@@ -1,5 +1,6 @@
 package it.proactivity.recruiting;
 
+import it.proactivity.recruiting.model.Candidate;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateInformationDto;
 import it.proactivity.recruiting.myEnum.Level;
@@ -93,6 +94,8 @@ class CandidateServiceTest {
 
         candidateService.updateCandidate(dto);
 
+        Candidate candidate = candidateRepository.findById(7L).get();
+        assertTrue(candidate.getExpertise().getName().equals("Senior"));
 
     }
 }

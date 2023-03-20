@@ -6,7 +6,7 @@ import it.proactivity.recruiting.myEnum.Level;
 
 public class SkillLevelBuilder {
 
-    private Boolean isActive;
+    private final Boolean isActive;
 
     private Level level;
 

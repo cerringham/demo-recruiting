@@ -36,14 +36,19 @@ public class SkillLevelUtility {
     public SkillLevel createSkillLevelFromDto(SkillLevelDto skillLevelDto) {
         Optional<Skill> skill = skillRepository.findByNameIgnoreCase(skillLevelDto.getSkillName());
         if (skill.isEmpty()) {
-            SkillBuilder.newBuilder(skillLevelDto.getSkillName())
+             Skill newSkill = SkillBuilder.newBuilder(skillLevelDto.getSkillName())
                     .isActive(true)
                     .build();
-            skillRepository.save(skill.get());
-        }
-        return SkillLevelBuilder.newBuilder(true)
+            skillRepository.save(newSkill);
+            return SkillLevelBuilder.newBuilder(true)
+                    .skill(newSkill)
+                    .level(Level.valueOf(skillLevelDto.getLevel()))
+                    .build();
+        } else {
+            return SkillLevelBuilder.newBuilder(true)
                     .skill(skill.get())
                     .level(Level.valueOf(skillLevelDto.getLevel()))
                     .build();
         }
+    }
 }

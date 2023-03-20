@@ -54,12 +54,12 @@ public class SkillService {
         }
 
         globalValidator.validateStringAlphaNumericSpace(dto.getName());
-        //cerco nel db se la skill esiste
+
         Optional<Skill> checkSkill = skillRepository.findByNameIgnoreCase(WordUtils.capitalizeFully(dto.getName()));
         if (checkSkill.isPresent()) {
             return ResponseEntity.status(HttpStatus.FOUND).build();
         }
-        //creo la skill inserendo il nome nel formato corretto
+
         Skill skill = skillUtility.createSkill(dto);
         skillRepository.save(skill);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -88,7 +88,7 @@ public class SkillService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        //controllo che il nuovo valore che assegnerò alla skill non sia già presente
+
         Optional<Skill> checkExistingSkill = skillRepository.findByNameIgnoreCase(dto.getName());
         if (checkExistingSkill.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

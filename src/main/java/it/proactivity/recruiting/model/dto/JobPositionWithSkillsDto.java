@@ -26,5 +26,5 @@ public class JobPositionWithSkillsDto {
 
     private String companyName;
 
-    private List<SkillLevelDto> skillLevelDtos;
+    private List<SkillLevelDto> skillLevelList;
 }

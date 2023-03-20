@@ -70,17 +70,19 @@ public class CompanyRoleService {
         }
         String companyRoleName = companyRoleUtility.transformCompanyRoleName(companyRoleDto.getName());
         Optional<CompanyRole> companyRole = companyRoleRepository.findById(companyRoleDto.getId());
+
+        if (companyRole.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
         if (companyRoleUtility.checkIfDefaultRole(companyRoleName) ||
                 companyRoleUtility.checkIfDefaultRole(companyRole.get().getName())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        if (companyRole.isPresent()) {
-            companyRole.get().setName(companyRoleName);
-            companyRole.get().setIsActive(true);
-            companyRoleRepository.save(companyRole.get());
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
-       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        companyRole.get().setName(companyRoleName);
+        companyRole.get().setIsActive(true);
+        companyRoleRepository.save(companyRole.get());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     public ResponseEntity deleteCompanyRole(Long id) {

@@ -8,7 +8,6 @@ import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
 import it.proactivity.recruiting.model.dto.NewAndUrgentJobPositionDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -51,23 +50,20 @@ public class JobPositionUtility {
 
     public Boolean validateParametersForInsert(JobPositionWithSkillsDto jobPositionWithSkillsDto) {
 
-        if (!globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getTitle()) ||
-                jobPositionWithSkillsDto.getTitle().length() > maxLength50 ||
-                !globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getArea()) ||
-                jobPositionWithSkillsDto.getArea().length() > maxLength20 ||
-                !globalValidator.validateDescription(jobPositionWithSkillsDto.getDescription()) ||
-                !globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCity()) ||
-                jobPositionWithSkillsDto.getCity().length() > maxLength50 ||
-                !globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getRegion()) ||
-                jobPositionWithSkillsDto.getRegion().length() > maxLength30 ||
-                !globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCountry()) ||
-                jobPositionWithSkillsDto.getCountry().length() > maxLength30 ||
-                !jobPositionWithSkillsDto.getIsActive() ||
-                !globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCompanyName()) ||
-                jobPositionWithSkillsDto.getSkillLevelDtos().size() < minSkills) {
-            return false;
-        }
-        return true;
+        return globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getTitle()) &&
+                jobPositionWithSkillsDto.getTitle().length() <= maxLength50 &&
+                globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getArea()) &&
+                jobPositionWithSkillsDto.getArea().length() <= maxLength20 &&
+                globalValidator.validateDescription(jobPositionWithSkillsDto.getDescription()) &&
+                globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCity()) &&
+                jobPositionWithSkillsDto.getCity().length() <= maxLength50 &&
+                globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getRegion()) &&
+                jobPositionWithSkillsDto.getRegion().length() <= maxLength30 &&
+                globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCountry()) &&
+                jobPositionWithSkillsDto.getCountry().length() <= maxLength30 &&
+                jobPositionWithSkillsDto.getIsActive() &&
+                globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCompanyName()) &&
+                jobPositionWithSkillsDto.getSkillLevelList().size() >= minSkills;
     }
 
     public NewAndUrgentJobPositionDto createNewAndUrgentJobPositionDto(JobPosition jobPosition) {
