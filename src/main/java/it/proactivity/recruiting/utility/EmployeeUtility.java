@@ -151,4 +151,12 @@ public class EmployeeUtility {
                 .birthDate(parsedBirthDate)
                 .build();
     }
+
+    public Employee getEmployeeFromId(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        if (employee.isPresent()) {
+            return employee.get();
+        }
+        return null;
+    }
 }

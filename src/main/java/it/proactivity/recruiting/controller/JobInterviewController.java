@@ -4,9 +4,7 @@ import it.proactivity.recruiting.model.dto.JobInterviewDto;
 import it.proactivity.recruiting.service.JobInterviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,5 +22,16 @@ public class JobInterviewController {
     @GetMapping("/get-JobInterview/{id}")
     public ResponseEntity<JobInterviewDto> findById(@PathVariable Long id) {
         return jobInterviewService.findById(id);
+    }
+
+
+    @PostMapping("/update-job-interview")
+    public ResponseEntity updateJobInterview(@RequestBody JobInterviewDto jobInterviewDto) {
+        return jobInterviewService.updateJobInterview(jobInterviewDto);
+    }
+
+    @PostMapping("/delete-job-interview")
+    public ResponseEntity deleteJobInterview (@RequestParam Long id) {
+        return jobInterviewService.deleteJobInterview(id);
     }
 }

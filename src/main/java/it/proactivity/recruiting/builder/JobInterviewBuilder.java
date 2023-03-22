@@ -2,13 +2,17 @@ package it.proactivity.recruiting.builder;
 
 import it.proactivity.recruiting.model.dto.JobInterviewDto;
 
+import java.io.StringReader;
+
 public class JobInterviewBuilder {
 
-    private final String date;
+    private Long id;
+
+    private String date;
 
     private String hour;
 
-    private String place;
+    private Long employeeId;
 
     private Integer rating;
 
@@ -20,8 +24,13 @@ public class JobInterviewBuilder {
         this.date = date;
     }
 
-    public static JobInterviewBuilder newBuilder(String date) {
+    public static JobInterviewBuilder newBuilder(String date ) {
         return new JobInterviewBuilder(date);
+    }
+
+    public JobInterviewBuilder id(Long id) {
+        this.id = id;
+        return this;
     }
 
     public JobInterviewBuilder hour(String hour) {
@@ -29,8 +38,8 @@ public class JobInterviewBuilder {
         return this;
     }
 
-    public JobInterviewBuilder place(String place) {
-        this.place = place;
+    public JobInterviewBuilder employeeId(Long employeeId) {
+        this.employeeId = employeeId;
         return this;
     }
 
@@ -50,6 +59,6 @@ public class JobInterviewBuilder {
     }
 
     public JobInterviewDto build() {
-        return new JobInterviewDto(date, hour, place, rating, note, isActive);
+        return new JobInterviewDto(id, date, hour, employeeId, rating, note, isActive);
     }
 }

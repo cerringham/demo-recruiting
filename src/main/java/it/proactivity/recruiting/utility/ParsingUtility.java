@@ -29,6 +29,15 @@ public class ParsingUtility {
         }
     }
 
+    public LocalTime parseStringToLocalTime(String hour) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        try {
+            return LocalTime.parse(hour, formatter);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
     public  LocalDate parseStringToLocalDate(String date) {
         if (date == null || date.isEmpty()) {
             return null;
