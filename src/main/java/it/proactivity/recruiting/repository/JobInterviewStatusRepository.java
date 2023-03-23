@@ -2,6 +2,7 @@ package it.proactivity.recruiting.repository;
 
 import it.proactivity.recruiting.model.JobInterviewStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface JobInterviewStatusRepository extends JpaRepository<JobInterview
     List<JobInterviewStatus> findByIsActive(boolean isActive);
 
     Optional<JobInterviewStatus> findByIdAndIsActive(Long id, boolean isActive);
+
+    Optional<JobInterviewStatus> findByName(String jobInterviewStatus);
 }

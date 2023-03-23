@@ -1,9 +1,10 @@
 package it.proactivity.recruiting.service;
 
 
-import it.proactivity.recruiting.model.JobInterview;
+import it.proactivity.recruiting.model.*;
 import it.proactivity.recruiting.model.dto.JobInterviewDto;
-import it.proactivity.recruiting.repository.JobInterviewRepository;
+import it.proactivity.recruiting.model.dto.JobInterviewInsertionDto;
+import it.proactivity.recruiting.repository.*;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.JobInterviewUtility;
 import it.proactivity.recruiting.utility.ParsingUtility;
@@ -29,6 +30,17 @@ public class JobInterviewService {
 
     @Autowired
     JobInterviewUtility jobInterviewUtility;
+    @Autowired
+    CandidateRepository candidateRepository;
+    @Autowired
+    EmployeeRepository employeeRepository;
+    @Autowired
+    JobPositionRepository jobPositionRepository;
+    @Autowired
+    JobInterviewStatusRepository jobInterviewStatusRepository;
+
+    private final String NEW_INTERVIEW_STATUS = "New";
+
 
 
     public ResponseEntity<List<JobInterviewDto>> getAll() {
@@ -52,5 +64,57 @@ public class JobInterviewService {
         return ResponseEntity.ok(jobInterviewUtility.createJobInterviewDto(parsingUtility.parseDateToString(jobInterview.get().getDate()),
                 parsingUtility.parseTimeToString(jobInterview.get().getHour()), jobInterview.get().getPlace(),
                 jobInterview.get().getRating(), jobInterview.get().getNote(), jobInterview.get().getIsActive()));
+    }
+
+    public ResponseEntity createJobInterview(JobInterviewInsertionDto dto) {
+        if (dto == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Optional<Candidate> candidate = candidateRepository.findById(dto.getCandidateId());
+        Optional<Employee> employee = employeeRepository.findById(dto.getEmployeeId());
+        Optional<JobPosition> jobPosition = jobPositionRepository.findById(dto.getJobPositionId());
+        Optional<JobInterviewStatus> jobInterviewStatus = jobInterviewStatusRepository.findByName(dto.getJobInterviewStatus());
+
+        if (candidate.isEmpty() || employee.isEmpty() || jobPosition.isEmpty() || jobInterviewStatus.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        List<JobInterview> candidateJobInterviewList = jobInterviewRepository.findByCandidateId(candidate.get().getId());
+
+        JobInterview jobInterview;
+
+        if (candidateJobInterviewList.isEmpty()) {
+
+            if (jobInterviewStatus.get().getName().equals(NEW_INTERVIEW_STATUS)) {
+
+                try {
+                    jobInterview = jobInterviewUtility.createJobInterview(candidate.get(), employee.get(),
+                            jobPosition.get(), jobInterviewStatus.get(), dto.getHour(), dto.getDate(), dto.getPlace());
+                } catch (IllegalArgumentException e) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+                }
+
+                jobInterviewRepository.save(jobInterview);
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+
+        } else {
+            if (jobInterviewUtility.jobInterviewStatusNextStep(candidateJobInterviewList, jobInterviewStatus.get())) {
+                try {
+                    jobInterview = jobInterviewUtility.createJobInterview(candidate.get(), employee.get(),
+                            jobPosition.get(), jobInterviewStatus.get(), dto.getHour(), dto.getDate(), dto.getPlace());
+                } catch (IllegalArgumentException e) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+                }
+
+                jobInterviewRepository.save(jobInterview);
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+        }
     }
 }

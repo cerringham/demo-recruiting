@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Optional;
 
 @Component
 public class ParsingUtility {
@@ -37,6 +38,16 @@ public class ParsingUtility {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
             return LocalDate.parse(date, formatter);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
+    public LocalTime parseStringToLocalTime(String time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        try{
+            return LocalTime.parse(time, formatter);
         } catch (DateTimeParseException e) {
             return null;
         }

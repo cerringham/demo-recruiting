@@ -72,7 +72,7 @@ public class Candidate {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id")
-    private List<JobInterview> candidateList;
+    private List<JobInterview> jobInterviewList;
 
     public Candidate(String name, String surname, String fiscalCode, String cityOfBirth, String countryOfBirth,
                      String cityOfResidence, String streetOfResidence, String regionOfResidence, String countryOfResidence,
@@ -94,18 +94,5 @@ public class Candidate {
         this.isActive = isActive;
         this.birthDate = birthDate;
         this.expertise = expertise;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Candidate candidate = (Candidate) o;
-        return id != null && Objects.equals(id, candidate.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
     }
 }

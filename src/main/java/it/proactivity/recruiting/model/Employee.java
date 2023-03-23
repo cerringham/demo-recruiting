@@ -99,30 +99,4 @@ public class Employee {
         this.isActive = isActive;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Employee employee = (Employee) o;
-        return Objects.equals(id, employee.id) && Objects.equals(fiscalCode, employee.fiscalCode) &&
-                Objects.equals(name, employee.name) && Objects.equals(surname, employee.surname) &&
-                Objects.equals(cityOfBirth, employee.cityOfBirth) &&
-                Objects.equals(countryOfBirth, employee.countryOfBirth) &&
-                Objects.equals(cityOfResidence, employee.cityOfResidence) &&
-                Objects.equals(streetOfResidence, employee.streetOfResidence) &&
-                Objects.equals(regionOfResidence, employee.regionOfResidence) &&
-                Objects.equals(countryOfResidence, employee.countryOfResidence) &&
-                Objects.equals(email, employee.email) && Objects.equals(phoneNumber, employee.phoneNumber) &&
-                Objects.equals(gender, employee.gender) && Objects.equals(expertise, employee.expertise) &&
-                Objects.equals(companyRole, employee.companyRole) && Objects.equals(company, employee.company) &&
-                Objects.equals(isActive, employee.isActive) && Objects.equals(birthDate, employee.birthDate) &&
-                Objects.equals(jobInterviewList, employee.jobInterviewList);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, fiscalCode, name, surname, cityOfBirth, countryOfBirth, cityOfResidence,
-                streetOfResidence, regionOfResidence, countryOfResidence, email, phoneNumber, gender, expertise,
-                companyRole, company, isActive, birthDate, jobInterviewList);
-    }
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
+
 
 @Entity
 @Table(name = "job_interview")
@@ -53,23 +53,18 @@ public class JobInterview {
     @ManyToOne
     private JobInterviewType jobInterviewType;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        JobInterview that = (JobInterview) o;
-        return Objects.equals(id, that.id) && Objects.equals(date, that.date) && Objects.equals(hour, that.hour) &&
-                Objects.equals(place, that.place) && Objects.equals(rating, that.rating) &&
-                Objects.equals(note, that.note) && Objects.equals(isActive, that.isActive) &&
-                Objects.equals(candidate, that.candidate) && Objects.equals(employee, that.employee) &&
-                Objects.equals(jobPosition, that.jobPosition) &&
-                Objects.equals(jobInterviewStatus, that.jobInterviewStatus) &&
-                Objects.equals(jobInterviewType, that.jobInterviewType);
-    }
+    public JobInterview(Candidate candidate, Employee employee, JobPosition jobPosition,
+                        JobInterviewStatus jobInterviewStatus, LocalTime hour, LocalDate date, String place,
+                        JobInterviewType jobInterviewType, Boolean isActive) {
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, date, hour, place, rating, note, isActive, candidate, employee, jobPosition,
-                jobInterviewStatus, jobInterviewType);
+        this.date = date;
+        this.hour = hour;
+        this.jobInterviewStatus = jobInterviewStatus;
+        this.jobPosition = jobPosition;
+        this.employee = employee;
+        this.candidate = candidate;
+        this.place = place;
+        this.jobInterviewType = jobInterviewType;
+        this.isActive = isActive;
     }
 }
