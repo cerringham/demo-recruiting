@@ -1,5 +1,6 @@
 package it.proactivity.recruiting.repository;
 
+import it.proactivity.recruiting.model.Candidate;
 import it.proactivity.recruiting.model.JobInterview;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,6 +19,8 @@ public interface JobInterviewRepository extends JpaRepository<JobInterview, Long
     Optional<JobInterview> findByIdAndIsActive(Long id, boolean isActive);
 
     Optional<List<JobInterview>> findByCandidateId(Long id);
+
+    Optional<JobInterview> findFirstByCandidateOrderByIdDesc(Candidate candidate);
 
     @Modifying
     @Transactional

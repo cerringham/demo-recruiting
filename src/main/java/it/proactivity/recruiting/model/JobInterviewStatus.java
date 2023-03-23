@@ -28,6 +28,9 @@ public class JobInterviewStatus {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "sequence")
+    private Integer sequence;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "job_interview_status_id")
     private List<JobInterview> jobInterviewList;
@@ -46,4 +49,6 @@ public class JobInterviewStatus {
     public int hashCode() {
         return Objects.hash(id, name, description, isActive, jobInterviewList);
     }
+
+
 }

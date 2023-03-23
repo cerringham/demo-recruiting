@@ -2,12 +2,13 @@ package it.proactivity.recruiting.utility;
 
 import it.proactivity.recruiting.builder.JobInterviewBuilder;
 import it.proactivity.recruiting.builder.JobInterviewDtoBuilder;
+import it.proactivity.recruiting.comparator.JobInterviewStatusComparator;
 import it.proactivity.recruiting.model.*;
 import it.proactivity.recruiting.model.dto.JobInterviewDto;
+import it.proactivity.recruiting.model.dto.JobInterviewInsertionDto;
 import it.proactivity.recruiting.model.dto.JobInterviewUpdateDto;
-import it.proactivity.recruiting.repository.JobInterviewRepository;
-import it.proactivity.recruiting.repository.JobInterviewStatusRepository;
-import it.proactivity.recruiting.repository.JobInterviewTypeRepository;
+import it.proactivity.recruiting.repository.*;
+import jakarta.persistence.NoResultException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JobInterviewUtility {
@@ -24,6 +26,12 @@ public class JobInterviewUtility {
 
     @Autowired
     JobInterviewStatusRepository jobInterviewStatusRepository;
+
+    @Autowired
+    EmployeeRepository employeeRepository;
+
+    @Autowired
+    JobPositionRepository jobPositionRepository;
 
     private static final String NEW_INTERVIEW_STATUS = "New";
 
@@ -42,6 +50,9 @@ public class JobInterviewUtility {
     @Autowired
     JobInterviewRepository jobInterviewRepository;
 
+    @Autowired
+    JobInterviewStatusComparator jobInterviewStatusComparator;
+
 
     public JobInterviewDto createJobInterviewDto(String date, String hour, String place, Integer rating, String note,
                                                  Boolean isActive) {
@@ -58,17 +69,27 @@ public class JobInterviewUtility {
                 .build();
     }
 
-    public JobInterview createJobInterview(Candidate candidate, Employee employee, JobPosition jobPosition,
-                                           JobInterviewStatus jobInterviewStatus, String hour, String date, String place) {
+    public JobInterview createJobInterview(Candidate candidate, JobInterviewStatus jobInterviewStatus, JobInterviewInsertionDto dto) {
 
-        LocalDate parsedDate = parsingUtility.parseStringToLocalDate(date);
+        LocalDate parsedDate = parsingUtility.parseStringToLocalDate(dto.getDate());
         if (parsedDate == null) {
             throw new IllegalArgumentException("Impossible to parse the date");
         }
 
-        LocalTime parsedTime = parsingUtility.parseStringToLocalTime(hour);
+        LocalTime parsedTime = parsingUtility.parseStringToLocalTime(dto.getHour());
         if (parsedTime == null) {
             throw new IllegalArgumentException("Impossible to parse the time");
+        }
+
+        Optional<Employee> employee = employeeRepository.findById(dto.getEmployeeId());
+        Optional<JobPosition> jobPosition = jobPositionRepository.findById(dto.getJobPositionId());
+
+        if (employee.isEmpty()) {
+            throw new NoResultException("Employee not found");
+        }
+
+        if (jobPosition.isEmpty()) {
+            throw new NoResultException("JobPosition not found");
         }
 
         JobInterviewType jobInterviewType = null;
@@ -90,39 +111,43 @@ public class JobInterviewUtility {
         }
 
         return JobInterviewBuilder.newBuilder(candidate)
-                .place(place)
+                .place(dto.getPlace())
                 .jobInterviewStatus(jobInterviewStatus)
                 .date(parsedDate)
                 .hour(parsedTime)
-                .employee(employee)
+                .employee(employee.get())
                 .jobInterviewType(jobInterviewType)
                 .isActive(true)
-                .jobPosition(jobPosition)
+                .jobPosition(jobPosition.get())
                 .build();
     }
 
 
-    public Boolean jobInterviewStatusNextStep(List<JobInterview> jobInterviewList, JobInterviewStatus jobInterviewStatus) {
+    public Boolean jobInterviewStatusNextStep(List<JobInterview> jobInterviewList, JobInterviewStatus jobInterviewStatus,
+                                              Candidate candidate) {
 
         List<JobInterviewStatus> jobInterviewStatusList = jobInterviewStatusRepository.findAll();
+        jobInterviewStatusList.sort(jobInterviewStatusComparator);
 
         List<JobInterviewStatus> candidateJobInterviewStatusList = jobInterviewList.stream()
                 .map(JobInterview::getJobInterviewStatus)
                 .toList();
 
         JobInterviewStatus nextStepStatus = jobInterviewStatusList.get(jobInterviewList.size());
-        JobInterview lastCandidateJobInterview = jobInterviewList.get(jobInterviewList.size() - 1);
+        Optional<JobInterview> lastCandidateJobInterview = jobInterviewRepository.findFirstByCandidateOrderByIdDesc(candidate);
+        if (lastCandidateJobInterview.isEmpty()) {
+            return false;
+        }
 
-
-        if (lastCandidateJobInterview.getJobInterviewStatus().getName().equals(FAILED_INTERVIEW_STATUS) ||
-                lastCandidateJobInterview.getJobInterviewStatus().getName().equals(SUCCESS_INTERVIEW_STATUS)) {
+        if (lastCandidateJobInterview.get().getJobInterviewStatus().getName().equals(FAILED_INTERVIEW_STATUS) ||
+                lastCandidateJobInterview.get().getJobInterviewStatus().getName().equals(SUCCESS_INTERVIEW_STATUS)) {
             return false;
         } else {
             if (!candidateJobInterviewStatusList.contains(nextStepStatus) &&
-                    nextStepStatus.getName().equals(jobInterviewStatus.getName())) {
+                    nextStepStatus.getName().equals(jobInterviewStatus.getName()) || jobInterviewStatus.getName().equals(FAILED_INTERVIEW_STATUS)) {
 
-                lastCandidateJobInterview.setIsActive(false);
-                jobInterviewRepository.save(lastCandidateJobInterview);
+                lastCandidateJobInterview.get().setIsActive(false);
+                jobInterviewRepository.save(lastCandidateJobInterview.get());
                 return true;
             } else {
                 return false;
@@ -149,5 +174,34 @@ public class JobInterviewUtility {
         jobInterview.setEmployee(employee);
         jobInterview.setRating(Integer.parseInt(dto.getRating()));
         jobInterview.setNote(dto.getNote());
+    }
+
+    public JobInterview createNewJobInterview(Candidate candidate, JobInterviewStatus jobInterviewStatus,
+                                              JobInterviewInsertionDto dto) {
+
+        if (jobInterviewStatus.getName().equals(NEW_INTERVIEW_STATUS)) {
+
+            try {
+                return createJobInterview(candidate, jobInterviewStatus, dto);
+            } catch (IllegalArgumentException | NoResultException e) {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public JobInterview createNextStepJobInterview(Candidate candidate, JobInterviewStatus jobInterviewStatus,
+                                                   JobInterviewInsertionDto dto, List<JobInterview> candidateJobInterviewList) {
+
+        if (jobInterviewStatusNextStep(candidateJobInterviewList, jobInterviewStatus, candidate)) {
+            try {
+                return createJobInterview(candidate, jobInterviewStatus, dto);
+            } catch (IllegalArgumentException | NoResultException e) {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 }

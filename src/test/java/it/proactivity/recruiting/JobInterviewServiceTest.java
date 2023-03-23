@@ -1,10 +1,13 @@
 package it.proactivity.recruiting;
 
+import it.proactivity.recruiting.comparator.JobInterviewStatusComparator;
 import it.proactivity.recruiting.model.JobInterview;
+import it.proactivity.recruiting.model.JobInterviewStatus;
 import it.proactivity.recruiting.model.dto.JobInterviewDto;
 import it.proactivity.recruiting.model.dto.JobInterviewInsertionDto;
 import it.proactivity.recruiting.model.dto.JobInterviewUpdateDto;
 import it.proactivity.recruiting.repository.JobInterviewRepository;
+import it.proactivity.recruiting.repository.JobInterviewStatusRepository;
 import it.proactivity.recruiting.repository.JobInterviewTypeRepository;
 import it.proactivity.recruiting.service.JobInterviewService;
 import org.junit.jupiter.api.Test;
@@ -26,7 +29,12 @@ class JobInterviewServiceTest {
     @Autowired
     JobInterviewRepository jobInterviewRepository;
 
+    @Autowired
+    JobInterviewStatusComparator jobInterviewStatusComparator;
+
     private final ResponseEntity POSITIVE_RESPONSE = ResponseEntity.status(HttpStatus.OK).build();
+    @Autowired
+    private JobInterviewStatusRepository jobInterviewStatusRepository;
 
 
     @Test
@@ -45,7 +53,7 @@ class JobInterviewServiceTest {
     @Test
     void createJobInterviewPositiveTest() {
         JobInterviewInsertionDto dto = new JobInterviewInsertionDto("12:00", "2023-03-22", "Milan",
-                "New", 4L, 4L, 1L);
+                "Failed", 4L, 4L, 1L);
 
         ResponseEntity response = jobInterviewService.createJobInterview(dto);
 
@@ -76,5 +84,12 @@ class JobInterviewServiceTest {
         JobInterview jobInterview = jobInterviewRepository.findById(31L).get();
 
         assertFalse(jobInterview.getIsActive());
+    }
+
+    @Test
+    void test() {
+        List<JobInterviewStatus> jobInterviewStatusList = jobInterviewStatusRepository.findAll();
+        jobInterviewStatusList.sort(jobInterviewStatusComparator);
+        jobInterviewStatusList.stream().forEach(j -> System.out.println(j.getName()));
     }
 }

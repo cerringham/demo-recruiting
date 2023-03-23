@@ -85,11 +85,13 @@ public class JobInterviewService {
         }
 
         Optional<Candidate> candidate = candidateRepository.findById(dto.getCandidateId());
-        Optional<Employee> employee = employeeRepository.findById(dto.getEmployeeId());
-        Optional<JobPosition> jobPosition = jobPositionRepository.findById(dto.getJobPositionId());
+        if (candidate.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
         Optional<JobInterviewStatus> jobInterviewStatus = jobInterviewStatusRepository.findByName(dto.getJobInterviewStatus());
 
-        if (candidate.isEmpty() || employee.isEmpty() || jobPosition.isEmpty() || jobInterviewStatus.isEmpty()) {
+        if (jobInterviewStatus.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
@@ -100,37 +102,16 @@ public class JobInterviewService {
 
         if (candidateJobInterviewList.isPresent() && candidateJobInterviewList.get().isEmpty()) {
 
-            if (jobInterviewStatus.get().getName().equals(NEW_INTERVIEW_STATUS)) {
-
-                try {
-                    jobInterview = jobInterviewUtility.createJobInterview(candidate.get(), employee.get(),
-                            jobPosition.get(), jobInterviewStatus.get(), dto.getHour(), dto.getDate(), dto.getPlace());
-                } catch (IllegalArgumentException e) {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-                }
-
-                jobInterviewRepository.save(jobInterview);
-                return ResponseEntity.status(HttpStatus.OK).build();
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }
-
+            jobInterview = jobInterviewUtility.createNewJobInterview(candidate.get(), jobInterviewStatus.get(), dto);
         } else {
-            if (candidateJobInterviewList.isPresent() &&
-                    jobInterviewUtility.jobInterviewStatusNextStep(candidateJobInterviewList.get(), jobInterviewStatus.get())) {
-                try {
-                    jobInterview = jobInterviewUtility.createJobInterview(candidate.get(), employee.get(),
-                            jobPosition.get(), jobInterviewStatus.get(), dto.getHour(), dto.getDate(), dto.getPlace());
-                } catch (IllegalArgumentException e) {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-                }
-
-                jobInterviewRepository.save(jobInterview);
-                return ResponseEntity.status(HttpStatus.OK).build();
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }
+            jobInterview = jobInterviewUtility.createNextStepJobInterview(candidate.get(), jobInterviewStatus.get(), dto,
+                    candidateJobInterviewList.get());
         }
+        if (jobInterview == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        jobInterviewRepository.save(jobInterview);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     public ResponseEntity updateJobInterview(JobInterviewUpdateDto dto) {
@@ -182,4 +163,6 @@ public class JobInterviewService {
         jobInterviewRepository.deleteJobInterview(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+
 }
