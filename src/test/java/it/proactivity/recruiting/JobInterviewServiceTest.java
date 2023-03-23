@@ -1,7 +1,11 @@
 package it.proactivity.recruiting;
 
+import it.proactivity.recruiting.model.JobInterview;
 import it.proactivity.recruiting.model.dto.JobInterviewDto;
 import it.proactivity.recruiting.model.dto.JobInterviewInsertionDto;
+import it.proactivity.recruiting.model.dto.JobInterviewUpdateDto;
+import it.proactivity.recruiting.repository.JobInterviewRepository;
+import it.proactivity.recruiting.repository.JobInterviewTypeRepository;
 import it.proactivity.recruiting.service.JobInterviewService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +18,16 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @SpringBootTest
- class JobInterviewServiceTest {
+class JobInterviewServiceTest {
 
     @Autowired
     JobInterviewService jobInterviewService;
 
+    @Autowired
+    JobInterviewRepository jobInterviewRepository;
+
     private final ResponseEntity POSITIVE_RESPONSE = ResponseEntity.status(HttpStatus.OK).build();
+
 
     @Test
     void getAllJobInterviewTest() {
@@ -36,12 +44,37 @@ import static org.junit.Assert.*;
 
     @Test
     void createJobInterviewPositiveTest() {
-        JobInterviewInsertionDto dto = new JobInterviewInsertionDto("12:00","2023-03-22", "Milan",
-                "Success", 4L, 2L, 1L);
+        JobInterviewInsertionDto dto = new JobInterviewInsertionDto("12:00", "2023-03-22", "Milan",
+                "New", 4L, 4L, 1L);
 
         ResponseEntity response = jobInterviewService.createJobInterview(dto);
 
         assertEquals(POSITIVE_RESPONSE.getStatusCode(), response.getStatusCode());
 
+    }
+
+    @Test
+    void updateJobInterviewPositiveTest() {
+        JobInterviewUpdateDto dto = new JobInterviewUpdateDto(31L, "2023-03-23", "17:00", "1", "Good candidate",
+                7L);
+
+        JobInterview jobInterviewBeforeUpdate = jobInterviewRepository.findById(31L).get();
+        assertTrue(jobInterviewBeforeUpdate.getRating() == 10);
+
+        jobInterviewService.updateJobInterview(dto);
+
+        JobInterview jobInterviewAfterUpdate = jobInterviewRepository.findById(31L).get();
+
+        assertTrue(jobInterviewAfterUpdate.getRating() == 1);
+
+    }
+
+    @Test
+    void deleteJobInterviewPositiveTest() {
+        jobInterviewService.deleteJobInterview(31L);
+
+        JobInterview jobInterview = jobInterviewRepository.findById(31L).get();
+
+        assertFalse(jobInterview.getIsActive());
     }
 }

@@ -4,6 +4,7 @@ import it.proactivity.recruiting.builder.JobInterviewBuilder;
 import it.proactivity.recruiting.builder.JobInterviewDtoBuilder;
 import it.proactivity.recruiting.model.*;
 import it.proactivity.recruiting.model.dto.JobInterviewDto;
+import it.proactivity.recruiting.model.dto.JobInterviewUpdateDto;
 import it.proactivity.recruiting.repository.JobInterviewRepository;
 import it.proactivity.recruiting.repository.JobInterviewStatusRepository;
 import it.proactivity.recruiting.repository.JobInterviewTypeRepository;
@@ -15,8 +16,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-
-
 @Component
 public class JobInterviewUtility {
 
@@ -26,19 +25,18 @@ public class JobInterviewUtility {
     @Autowired
     JobInterviewStatusRepository jobInterviewStatusRepository;
 
-    private final String NEW_INTERVIEW_STATUS = "New";
+    private static final String NEW_INTERVIEW_STATUS = "New";
 
-    private final String BEHAVIORAL_INTERVIEW_STATUS = "Behavioral";
+    private static final String BEHAVIORAL_INTERVIEW_STATUS = "Behavioral";
 
-    private final String TECHNICAL_TO_DO_INTERVIEW_STATUS = "Technical to do";
+    private static final String TECHNICAL_TO_DO_INTERVIEW_STATUS = "Technical to do";
 
-    private final String TECHNICAL_INTERVIEW_STATUS = "Technical";
+    private static final String TECHNICAL_INTERVIEW_STATUS = "Technical";
 
-    private final String SUCCESS_INTERVIEW_STATUS = "Success";
+    private static final String SUCCESS_INTERVIEW_STATUS = "Success";
 
-    private final String FAILED_INTERVIEW_STATUS = "Failed";
+    private static final String FAILED_INTERVIEW_STATUS = "Failed";
 
-    private final Integer MAX_STEP = 5;
     @Autowired
     JobInterviewTypeRepository jobInterviewTypeRepository;
     @Autowired
@@ -76,9 +74,9 @@ public class JobInterviewUtility {
         JobInterviewType jobInterviewType = null;
 
         if (jobInterviewStatus.getName().equals(NEW_INTERVIEW_STATUS) ||
-                jobInterviewStatus.getName().equals(BEHAVIORAL_INTERVIEW_STATUS) ) {
+                jobInterviewStatus.getName().equals(BEHAVIORAL_INTERVIEW_STATUS)) {
 
-             jobInterviewType = jobInterviewTypeRepository.findBehavioral();
+            jobInterviewType = jobInterviewTypeRepository.findBehavioral();
         }
 
         if (jobInterviewStatus.getName().equals(TECHNICAL_TO_DO_INTERVIEW_STATUS) ||
@@ -115,17 +113,9 @@ public class JobInterviewUtility {
         JobInterviewStatus nextStepStatus = jobInterviewStatusList.get(jobInterviewList.size());
         JobInterview lastCandidateJobInterview = jobInterviewList.get(jobInterviewList.size() - 1);
 
-        if (jobInterviewList.size() <= MAX_STEP) {
-            if (jobInterviewStatus.getName().equals(FAILED_INTERVIEW_STATUS) ||
-                    jobInterviewStatus.getName().equals(SUCCESS_INTERVIEW_STATUS)) {
 
-                lastCandidateJobInterview.setIsActive(false);
-                jobInterviewRepository.save(lastCandidateJobInterview);
-                return true;
-            }
-        }
-
-        if (lastCandidateJobInterview.getJobInterviewStatus().getName().equals(FAILED_INTERVIEW_STATUS)) {
+        if (lastCandidateJobInterview.getJobInterviewStatus().getName().equals(FAILED_INTERVIEW_STATUS) ||
+                lastCandidateJobInterview.getJobInterviewStatus().getName().equals(SUCCESS_INTERVIEW_STATUS)) {
             return false;
         } else {
             if (!candidateJobInterviewStatusList.contains(nextStepStatus) &&
@@ -138,5 +128,26 @@ public class JobInterviewUtility {
                 return false;
             }
         }
+    }
+
+
+    public void updateParametersForJobInterview(JobInterview jobInterview, Employee employee, JobInterviewUpdateDto dto) {
+
+        LocalDate parsedDate = parsingUtility.parseStringToLocalDate(dto.getDate());
+        LocalTime parsedTime = parsingUtility.parseStringToLocalTime(dto.getHour());
+
+        if (parsedDate == null) {
+            throw new IllegalArgumentException("Impossible to parse the date");
+        }
+
+        if (parsedTime == null) {
+            throw new IllegalArgumentException("Impossible to parse the time");
+        }
+
+        jobInterview.setDate(parsedDate);
+        jobInterview.setHour(parsedTime);
+        jobInterview.setEmployee(employee);
+        jobInterview.setRating(Integer.parseInt(dto.getRating()));
+        jobInterview.setNote(dto.getNote());
     }
 }
