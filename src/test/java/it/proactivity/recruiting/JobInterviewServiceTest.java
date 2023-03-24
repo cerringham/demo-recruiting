@@ -42,7 +42,7 @@ class JobInterviewServiceTest {
     @Test
     void createJobInterviewPositiveTest() {
         JobInterviewInsertionDto dto = new JobInterviewInsertionDto("12:00", "2023-03-25", "Milan",
-                "Failed", 4L, 3L, 1L);
+                "Failed", 4L, 5L, 1L);
 
         ResponseEntity response = jobInterviewService.createJobInterview(dto);
 

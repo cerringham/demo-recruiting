@@ -60,45 +60,11 @@ public class JobInterviewValidator {
     }
 
     public boolean validateAllParametersForJobInterviewInsertionDto(JobInterviewInsertionDto dto) {
-        if (dto == null) {
-            return false;
-        }
-
-        if (!validateHour(dto.getHour())) {
-            return false;
-        }
-
-        if (!validateDate(dto.getDate())) {
-            return false;
-        }
-
-        if (!validatePlace(dto.getPlace())) {
-            return false;
-        }
-        return true;
+        return dto != null && validateHour(dto.getHour()) && validateDate(dto.getDate()) && validatePlace(dto.getPlace());
     }
 
     public boolean validateAllParametersForJobInterviewUpdateDto(JobInterviewUpdateDto dto) {
-        if (dto == null) {
-            return false;
-        }
-
-        if (!validateHour(dto.getHour())) {
-            return false;
-        }
-
-        if (!validateDate(dto.getDate())) {
-            return false;
-        }
-
-        if (!validateNote(dto.getNote())) {
-            return false;
-        }
-
-        if (!validateRating(dto.getRating())) {
-            return false;
-        }
-
-        return true;
+        return dto != null && validateHour(dto.getHour()) && validateDate(dto.getDate()) && validateNote(dto.getNote()) &&
+                validateRating(dto.getRating());
     }
 }

@@ -40,10 +40,6 @@ public class JobInterviewService {
     @Autowired
     JobInterviewValidator jobInterviewValidator;
 
-
-    private static final String NEW_INTERVIEW_STATUS = "New";
-
-
     public ResponseEntity<List<JobInterviewDto>> getAll() {
         List<JobInterview> jobInterviewList = jobInterviewRepository.findByIsActive(true);
 
@@ -82,16 +78,16 @@ public class JobInterviewService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        Optional<List<JobInterview>> candidateJobInterviewList = jobInterviewRepository.
-                findByCandidateId(candidate.get().getId());
+        Optional<JobInterview> lastCandidateJobInterview = jobInterviewRepository.findFirstByCandidateOrderByIdDesc(candidate.get());
 
         JobInterview jobInterview;
 
-        if (candidateJobInterviewList.isPresent() && candidateJobInterviewList.get().isEmpty()) {
+        if (lastCandidateJobInterview.isEmpty()) {
 
             jobInterview = jobInterviewUtility.createNewJobInterview(candidate.get(), jobInterviewStatus.get(), dto);
         } else {
-            jobInterview = jobInterviewUtility.createNextStepJobInterview(candidate.get(), jobInterviewStatus.get(), dto);
+            jobInterview = jobInterviewUtility.createNextStepJobInterview(candidate.get(), jobInterviewStatus.get(),
+                    lastCandidateJobInterview.get(), dto);
         }
         if (jobInterview == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

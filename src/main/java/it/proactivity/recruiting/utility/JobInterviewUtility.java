@@ -117,27 +117,24 @@ public class JobInterviewUtility {
     }
 
 
-    public Boolean jobInterviewStatusNextStep(JobInterviewStatus newJobInterviewStatus, Candidate candidate) {
+    public Boolean jobInterviewStatusNextStep(JobInterviewStatus newJobInterviewStatus, Candidate candidate,
+                                              JobInterview lastCandidateJobInterview) {
 
-        Optional<JobInterview> lastCandidateJobInterview = jobInterviewRepository.findFirstByCandidateOrderByIdDesc(candidate);
-        if (lastCandidateJobInterview.isEmpty()) {
-            return false;
-        }
 
-        if (lastCandidateJobInterview.get().getJobInterviewStatus().getName().equals(FAILED_INTERVIEW_STATUS) ||
-                lastCandidateJobInterview.get().getJobInterviewStatus().getName().equals(SUCCESS_INTERVIEW_STATUS)) {
+        if (lastCandidateJobInterview.getJobInterviewStatus().getName().equals(FAILED_INTERVIEW_STATUS) ||
+                lastCandidateJobInterview.getJobInterviewStatus().getName().equals(SUCCESS_INTERVIEW_STATUS)) {
             return false;
         } else {
 
             Optional<JobInterviewStatus> nextStepStatus = jobInterviewStatusRepository.
-                    findNextStepStatusBySequence(lastCandidateJobInterview.get().getJobInterviewStatus().getSequence());
+                    findNextStepStatusBySequence(lastCandidateJobInterview.getJobInterviewStatus().getSequence());
             if (nextStepStatus.isEmpty()) {
                 return false;
             }
             if (nextStepStatus.get().getName().equals(newJobInterviewStatus.getName()) || newJobInterviewStatus.getName().equals(FAILED_INTERVIEW_STATUS)) {
 
-                lastCandidateJobInterview.get().setIsActive(false);
-                jobInterviewRepository.save(lastCandidateJobInterview.get());
+                lastCandidateJobInterview.setIsActive(false);
+                jobInterviewRepository.save(lastCandidateJobInterview);
                 return true;
             } else {
                 return false;
@@ -182,9 +179,9 @@ public class JobInterviewUtility {
     }
 
     public JobInterview createNextStepJobInterview(Candidate candidate, JobInterviewStatus jobInterviewStatus,
-                                                   JobInterviewInsertionDto dto) {
+                                                   JobInterview lastCandidateJobInterview, JobInterviewInsertionDto dto) {
 
-        if (jobInterviewStatusNextStep(jobInterviewStatus, candidate)) {
+        if (jobInterviewStatusNextStep(jobInterviewStatus, candidate, lastCandidateJobInterview)) {
             try {
                 return createJobInterview(candidate, jobInterviewStatus, dto);
             } catch (IllegalArgumentException | NoResultException e) {
