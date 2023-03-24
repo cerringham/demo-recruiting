@@ -28,6 +28,9 @@ public class JobInterviewStatus {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "sequence_order")
+    private Integer sequenceOrder;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "job_interview_status_id")
     private List<JobInterview> jobInterviewList;
@@ -37,13 +40,13 @@ public class JobInterviewStatus {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JobInterviewStatus that = (JobInterviewStatus) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) &&
-                Objects.equals(description, that.description) && Objects.equals(isActive, that.isActive) &&
-                Objects.equals(jobInterviewList, that.jobInterviewList);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description,
+                that.description) && Objects.equals(isActive, that.isActive) && Objects.equals(sequenceOrder,
+                that.sequenceOrder) && Objects.equals(jobInterviewList, that.jobInterviewList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, isActive, jobInterviewList);
+        return Objects.hash(id, name, description, isActive, sequenceOrder, jobInterviewList);
     }
 }

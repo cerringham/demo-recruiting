@@ -12,4 +12,8 @@ public interface JobInterviewStatusRepository extends JpaRepository<JobInterview
     List<JobInterviewStatus> findByIsActive(boolean isActive);
 
     Optional<JobInterviewStatus> findByIdAndIsActive(Long id, boolean isActive);
+
+    Optional<JobInterviewStatus> findByName(String name);
+
+    Optional<JobInterviewStatus> findBySequenceOrder(Integer sequenceOrder);
 }

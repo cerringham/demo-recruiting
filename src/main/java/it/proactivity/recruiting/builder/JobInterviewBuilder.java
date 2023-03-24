@@ -1,30 +1,38 @@
 package it.proactivity.recruiting.builder;
 
+import it.proactivity.recruiting.model.*;
 import it.proactivity.recruiting.model.dto.JobInterviewDto;
+import org.springframework.cglib.core.Local;
 
 import java.io.StringReader;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class JobInterviewBuilder {
 
     private Long id;
 
-    private String date;
+    private LocalDate date;
 
-    private String hour;
+    private LocalTime hour;
 
-    private Long employeeId;
+    private Employee employeeId;
 
-    private Integer rating;
+    private Candidate candidateId;
 
-    private String note;
+    private String place;
+
+    private JobPosition jobPositionId;
+
+    private JobInterviewStatus status;
 
     private Boolean isActive;
 
-    private JobInterviewBuilder(String date) {
+    private JobInterviewBuilder(LocalDate date) {
         this.date = date;
     }
 
-    public static JobInterviewBuilder newBuilder(String date ) {
+    public static JobInterviewBuilder newBuilder(LocalDate date ) {
         return new JobInterviewBuilder(date);
     }
 
@@ -33,23 +41,33 @@ public class JobInterviewBuilder {
         return this;
     }
 
-    public JobInterviewBuilder hour(String hour) {
+    public JobInterviewBuilder hour(LocalTime hour) {
         this.hour = hour;
         return this;
     }
 
-    public JobInterviewBuilder employeeId(Long employeeId) {
+    public JobInterviewBuilder employeeId(Employee employeeId) {
         this.employeeId = employeeId;
         return this;
     }
 
-    public JobInterviewBuilder note(String note) {
-        this.note = note;
+    public JobInterviewBuilder candidateId(Candidate candidateId) {
+        this.candidateId = candidateId;
         return this;
     }
 
-    public JobInterviewBuilder rating(Integer rating) {
-        this.rating = rating;
+    public JobInterviewBuilder place(String place) {
+        this.place = place;
+        return this;
+    }
+
+    public JobInterviewBuilder jobPositionId(JobPosition jobPositionId) {
+        this.jobPositionId = jobPositionId;
+        return this;
+    }
+
+    public JobInterviewBuilder jobInterviewStatus(JobInterviewStatus status) {
+        this.status = status;
         return this;
     }
 
@@ -58,7 +76,7 @@ public class JobInterviewBuilder {
         return this;
     }
 
-    public JobInterviewDto build() {
-        return new JobInterviewDto(id, date, hour, employeeId, rating, note, isActive);
+    public JobInterview build() {
+        return new JobInterview(id, date, hour, place,  isActive, candidateId, employeeId,  jobPositionId, status);
     }
 }

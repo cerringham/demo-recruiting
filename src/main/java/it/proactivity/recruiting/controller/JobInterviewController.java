@@ -25,6 +25,11 @@ public class JobInterviewController {
     }
 
 
+    @PostMapping("/insert-job-interview")
+    public ResponseEntity insertJobInterview(@RequestBody JobInterviewDto jobInterviewDto) {
+        return jobInterviewService.insertJobInterview(jobInterviewDto);
+    }
+
     @PostMapping("/update-job-interview")
     public ResponseEntity updateJobInterview(@RequestBody JobInterviewDto jobInterviewDto) {
         return jobInterviewService.updateJobInterview(jobInterviewDto);

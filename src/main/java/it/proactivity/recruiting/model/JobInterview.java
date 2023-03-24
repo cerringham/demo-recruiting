@@ -53,6 +53,20 @@ public class JobInterview {
     @ManyToOne
     private JobInterviewType jobInterviewType;
 
+    public JobInterview(Long id, LocalDate date, LocalTime hour, String place,
+                        Boolean isActive, Candidate candidate, Employee employee, JobPosition jobPosition,
+                        JobInterviewStatus jobInterviewStatus) {
+        this.id = id;
+        this.date = date;
+        this.hour = hour;
+        this.place = place;
+        this.isActive = isActive;
+        this.candidate = candidate;
+        this.employee = employee;
+        this.jobPosition = jobPosition;
+        this.jobInterviewStatus = jobInterviewStatus;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

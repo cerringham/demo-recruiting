@@ -1,9 +1,10 @@
 package it.proactivity.recruiting.service;
 
 
-import it.proactivity.recruiting.model.JobInterview;
+import it.proactivity.recruiting.builder.JobInterviewBuilder;
+import it.proactivity.recruiting.model.*;
 import it.proactivity.recruiting.model.dto.JobInterviewDto;
-import it.proactivity.recruiting.repository.JobInterviewRepository;
+import it.proactivity.recruiting.repository.*;
 import it.proactivity.recruiting.utility.EmployeeUtility;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.JobInterviewUtility;
@@ -34,6 +35,18 @@ public class JobInterviewService {
     @Autowired
     EmployeeUtility employeeUtility;
 
+    @Autowired
+    CandidateRepository candidateRepository;
+
+    @Autowired
+    EmployeeRepository employeeRepository;
+
+    @Autowired
+    JobPositionRepository jobPositionRepository;
+
+    @Autowired
+    JobInterviewStatusRepository jobInterviewStatusRepository;
+
 
     public ResponseEntity<List<JobInterviewDto>> getAll() {
         List<JobInterview> jobInterviewList = jobInterviewRepository.findByIsActive(true);
@@ -58,34 +71,74 @@ public class JobInterviewService {
                 jobInterview.get().getRating(), jobInterview.get().getNote(), jobInterview.get().getIsActive()));
     }
 
+    public ResponseEntity insertJobInterview(JobInterviewDto jobInterviewDto) {
+        if (!jobInterviewUtility.validateParametersForInsert(jobInterviewDto)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        Optional<Candidate> candidate = candidateRepository.findById(jobInterviewDto.getCandidateId());
+        List<JobInterview> jobInterviewList = jobInterviewRepository.findByCandidateId(candidate.get().getId());
+        Optional<Employee> employee = employeeRepository.findById(jobInterviewDto.getEmployeeId());
+        Optional<JobPosition> jobPosition = jobPositionRepository.findById(jobInterviewDto.getJobPositionId());
+        Optional<JobInterviewStatus> jobInterviewStatus = jobInterviewStatusRepository.findByName("New");
+
+        if (candidate.isEmpty() || employee.isEmpty() || jobPosition.isEmpty() || jobInterviewStatus.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        if (jobInterviewList.isEmpty()) {
+            JobInterview jobInterview = JobInterviewBuilder.newBuilder(parsingUtility.parseStringToLocalDate(jobInterviewDto.getDate()))
+                    .hour(parsingUtility.parseStringToLocalTime(jobInterviewDto.getHour()))
+                    .employeeId(employee.get())
+                    .candidateId(candidate.get())
+                    .place(jobInterviewDto.getPlace())
+                    .jobPositionId(jobPosition.get())
+                    .jobInterviewStatus(jobInterviewStatus.get())
+                    .isActive(true)
+                    .build();
+            jobInterviewRepository.save(jobInterview);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        Integer max = jobInterviewUtility.getLastStatusFromList(jobInterviewList);
+        Optional<JobInterviewStatus> jobInterviewStatus1 = jobInterviewStatusRepository.findBySequenceOrder(max + 1);
+        jobInterviewUtility.setFalseOtherInterviews(jobInterviewList);
+        JobInterview jobInterview = JobInterviewBuilder.newBuilder(parsingUtility.parseStringToLocalDate(jobInterviewDto.getDate()))
+                .hour(parsingUtility.parseStringToLocalTime(jobInterviewDto.getHour()))
+                .employeeId(employee.get())
+                .candidateId(candidate.get())
+                .place(jobInterviewDto.getPlace())
+                .jobPositionId(jobPosition.get())
+                .jobInterviewStatus(jobInterviewStatus1.get())
+                .isActive(true)
+                .build();
+        jobInterviewRepository.save(jobInterview);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     public ResponseEntity updateJobInterview(JobInterviewDto jobInterviewDto) {
         if (!jobInterviewUtility.validateJobInterviewParameters(jobInterviewDto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         Optional<JobInterview> jobInterview = jobInterviewRepository.findById(jobInterviewDto.getId());
-        if (jobInterview.isPresent()) {
-            jobInterview.get().setDate(parsingUtility.parseStringToLocalDate(jobInterviewDto.getDate()));
-            jobInterview.get().setHour(parsingUtility.parseStringToLocalTime(jobInterviewDto.getHour()));
-            jobInterview.get().setEmployee(employeeUtility.getEmployeeFromId(jobInterviewDto.getEmployeeId()));
-            jobInterview.get().setRating(jobInterviewDto.getRating());
-            jobInterview.get().setNote(jobInterviewDto.getNote());
-            jobInterviewRepository.save(jobInterview.get());
-            return ResponseEntity.status(HttpStatus.OK).build();
+        if (!jobInterview.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        jobInterview.get().setDate(parsingUtility.parseStringToLocalDate(jobInterviewDto.getDate()));
+        jobInterview.get().setHour(parsingUtility.parseStringToLocalTime(jobInterviewDto.getHour()));
+        jobInterview.get().setEmployee(employeeUtility.getEmployeeFromId(jobInterviewDto.getEmployeeId()));
+        jobInterview.get().setRating(jobInterviewDto.getRating());
+        jobInterview.get().setNote(jobInterviewDto.getNote());
+        jobInterviewRepository.save(jobInterview.get());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     public ResponseEntity deleteJobInterview(Long id) {
         if (!globalValidator.validateId(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        Optional<JobInterview> jobInterview = jobInterviewRepository.findById(id);
-        if (jobInterview.isPresent()) {
-            jobInterview.get().setIsActive(false);
-            jobInterviewRepository.save(jobInterview.get());
-            return ResponseEntity.status(HttpStatus.OK).build();
+        int deleted = jobInterviewRepository.inactivateJobInterviewById(id);
+        if (deleted == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 
