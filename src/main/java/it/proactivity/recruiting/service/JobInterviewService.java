@@ -1,7 +1,6 @@
 package it.proactivity.recruiting.service;
 
 
-import it.proactivity.recruiting.builder.JobInterviewBuilder;
 import it.proactivity.recruiting.model.*;
 import it.proactivity.recruiting.model.dto.JobInterviewDto;
 import it.proactivity.recruiting.repository.*;
@@ -76,11 +75,10 @@ public class JobInterviewService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         Optional<Candidate> candidate = candidateRepository.findById(jobInterviewDto.getCandidateId());
-        List<JobInterview> jobInterviewList = jobInterviewRepository.findByCandidateId(candidate.get().getId());
+        List<JobInterview> jobInterviewList = jobInterviewRepository.findByCandidateIdAndIsActive(jobInterviewDto.getCandidateId(), true);
         Optional<Employee> employee = employeeRepository.findById(jobInterviewDto.getEmployeeId());
         Optional<JobPosition> jobPosition = jobPositionRepository.findById(jobInterviewDto.getJobPositionId());
         Optional<JobInterviewStatus> jobInterviewStatus = jobInterviewStatusRepository.findByName("New");
-
         if (candidate.isEmpty() || employee.isEmpty() || jobPosition.isEmpty() || jobInterviewStatus.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -90,11 +88,14 @@ public class JobInterviewService {
             jobInterviewRepository.save(jobInterview);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
-        Integer max = jobInterviewUtility.getLastStatusFromList(jobInterviewList);
-        Optional<JobInterviewStatus> jobInterviewStatus1 = jobInterviewStatusRepository.findBySequenceOrder(max + 1);
+        Optional<JobInterviewStatus> jobInterviewStatus1 = jobInterviewList.stream()
+                .map(j -> j.getJobInterviewStatus())
+                .findAny();
         jobInterviewUtility.setFalseOtherInterviews(jobInterviewList);
+        Optional<JobInterviewStatus> status =
+                jobInterviewStatusRepository.findBySequenceOrder(jobInterviewStatus1.get().getSequenceOrder() + 1);
         JobInterview jobInterview = jobInterviewUtility.createJobInterview(jobInterviewDto, candidate.get(),
-                employee.get(), jobPosition.get(), jobInterviewStatus1.get());
+                employee.get(), jobPosition.get(), status.get());
         jobInterviewRepository.save(jobInterview);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -112,7 +113,6 @@ public class JobInterviewService {
         jobInterview.get().setEmployee(employeeUtility.getEmployeeFromId(jobInterviewDto.getEmployeeId()));
         jobInterview.get().setRating(jobInterviewDto.getRating());
         jobInterview.get().setNote(jobInterviewDto.getNote());
-        jobInterviewRepository.save(jobInterview.get());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

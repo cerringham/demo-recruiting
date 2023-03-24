@@ -23,6 +23,5 @@ public interface JobInterviewRepository extends JpaRepository<JobInterview, Long
     @Query("UPDATE JobInterview j SET j.isActive = false WHERE j.id = ?1")
     int inactivateJobInterviewById(Long id);
 
-
-    List<JobInterview> findByCandidateId(Long candidateId);
+    List<JobInterview> findByCandidateIdAndIsActive(Long id, boolean b);
 }

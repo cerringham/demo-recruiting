@@ -17,7 +17,4 @@ public interface JobInterviewStatusRepository extends JpaRepository<JobInterview
     Optional<JobInterviewStatus> findByName(String name);
 
     Optional<JobInterviewStatus> findBySequenceOrder(Integer sequenceOrder);
-
-    @Query("SELECT j FROM JobInterviewStatus j WHERE j.sequenceOrder =")
-    Optional<JobInterviewStatus> findByMaxSequenceOrder();
 }

@@ -38,8 +38,7 @@ public class JobInterviewUtility {
     }
 
     public Boolean validateJobInterviewParameters(JobInterviewDto jobInterviewDto) {
-        if (jobInterviewDto == null || parsingUtility.parseStringToLocalDate(jobInterviewDto.getDate()) == null ||
-                parsingUtility.parseStringToLocalDate(jobInterviewDto.getHour()) == null ||
+        if (jobInterviewDto == null || StringUtils.isEmpty(jobInterviewDto.getDate()) ||  StringUtils.isEmpty(jobInterviewDto.getHour()) ||
                 !globalValidator.validateId(jobInterviewDto.getEmployeeId()) || jobInterviewDto.getRating() == null ||
                 StringUtils.isEmpty(jobInterviewDto.getNote())) {
             return false;
@@ -48,8 +47,8 @@ public class JobInterviewUtility {
     }
 
     public Boolean validateParametersForInsert(JobInterviewDto jobInterviewDto) {
-        if (jobInterviewDto == null || parsingUtility.parseStringToLocalDate(jobInterviewDto.getDate()) == null ||
-                parsingUtility.parseStringToLocalDate(jobInterviewDto.getHour()) == null ||
+        if (StringUtils.isEmpty(jobInterviewDto.getDate()) ||
+               StringUtils.isEmpty(jobInterviewDto.getHour()) ||
                 jobInterviewDto.getEmployeeId() == null || jobInterviewDto.getCandidateId() == null ||
                 StringUtils.isEmpty(jobInterviewDto.getPlace()) || jobInterviewDto.getJobPositionId() == null) {
             return false;
@@ -68,13 +67,6 @@ public class JobInterviewUtility {
                 .jobInterviewStatus(jobInterviewStatus)
                 .isActive(true)
                 .build();
-    }
-
-    public Integer getLastStatusFromList(List<JobInterview> jobInterviewList) {
-        Optional<Integer> maxStatus = jobInterviewList.stream()
-                .map( j -> j.getJobInterviewStatus().getSequenceOrder())
-                .max(Integer::compare);
-        return maxStatus.get();
     }
 
     public void setFalseOtherInterviews(List<JobInterview> jobInterviewList) {
