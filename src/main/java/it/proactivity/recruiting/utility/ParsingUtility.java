@@ -15,8 +15,8 @@ public class ParsingUtility {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
             return date.format(formatter);
-        } catch (DateTimeException e) {
-            return null;
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Date cannot be parsed");
         }
     }
 
@@ -25,7 +25,7 @@ public class ParsingUtility {
         try {
             return time.format(formatter);
         } catch (DateTimeParseException e) {
-            return null;
+            throw new IllegalArgumentException("Time cannot be parsed");
         }
     }
 
@@ -34,7 +34,7 @@ public class ParsingUtility {
         try {
             return LocalTime.parse(hour, formatter);
         } catch (DateTimeParseException e) {
-            return null;
+            throw new IllegalArgumentException("Time cannot be parsed");
         }
     }
 
@@ -42,12 +42,11 @@ public class ParsingUtility {
         if (date == null || date.isEmpty()) {
             return null;
         }
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
             return LocalDate.parse(date, formatter);
         } catch (DateTimeParseException e) {
-            return null;
+            throw new IllegalArgumentException("Date cannot be parsed");
         }
     }
 }

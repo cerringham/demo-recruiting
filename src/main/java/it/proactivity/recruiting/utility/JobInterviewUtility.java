@@ -1,9 +1,7 @@
 package it.proactivity.recruiting.utility;
 
 import it.proactivity.recruiting.builder.JobInterviewBuilder;
-import it.proactivity.recruiting.model.Candidate;
-import it.proactivity.recruiting.model.JobInterview;
-import it.proactivity.recruiting.model.JobInterviewStatus;
+import it.proactivity.recruiting.model.*;
 import it.proactivity.recruiting.model.dto.JobInterviewDto;
 import it.proactivity.recruiting.repository.JobInterviewRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -11,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +38,8 @@ public class JobInterviewUtility {
     }
 
     public Boolean validateJobInterviewParameters(JobInterviewDto jobInterviewDto) {
-        if (jobInterviewDto.getDate() == null || jobInterviewDto.getHour() == null ||
+        if (jobInterviewDto == null || parsingUtility.parseStringToLocalDate(jobInterviewDto.getDate()) == null ||
+                parsingUtility.parseStringToLocalDate(jobInterviewDto.getHour()) == null ||
                 !globalValidator.validateId(jobInterviewDto.getEmployeeId()) || jobInterviewDto.getRating() == null ||
                 StringUtils.isEmpty(jobInterviewDto.getNote())) {
             return false;
@@ -48,12 +48,26 @@ public class JobInterviewUtility {
     }
 
     public Boolean validateParametersForInsert(JobInterviewDto jobInterviewDto) {
-        if (StringUtils.isEmpty(jobInterviewDto.getDate()) || StringUtils.isEmpty(jobInterviewDto.getHour()) ||
+        if (jobInterviewDto == null || parsingUtility.parseStringToLocalDate(jobInterviewDto.getDate()) == null ||
+                parsingUtility.parseStringToLocalDate(jobInterviewDto.getHour()) == null ||
                 jobInterviewDto.getEmployeeId() == null || jobInterviewDto.getCandidateId() == null ||
                 StringUtils.isEmpty(jobInterviewDto.getPlace()) || jobInterviewDto.getJobPositionId() == null) {
             return false;
         }
         return true;
+    }
+
+    public JobInterview createJobInterview(JobInterviewDto jobInterviewDto, Candidate candidate, Employee employee,
+                                           JobPosition jobPosition, JobInterviewStatus jobInterviewStatus) {
+        return JobInterviewBuilder.newBuilder(parsingUtility.parseStringToLocalDate(jobInterviewDto.getDate()))
+                .hour(parsingUtility.parseStringToLocalTime(jobInterviewDto.getHour()))
+                .employeeId(employee)
+                .candidateId(candidate)
+                .place(jobInterviewDto.getPlace())
+                .jobPositionId(jobPosition)
+                .jobInterviewStatus(jobInterviewStatus)
+                .isActive(true)
+                .build();
     }
 
     public Integer getLastStatusFromList(List<JobInterview> jobInterviewList) {

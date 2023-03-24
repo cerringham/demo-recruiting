@@ -85,30 +85,16 @@ public class JobInterviewService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         if (jobInterviewList.isEmpty()) {
-            JobInterview jobInterview = JobInterviewBuilder.newBuilder(parsingUtility.parseStringToLocalDate(jobInterviewDto.getDate()))
-                    .hour(parsingUtility.parseStringToLocalTime(jobInterviewDto.getHour()))
-                    .employeeId(employee.get())
-                    .candidateId(candidate.get())
-                    .place(jobInterviewDto.getPlace())
-                    .jobPositionId(jobPosition.get())
-                    .jobInterviewStatus(jobInterviewStatus.get())
-                    .isActive(true)
-                    .build();
+            JobInterview jobInterview = jobInterviewUtility.createJobInterview(jobInterviewDto, candidate.get(),
+                    employee.get(), jobPosition.get(), jobInterviewStatus.get());
             jobInterviewRepository.save(jobInterview);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
         Integer max = jobInterviewUtility.getLastStatusFromList(jobInterviewList);
         Optional<JobInterviewStatus> jobInterviewStatus1 = jobInterviewStatusRepository.findBySequenceOrder(max + 1);
         jobInterviewUtility.setFalseOtherInterviews(jobInterviewList);
-        JobInterview jobInterview = JobInterviewBuilder.newBuilder(parsingUtility.parseStringToLocalDate(jobInterviewDto.getDate()))
-                .hour(parsingUtility.parseStringToLocalTime(jobInterviewDto.getHour()))
-                .employeeId(employee.get())
-                .candidateId(candidate.get())
-                .place(jobInterviewDto.getPlace())
-                .jobPositionId(jobPosition.get())
-                .jobInterviewStatus(jobInterviewStatus1.get())
-                .isActive(true)
-                .build();
+        JobInterview jobInterview = jobInterviewUtility.createJobInterview(jobInterviewDto, candidate.get(),
+                employee.get(), jobPosition.get(), jobInterviewStatus1.get());
         jobInterviewRepository.save(jobInterview);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

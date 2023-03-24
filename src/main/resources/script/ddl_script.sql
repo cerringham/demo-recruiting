@@ -184,3 +184,6 @@ RENAME COLUMN date_formatted TO date;
 
 ALTER TABLE job_interview
 ALTER COLUMN date TYPE DATE USING date::DATE;
+
+ALTER TABLE job_interview_status
+ADD COLUMN sequence_order INT;
