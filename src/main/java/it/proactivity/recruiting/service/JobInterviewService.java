@@ -68,22 +68,9 @@ public class JobInterviewService {
     }
 
     public ResponseEntity createJobInterview(JobInterviewInsertionDto dto) {
-        if (dto == null) {
+        if (!jobInterviewValidator.validateAllParametersForJobInterviewInsertionDto(dto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
-        if (!jobInterviewValidator.validateDate(dto.getDate())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        if (!jobInterviewValidator.validateHour(dto.getHour())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        if (!jobInterviewValidator.validatePlace(dto.getPlace())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
         Optional<Candidate> candidate = candidateRepository.findById(dto.getCandidateId());
         if (candidate.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -104,8 +91,7 @@ public class JobInterviewService {
 
             jobInterview = jobInterviewUtility.createNewJobInterview(candidate.get(), jobInterviewStatus.get(), dto);
         } else {
-            jobInterview = jobInterviewUtility.createNextStepJobInterview(candidate.get(), jobInterviewStatus.get(), dto,
-                    candidateJobInterviewList.get());
+            jobInterview = jobInterviewUtility.createNextStepJobInterview(candidate.get(), jobInterviewStatus.get(), dto);
         }
         if (jobInterview == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -115,22 +101,9 @@ public class JobInterviewService {
     }
 
     public ResponseEntity updateJobInterview(JobInterviewUpdateDto dto) {
-        if (!jobInterviewValidator.validateHour(dto.getHour())) {
+        if (!jobInterviewValidator.validateAllParametersForJobInterviewUpdateDto(dto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
-        if (!jobInterviewValidator.validateDate(dto.getDate())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        if (!jobInterviewValidator.validateNote(dto.getNote())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        if (!jobInterviewValidator.validateRating(dto.getRating())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
         Optional<JobInterview> jobInterview = jobInterviewRepository.findById(dto.getJobInterviewId());
 
         if (jobInterview.isEmpty()) {

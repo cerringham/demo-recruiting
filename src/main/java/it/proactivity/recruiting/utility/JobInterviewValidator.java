@@ -1,5 +1,7 @@
 package it.proactivity.recruiting.utility;
 
+import it.proactivity.recruiting.model.dto.JobInterviewInsertionDto;
+import it.proactivity.recruiting.model.dto.JobInterviewUpdateDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +17,7 @@ public class JobInterviewValidator {
 
     private static final Integer NOTE_MAX_LENGTH = 250;
 
-    public Boolean validateHour(String hour) {
+    private Boolean validateHour(String hour) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
         try {
@@ -26,18 +28,17 @@ public class JobInterviewValidator {
         }
     }
 
-    public Boolean validateDate(String date) {
+    private Boolean validateDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         try {
-            LocalDate.parse(date, formatter);
-            return true;
+            return !LocalDate.parse(date, formatter).isBefore(LocalDate.now());
         } catch (DateTimeParseException e) {
             return false;
         }
     }
 
-    public Boolean validatePlace(String place) {
+    private Boolean validatePlace(String place) {
         if (StringUtils.isEmpty(place)) {
             return false;
         }
@@ -45,7 +46,7 @@ public class JobInterviewValidator {
         return StringUtils.isAlpha(place) && place.length() < PLACE_MAX_LENGTH;
     }
 
-    public Boolean validateNote(String note) {
+    private Boolean validateNote(String note) {
         if (StringUtils.isEmpty(note)) {
             return false;
         }
@@ -53,8 +54,51 @@ public class JobInterviewValidator {
         return note.length() < NOTE_MAX_LENGTH;
     }
 
-    public Boolean validateRating(String rating) {
+    private Boolean validateRating(String rating) {
 
         return StringUtils.isNumeric(rating);
+    }
+
+    public boolean validateAllParametersForJobInterviewInsertionDto(JobInterviewInsertionDto dto) {
+        if (dto == null) {
+            return false;
+        }
+
+        if (!validateHour(dto.getHour())) {
+            return false;
+        }
+
+        if (!validateDate(dto.getDate())) {
+            return false;
+        }
+
+        if (!validatePlace(dto.getPlace())) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean validateAllParametersForJobInterviewUpdateDto(JobInterviewUpdateDto dto) {
+        if (dto == null) {
+            return false;
+        }
+
+        if (!validateHour(dto.getHour())) {
+            return false;
+        }
+
+        if (!validateDate(dto.getDate())) {
+            return false;
+        }
+
+        if (!validateNote(dto.getNote())) {
+            return false;
+        }
+
+        if (!validateRating(dto.getRating())) {
+            return false;
+        }
+
+        return true;
     }
 }

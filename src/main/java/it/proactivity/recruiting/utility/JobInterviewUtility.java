@@ -2,7 +2,6 @@ package it.proactivity.recruiting.utility;
 
 import it.proactivity.recruiting.builder.JobInterviewBuilder;
 import it.proactivity.recruiting.builder.JobInterviewDtoBuilder;
-import it.proactivity.recruiting.comparator.JobInterviewStatusComparator;
 import it.proactivity.recruiting.model.*;
 import it.proactivity.recruiting.model.dto.JobInterviewDto;
 import it.proactivity.recruiting.model.dto.JobInterviewInsertionDto;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -49,10 +47,6 @@ public class JobInterviewUtility {
     JobInterviewTypeRepository jobInterviewTypeRepository;
     @Autowired
     JobInterviewRepository jobInterviewRepository;
-
-    @Autowired
-    JobInterviewStatusComparator jobInterviewStatusComparator;
-
 
     public JobInterviewDto createJobInterviewDto(String date, String hour, String place, Integer rating, String note,
                                                  Boolean isActive) {
@@ -123,17 +117,8 @@ public class JobInterviewUtility {
     }
 
 
-    public Boolean jobInterviewStatusNextStep(List<JobInterview> jobInterviewList, JobInterviewStatus jobInterviewStatus,
-                                              Candidate candidate) {
+    public Boolean jobInterviewStatusNextStep(JobInterviewStatus newJobInterviewStatus, Candidate candidate) {
 
-        List<JobInterviewStatus> jobInterviewStatusList = jobInterviewStatusRepository.findAll();
-        jobInterviewStatusList.sort(jobInterviewStatusComparator);
-
-        List<JobInterviewStatus> candidateJobInterviewStatusList = jobInterviewList.stream()
-                .map(JobInterview::getJobInterviewStatus)
-                .toList();
-
-        JobInterviewStatus nextStepStatus = jobInterviewStatusList.get(jobInterviewList.size());
         Optional<JobInterview> lastCandidateJobInterview = jobInterviewRepository.findFirstByCandidateOrderByIdDesc(candidate);
         if (lastCandidateJobInterview.isEmpty()) {
             return false;
@@ -143,8 +128,13 @@ public class JobInterviewUtility {
                 lastCandidateJobInterview.get().getJobInterviewStatus().getName().equals(SUCCESS_INTERVIEW_STATUS)) {
             return false;
         } else {
-            if (!candidateJobInterviewStatusList.contains(nextStepStatus) &&
-                    nextStepStatus.getName().equals(jobInterviewStatus.getName()) || jobInterviewStatus.getName().equals(FAILED_INTERVIEW_STATUS)) {
+
+            Optional<JobInterviewStatus> nextStepStatus = jobInterviewStatusRepository.
+                    findNextStepStatusBySequence(lastCandidateJobInterview.get().getJobInterviewStatus().getSequence());
+            if (nextStepStatus.isEmpty()) {
+                return false;
+            }
+            if (nextStepStatus.get().getName().equals(newJobInterviewStatus.getName()) || newJobInterviewStatus.getName().equals(FAILED_INTERVIEW_STATUS)) {
 
                 lastCandidateJobInterview.get().setIsActive(false);
                 jobInterviewRepository.save(lastCandidateJobInterview.get());
@@ -192,9 +182,9 @@ public class JobInterviewUtility {
     }
 
     public JobInterview createNextStepJobInterview(Candidate candidate, JobInterviewStatus jobInterviewStatus,
-                                                   JobInterviewInsertionDto dto, List<JobInterview> candidateJobInterviewList) {
+                                                   JobInterviewInsertionDto dto) {
 
-        if (jobInterviewStatusNextStep(candidateJobInterviewList, jobInterviewStatus, candidate)) {
+        if (jobInterviewStatusNextStep(jobInterviewStatus, candidate)) {
             try {
                 return createJobInterview(candidate, jobInterviewStatus, dto);
             } catch (IllegalArgumentException | NoResultException e) {
