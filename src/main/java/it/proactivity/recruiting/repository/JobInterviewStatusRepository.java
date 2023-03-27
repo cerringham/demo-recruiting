@@ -16,6 +16,6 @@ public interface JobInterviewStatusRepository extends JpaRepository<JobInterview
 
     Optional<JobInterviewStatus> findByName(String jobInterviewStatus);
 
-    @Query("SELECT j FROM JobInterviewStatus j WHERE j.sequence = ?1 + 1")
-    Optional<JobInterviewStatus> findNextStepStatusBySequence(Integer sequence);
+    @Query("SELECT j FROM JobInterviewStatus j WHERE j.sequenceOrder = ?1 + 1")
+    Optional<JobInterviewStatus> findNextStepStatusBySequenceOrder(Integer sequenceOrder);
 }
