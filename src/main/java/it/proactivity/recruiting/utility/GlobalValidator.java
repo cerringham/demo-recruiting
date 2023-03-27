@@ -25,6 +25,13 @@ public class GlobalValidator {
         return StringUtils.isAlphanumericSpace(name);
     }
 
+    public Boolean vaidateStringAlpha(String s) {
+        if (StringUtils.isEmpty(s)) {
+            return false;
+        }
+        return StringUtils.isAlpha(s);
+    }
+
     public Boolean validateStringAlphaSpace(String s) {
         if (StringUtils.isEmpty(s)) {
             return false;
