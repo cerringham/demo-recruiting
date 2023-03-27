@@ -205,19 +205,5 @@ is_active BOOLEAN NOT NULL,
 account_id INT,
 FOREIGN KEY(account_id) REFERENCES account(id));
 
-CREATE TABLE IF NOT EXISTS account(
-id SERIAL PRIMARY KEY,
-name VARCHAR(50) NOT NULL,
-surname VARCHAR(50) NOT NULL,
-email VARCHAR(150) NOT NULL,
-username VARCHAR(150) NOT NULL,
-password VARCHAR(12) NOT NULL,
-is_active BOOLEAN NOT NULL);
-
-CREATE TABLE IF NOT EXISTS access_token(
-id SERIAL PRIMARY KEY,
-value VARCHAR(255) NOT NULL,
-duration TIME NOT NULL,
-is_active BOOLEAN NOT NULL,
-account_id INT,
-FOREIGN KEY(account_id) REFERENCES account(id));
+ALTER TABLE account ADD CONSTRAINT email_unique UNIQUE (email);
+ALTER TABLE account ALTER COLUMN password TYPE VARCHAR(32);

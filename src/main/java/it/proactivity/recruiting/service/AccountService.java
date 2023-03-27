@@ -27,6 +27,9 @@ public class AccountService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         Account account = accountUtility.createAccount(dto);
+        if (account == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         accountRepository.save(account);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
