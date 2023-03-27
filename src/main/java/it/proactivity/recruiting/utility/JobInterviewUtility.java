@@ -127,7 +127,7 @@ public class JobInterviewUtility {
         } else {
 
             Optional<JobInterviewStatus> nextStepStatus = jobInterviewStatusRepository.
-                    findNextStepStatusBySequence(lastCandidateJobInterview.getJobInterviewStatus().getSequence());
+                    findNextStepStatusBySequenceOrder(lastCandidateJobInterview.getJobInterviewStatus().getSequenceOrder());
             if (nextStepStatus.isEmpty()) {
                 return false;
             }
