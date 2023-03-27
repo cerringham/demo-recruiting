@@ -13,6 +13,7 @@ public class AccountValidator {
 
     private static final Integer EMAIL_MAX_LENGTH = 150;
 
+
     private static final Integer USERNAME_MAX_LENGTH = 150;
 
     private static final Integer PASSWORD_MAX_LENGTH = 12;
