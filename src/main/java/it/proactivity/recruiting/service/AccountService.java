@@ -58,7 +58,9 @@ public class AccountService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        AccessToken token = accountUtility.createAccessToken(dto, account.get());
+        AccessToken token = accountUtility.createAccessToken(dto.getUsername());
+        token.setAccount(account.get());
+        accountUtility.setLastAccessTokenToFalse(account.get());
         accessTokenRepository.save(token);
 
         return ResponseEntity.status(HttpStatus.OK).build();

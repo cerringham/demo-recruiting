@@ -31,8 +31,7 @@ public class CompanyRoleUtility {
         if (StringUtils.isEmpty(companyRoleName)) {
             throw new NullPointerException();
         }
-        String name = WordUtils.capitalizeFully(companyRoleName);
-        return name;
+        return WordUtils.capitalizeFully(companyRoleName);
     }
 
     public Boolean checkIfDefaultRole(String companyName) {
@@ -40,14 +39,5 @@ public class CompanyRoleUtility {
             return true;
         }
         return false;
-    }
-
-    public CompanyRole createCompanyRoleFromDto(String name, Boolean isActive) {
-        if (StringUtils.isEmpty(name) || isActive == null) {
-            throw new IllegalArgumentException("the parameters for creating the company role can't be null or empty");
-        }
-        return CompanyRoleBuilder.newBuilder(name)
-                .isActive(isActive)
-                .build();
     }
 }

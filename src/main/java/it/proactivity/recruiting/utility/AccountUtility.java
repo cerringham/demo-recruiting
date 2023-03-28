@@ -5,7 +5,6 @@ import it.proactivity.recruiting.builder.AccountBuilder;
 import it.proactivity.recruiting.model.AccessToken;
 import it.proactivity.recruiting.model.Account;
 import it.proactivity.recruiting.model.dto.AddAccountDto;
-import it.proactivity.recruiting.model.dto.LoginDto;
 import it.proactivity.recruiting.repository.AccessTokenRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -52,25 +51,27 @@ public class AccountUtility {
         return number.toString(16);
     }
 
-    public AccessToken createAccessToken(LoginDto dto, Account account) {
+    public AccessToken createAccessToken(String username) {
 
         LocalDateTime tokenCreationDateTime = LocalDateTime.now();
-        String tokenValue = createValueForToken(dto.getUsername());
-        setLastAccessTokenToFalse(account);
+        String tokenValue = createValueForToken(username);
 
         return AccessTokenBuilder.newBuilder(tokenValue)
                 .creationTokenDateTime(tokenCreationDateTime)
-                .account(account)
                 .isActive(true)
                 .build();
     }
 
-    private void setLastAccessTokenToFalse(Account account) {
+    public void setLastAccessTokenToFalse(Account account) {
         Optional<AccessToken> lastAccessToken = accessTokenRepository.findFirstByAccountOrderByIdDesc(account);
         if (lastAccessToken.isPresent()) {
             lastAccessToken.get().setIsActive(false);
             accessTokenRepository.save(lastAccessToken.get());
         }
+    }
+
+    public static String encodeString(String stringToDecrypt) {
+        return new String(Base64.encodeBase64(stringToDecrypt.getBytes()));
     }
 
     private String createValueForToken(String username) {
@@ -85,9 +86,5 @@ public class AccountUtility {
         Instant instant = Instant.now();
         sb.append(instant.toEpochMilli());
         return sb.toString();
-    }
-
-    private static String encodeString(String stringToDecrypt) {
-        return new String(Base64.encodeBase64(stringToDecrypt.getBytes()));
     }
 }
