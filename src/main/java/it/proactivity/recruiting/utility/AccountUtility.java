@@ -1,7 +1,10 @@
 package it.proactivity.recruiting.utility;
 
+import it.proactivity.recruiting.builder.AccountBuilder;
+import it.proactivity.recruiting.model.AccessToken;
 import it.proactivity.recruiting.model.Account;
 import it.proactivity.recruiting.model.dto.AccountDto;
+import it.proactivity.recruiting.model.dto.LoginDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,10 +43,33 @@ public class AccountUtility {
         return true;
     }
 
-    public Boolean validateAccountForLogin(AccountDto accountDto) {
-        if (accountDto == null) {
+    public Account createAccount(AccountDto accountDto) {
+        try {
+            String correctPassword = hashPassword(accountDto.getPassword());
+            Account account = AccountBuilder.newBuilder(accountDto.getName())
+                    .surname(accountDto.getSurname())
+                    .email(accountDto.getEmail())
+                    .username(accountDto.getUsername())
+                    .password(correctPassword)
+                    .isActive(true)
+                    .build();
+            return account;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String hashPassword(String plainText) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] messageDigest = md.digest(plainText.getBytes());
+        BigInteger number = new BigInteger(1, messageDigest);
+        return number.toString(16);
+    }
+
+    public Boolean validateAccountForLogin(LoginDto loginDto) {
+        if (loginDto == null) {
             return false;
-        }else if (StringUtils.isEmpty(accountDto.getUsername()) || StringUtils.isEmpty(accountDto.getPassword())) {
+        }else if (StringUtils.isEmpty(loginDto.getUsername()) || StringUtils.isEmpty(loginDto.getPassword())) {
             return false;
         }
         return true;

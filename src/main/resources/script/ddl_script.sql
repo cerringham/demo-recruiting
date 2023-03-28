@@ -206,3 +206,5 @@ account_id INT,
 is_active BOOLEAN NOT NULL,
 FOREIGN KEY (account_id) REFERENCES account(id)
 );
+
+ALTER TABLE access_token DROP COLUMN name;

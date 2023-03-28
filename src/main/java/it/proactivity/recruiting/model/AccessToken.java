@@ -20,9 +20,6 @@ public class AccessToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
-
     @Column(name = "duration")
     private LocalTime duration;
 
@@ -32,8 +29,7 @@ public class AccessToken {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    public AccessToken(String name, LocalTime duration, Account account, Boolean isActive) {
-        this.name = name;
+    public AccessToken(LocalTime duration, Account account, Boolean isActive) {
         this.duration = duration;
         this.account = account;
         this.isActive = isActive;

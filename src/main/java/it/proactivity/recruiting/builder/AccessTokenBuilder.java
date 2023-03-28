@@ -7,29 +7,22 @@ import java.time.LocalTime;
 
 public class AccessTokenBuilder {
 
-    private String name;
-
     private LocalTime duration;
 
     private Account account;
 
     private Boolean isActive;
 
-    private AccessTokenBuilder(String name) {
-        this.name = name;
+    private AccessTokenBuilder(Account account) {
+        this.account = account;
     }
 
-    public static AccessTokenBuilder newBuilder(String name) {
-        return new AccessTokenBuilder(name);
+    public static AccessTokenBuilder newBuilder(Account account) {
+        return new AccessTokenBuilder(account);
     }
 
     public AccessTokenBuilder duration(LocalTime duration) {
         this.duration = duration;
-        return this;
-    }
-
-    public AccessTokenBuilder account(Account account) {
-        this.account = account;
         return this;
     }
 
@@ -39,6 +32,6 @@ public class AccessTokenBuilder {
     }
 
     public AccessToken build() {
-        return new AccessToken(name,duration, account, isActive);
+        return new AccessToken(duration, account, isActive);
     }
 }
