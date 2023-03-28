@@ -45,8 +45,10 @@ public class AccountService {
 
     public ResponseEntity login(LoginDto dto) {
         if (!accountValidator.validateLoginDto(dto)) {
+            // eliminare controlli superflui
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        // antipattern, creare un metodo che restituisce hashPassword
         String hashPassword;
         try {
             hashPassword = accountUtility.hashPassword(dto.getPassword());

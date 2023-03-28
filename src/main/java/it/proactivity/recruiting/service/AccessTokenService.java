@@ -29,8 +29,10 @@ public class AccessTokenService {
         if (accessTokenUtility.isExpired(token)) {
             token.setIsActive(false);
             accessTokenRepository.save(token);
+            // 401
             return ResponseEntity.status(HttpStatus.GONE).build();
         } else {
+            // 200
             return ResponseEntity.status(HttpStatus.IM_USED).build();
         }
     }
