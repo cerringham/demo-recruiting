@@ -29,6 +29,7 @@ public class AccountService {
         if (!accountUtility.validateAccountDto(accountDto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+        // antipattern
         String correctPassword = null;
         try {
             correctPassword = hashPassword(accountDto.getPassword());

@@ -21,6 +21,7 @@ public class AccountController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AccountDto accountDto){
+        // DTO solo con username e password
         return accountService.login(accountDto);
     }
 
