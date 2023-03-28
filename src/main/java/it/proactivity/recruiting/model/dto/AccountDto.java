@@ -20,6 +20,11 @@ public class AccountDto {
 
     private Boolean isActive;
 
+    public AccountDto(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "AccountDto{" +

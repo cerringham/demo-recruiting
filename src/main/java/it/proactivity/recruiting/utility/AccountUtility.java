@@ -1,5 +1,6 @@
 package it.proactivity.recruiting.utility;
 
+import it.proactivity.recruiting.model.Account;
 import it.proactivity.recruiting.model.dto.AccountDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +18,6 @@ public class AccountUtility {
 
     @Autowired
     GlobalValidator globalValidator;
-
 
     public Boolean validatePassword(String password) {
         if (StringUtils.isEmpty(password)) {
@@ -33,7 +34,16 @@ public class AccountUtility {
         } else if (!globalValidator.validateStringAlphaSpace(accountDto.getName()) ||
                 !globalValidator.validateStringAlphaSpace(accountDto.getSurname())
                 || !globalValidator.validateEmail(accountDto.getEmail()) || !accountDto.getEmail().equals(accountDto.getUsername())||
-                StringUtils.isEmpty(accountDto.getPassword()) || accountDto.getIsActive() == false) {
+                !validatePassword(accountDto.getPassword()) || accountDto.getIsActive() == false) {
+            return false;
+        }
+        return true;
+    }
+
+    public Boolean validateAccountForLogin(AccountDto accountDto) {
+        if (accountDto == null) {
+            return false;
+        }else if (StringUtils.isEmpty(accountDto.getUsername()) || StringUtils.isEmpty(accountDto.getPassword())) {
             return false;
         }
         return true;

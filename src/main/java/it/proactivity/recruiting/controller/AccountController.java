@@ -19,5 +19,10 @@ public class AccountController {
         return accountService.addAccount(accountDto);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity login(@RequestBody AccountDto accountDto){
+        return accountService.login(accountDto);
+    }
+
 
 }

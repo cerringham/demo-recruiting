@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "account")
 @Getter
@@ -35,6 +37,10 @@ public class Account {
 
     @Column(name = "is_active")
     private Boolean isActive;
+
+    @OneToMany
+    @JoinColumn(name = "account_id")
+    List<AccessToken> accessTokenList;
 
     public Account(String name, String surname, String email, String username, String password, Boolean isActive) {
         this.name = name;
