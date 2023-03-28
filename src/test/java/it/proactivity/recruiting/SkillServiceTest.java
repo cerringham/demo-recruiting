@@ -1,12 +1,10 @@
 package it.proactivity.recruiting;
 
-import it.proactivity.recruiting.mapper.SkillMapper;
+
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.SkillRepository;
 import it.proactivity.recruiting.service.SkillService;
-import org.aspectj.apache.bcel.classfile.Module;
-import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

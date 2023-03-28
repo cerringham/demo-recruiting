@@ -200,12 +200,18 @@ is_active BOOLEAN NOT NULL);
 CREATE TABLE IF NOT EXISTS access_token(
 id SERIAL PRIMARY KEY,
 value VARCHAR(255) NOT NULL,
-duration TIME NOT NULL,
 is_active BOOLEAN NOT NULL,
 account_id INT,
 FOREIGN KEY(account_id) REFERENCES account(id));
 
 ALTER TABLE account ADD CONSTRAINT email_unique UNIQUE (email);
 ALTER TABLE account ALTER COLUMN password TYPE VARCHAR(32);
-
 ALTER TABLE access_token ADD COLUMN token_creation_date_time TIMESTAMP;
+
+CREATE TABLE IF NOT EXISTS role(
+id SERIAL PRIMARY KEY,
+name VARCHAR(5) NOT NULL,
+description VARCHAR(50) NOT NULL,
+is_active BOOLEAN NOT NULL);
+
+ALTER TABLE account ADD COLUMN role_id INTEGER REFERENCES role(id);

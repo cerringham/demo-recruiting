@@ -36,6 +36,9 @@ public class Account {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @ManyToOne
+    private Role role;
+
     @OneToMany
     @JoinColumn(name = "account_id")
     List<AccessToken> tokenList;
