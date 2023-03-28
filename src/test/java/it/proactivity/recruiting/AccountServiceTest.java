@@ -2,8 +2,10 @@ package it.proactivity.recruiting;
 
 import it.proactivity.recruiting.model.Account;
 import it.proactivity.recruiting.model.dto.AddAccountDto;
+import it.proactivity.recruiting.model.dto.LoginDto;
 import it.proactivity.recruiting.repository.AccountRepository;
 import it.proactivity.recruiting.service.AccountService;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +30,7 @@ public class AccountServiceTest {
     private static final ResponseEntity BAD_REQUEST_RESPONSE = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
     @Test
-     void addAccountPositiveTest() {
+    void addAccountPositiveTest() {
         AddAccountDto dto = new AddAccountDto("Ciccio", "Graziani", "ciccio.graziani@proactivity.it",
                 "ciccio.graziani@proactivity.it", "Graziani1!");
 
@@ -39,6 +41,15 @@ public class AccountServiceTest {
             assertTrue(account.get().getName().equals("Ciccio"));
             assertEquals(POSITIVE_RESPONSE.getStatusCode(), response.getStatusCode());
         }
+    }
+
+    @Test
+    void loginPositiveTest() {
+        LoginDto dto = new LoginDto("ciccio.graziani@proactivity.it", "Graziani1!");
+
+        ResponseEntity response = accountService.login(dto);
+
+        assertEquals(POSITIVE_RESPONSE.getStatusCode(), response.getStatusCode());
     }
 
     @Test

@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalTime;
+
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "access_token")
@@ -21,12 +23,19 @@ public class AccessToken {
     @Column(name = "value")
     private String value;
 
-    @Column(name = "duration")
-    private LocalTime duration;
+    @Column(name = "token_creation_date_time")
+    private LocalDateTime creationTokenDateTime;
 
     @Column(name = "is_active")
     private Boolean isActive;
 
     @ManyToOne
     private Account account;
+
+    public AccessToken(String value, LocalDateTime creationTokenDateTime, Boolean isActive, Account account) {
+        this.value = value;
+        this.creationTokenDateTime = creationTokenDateTime;
+        this.isActive = isActive;
+        this.account = account;
+    }
 }

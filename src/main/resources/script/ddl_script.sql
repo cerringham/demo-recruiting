@@ -207,3 +207,5 @@ FOREIGN KEY(account_id) REFERENCES account(id));
 
 ALTER TABLE account ADD CONSTRAINT email_unique UNIQUE (email);
 ALTER TABLE account ALTER COLUMN password TYPE VARCHAR(32);
+
+ALTER TABLE access_token ADD COLUMN token_creation_date_time TIMESTAMP;

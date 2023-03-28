@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class AddAccountDto {
+
+public class AddAccountDto extends LoginDto {
 
     private String name;
 
@@ -17,7 +17,10 @@ public class AddAccountDto {
 
     private String email;
 
-    private String username;
-
-    private String password;
+    public AddAccountDto(String name, String surname, String email, String username, String password) {
+        super(username, password);
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+    }
 }

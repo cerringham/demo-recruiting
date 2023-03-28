@@ -2,10 +2,14 @@ package it.proactivity.recruiting.utility;
 
 
 import it.proactivity.recruiting.model.dto.AddAccountDto;
+import it.proactivity.recruiting.model.dto.LoginDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Component
@@ -47,24 +51,9 @@ public class AccountValidator {
         if (password.length() < PASSWORD_MIN_LENGTH || password.length() > PASSWORD_MAX_LENGTH) {
             return false;
         }
-        char[] splittedPassword = password.toCharArray();
-
-        Boolean hasUpper = false;
-        Boolean hasNumber = false;
-        Boolean hasSpecialChar = false;
-        for (Character c : splittedPassword) {
-            if (Character.isUpperCase(c)) {
-                hasUpper = true;
-            }
-            if (Character.isDigit(c)) {
-                hasNumber = true;
-            }
-
-            if (!Character.isLetterOrDigit(c)) {
-                hasSpecialChar = true;
-            }
-        }
-        return hasUpper && hasNumber && hasSpecialChar;
+        Pattern pattern = Pattern.compile("^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{6,12}$");
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
     }
 
     private Boolean validateNameAndSurname(String name, String surname) {
@@ -79,6 +68,13 @@ public class AccountValidator {
 
         return validatePassword(dto.getPassword()) && validateNameAndSurname(dto.getName(), dto.getSurname()) &&
                 validateAndCheckIfUsernameAndEmailAreSame(dto.getUsername(), dto.getEmail());
+    }
+
+    public Boolean validateLoginDto(LoginDto dto) {
+        if (dto == null) {
+            return false;
+        }
+        return validatePassword(dto.getPassword()) && globalValidator.validateEmail(dto.getUsername());
     }
 
 
