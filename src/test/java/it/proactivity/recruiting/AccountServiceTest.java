@@ -5,7 +5,6 @@ import it.proactivity.recruiting.model.dto.AddAccountDto;
 import it.proactivity.recruiting.model.dto.LoginDto;
 import it.proactivity.recruiting.repository.AccountRepository;
 import it.proactivity.recruiting.service.AccountService;
-import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
