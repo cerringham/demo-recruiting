@@ -43,17 +43,10 @@ public class AccountUtility {
         return true;
     }
 
-    public Account createAccount(AccountDto accountDto) {
+    public String correctPassword(String password) {
         try {
-            String correctPassword = hashPassword(accountDto.getPassword());
-            Account account = AccountBuilder.newBuilder(accountDto.getName())
-                    .surname(accountDto.getSurname())
-                    .email(accountDto.getEmail())
-                    .username(accountDto.getUsername())
-                    .password(correctPassword)
-                    .isActive(true)
-                    .build();
-            return account;
+            String correctPassword = hashPassword(password);
+            return correctPassword;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

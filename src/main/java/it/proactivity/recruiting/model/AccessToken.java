@@ -29,9 +29,13 @@ public class AccessToken {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    public AccessToken(LocalTime duration, Account account, Boolean isActive) {
+    @Column(name = "name")
+    private String name;
+
+    public AccessToken(LocalTime duration, Account account, Boolean isActive, String name) {
         this.duration = duration;
         this.account = account;
         this.isActive = isActive;
+        this.name = name;
     }
 }

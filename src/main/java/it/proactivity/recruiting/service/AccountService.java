@@ -5,7 +5,9 @@ import it.proactivity.recruiting.builder.AccountBuilder;
 import it.proactivity.recruiting.model.AccessToken;
 import it.proactivity.recruiting.model.Account;
 import it.proactivity.recruiting.model.dto.AccountDto;
+import it.proactivity.recruiting.model.dto.LoginDto;
 import it.proactivity.recruiting.repository.AccountRepository;
+import it.proactivity.recruiting.utility.AccessTokenUtility;
 import it.proactivity.recruiting.utility.AccountUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,16 +27,17 @@ public class AccountService {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    AccessTokenUtility accessTokenUtility;
+
     public ResponseEntity addAccount(AccountDto accountDto){
         if (!accountUtility.validateAccountDto(accountDto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        // antipattern
-        String correctPassword = null;
-        try {
-            correctPassword = hashPassword(accountDto.getPassword());
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+        String correctPassword = accountUtility.correctPassword(accountDto.getPassword());
+        if (correctPassword == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         Account account = AccountBuilder.newBuilder(accountDto.getName())
                 .surname(accountDto.getSurname())
@@ -47,22 +50,19 @@ public class AccountService {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    private static String hashPassword(String plainText) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] messageDigest = md.digest(plainText.getBytes());
-        BigInteger number = new BigInteger(1, messageDigest);
-        return number.toString(16);
-    }
-
-    public ResponseEntity login(AccountDto accountDto) {
-        if (!accountUtility.validateAccountForLogin(accountDto)) {
+    public ResponseEntity login(LoginDto loginDto) {
+        if (!accountUtility.validateAccountForLogin(loginDto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        Optional<Account> account = accountRepository.findByUsernameAndPassword(accountDto.getUsername(),
-                accountDto.getPassword());
+        String correctPassword = accountUtility.correctPassword(loginDto.getPassword());
+        Optional<Account> account = accountRepository.findByUsernameAndPassword(loginDto.getUsername(), correctPassword);
         if (account.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        AccessToken accessToken = AccessTokenBuilder.newBuilder("Name").duration()
+        String tokenName = accessTokenUtility.createStringAccessToken(loginDto.getUsername());
+        AccessToken accessToken =
+
+
+
     }
 }

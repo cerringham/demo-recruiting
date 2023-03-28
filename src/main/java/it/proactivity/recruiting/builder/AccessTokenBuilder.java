@@ -13,6 +13,8 @@ public class AccessTokenBuilder {
 
     private Boolean isActive;
 
+    private String name;
+
     private AccessTokenBuilder(Account account) {
         this.account = account;
     }
@@ -31,7 +33,12 @@ public class AccessTokenBuilder {
         return this;
     }
 
+    public AccessTokenBuilder name(String name) {
+        this.name = name;
+        return this;
+    }
+
     public AccessToken build() {
-        return new AccessToken(duration, account, isActive);
+        return new AccessToken(duration, account, isActive, name);
     }
 }

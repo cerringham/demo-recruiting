@@ -1,6 +1,7 @@
 package it.proactivity.recruiting.controller;
 
 import it.proactivity.recruiting.model.dto.AccountDto;
+import it.proactivity.recruiting.model.dto.LoginDto;
 import it.proactivity.recruiting.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,8 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AccountDto accountDto){
-        // DTO solo con username e password
-        return accountService.login(accountDto);
+    public ResponseEntity login(@RequestBody LoginDto loginDto){
+        return accountService.login(loginDto);
     }
 
 
