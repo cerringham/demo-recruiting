@@ -71,11 +71,6 @@ public class AccountValidator {
     }
 
     public Boolean validateLoginDto(LoginDto dto) {
-        if (dto == null) {
-            return false;
-        }
-        return validatePassword(dto.getPassword()) && globalValidator.validateEmail(dto.getUsername());
+        return dto != null;
     }
-
-
 }

@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.security.NoSuchAlgorithmException;
+
 import java.util.Optional;
 
 @Service
@@ -45,15 +45,12 @@ public class AccountService {
 
     public ResponseEntity login(LoginDto dto) {
         if (!accountValidator.validateLoginDto(dto)) {
-            // eliminare controlli superflui
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        // antipattern, creare un metodo che restituisce hashPassword
-        String hashPassword;
-        try {
-            hashPassword = accountUtility.hashPassword(dto.getPassword());
-        } catch (NoSuchAlgorithmException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        String hashPassword = accountUtility.createHashPassword(dto.getPassword());
+        if (hashPassword == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         Optional<Account> account = accountRepository.findByUsernameAndPassword(dto.getUsername(), hashPassword);
         if (account.isEmpty() || !account.get().getIsActive()) {

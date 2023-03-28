@@ -44,6 +44,14 @@ public class AccountUtility {
 
     }
 
+    public String createHashPassword(String password) {
+        try {
+            return hashPassword(password);
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
+    }
+
     public String hashPassword(String plainText) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] messageDigest = md.digest(plainText.getBytes());
