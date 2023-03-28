@@ -1,9 +1,11 @@
 package it.proactivity.recruiting.controller;
 
 import it.proactivity.recruiting.model.dto.AddAccountDto;
+import it.proactivity.recruiting.model.dto.LoginDto;
 import it.proactivity.recruiting.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,5 +19,10 @@ public class AccountController {
     @PostMapping("add-account")
     public ResponseEntity addAccount(@RequestBody AddAccountDto dto) {
         return accountService.addAccount(dto);
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity login(@RequestBody LoginDto dto) {
+        return accountService.login(dto);
     }
 }
