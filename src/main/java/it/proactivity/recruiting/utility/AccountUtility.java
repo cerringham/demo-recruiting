@@ -4,10 +4,13 @@ import it.proactivity.recruiting.builder.AccessTokenBuilder;
 import it.proactivity.recruiting.builder.AccountBuilder;
 import it.proactivity.recruiting.model.AccessToken;
 import it.proactivity.recruiting.model.Account;
+import it.proactivity.recruiting.model.dto.AccountInformationDto;
 import it.proactivity.recruiting.model.dto.AddAccountDto;
 import it.proactivity.recruiting.repository.AccessTokenRepository;
+import it.proactivity.recruiting.repository.AccountRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +28,9 @@ public class AccountUtility {
 
     @Autowired
     AccessTokenRepository accessTokenRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     public Account createAccount(AddAccountDto dto) {
 
@@ -76,8 +82,24 @@ public class AccountUtility {
         }
     }
 
-    public  String encodeString(String stringToDecrypt) {
+    public String encodeString(String stringToDecrypt) {
         return new String(Base64.encodeBase64(stringToDecrypt.getBytes()));
+    }
+
+    public Optional<AccountInformationDto> getAccountInformation(String username) {
+        if (StringUtils.isEmpty(username))
+            return Optional.empty();
+
+        return accountRepository.findByUsernameAndIsActiveTrue(username)
+                .map(account -> new AccountInformationDto(
+                        account.getId(),
+                        account.getName(),
+                        account.getSurname(),
+                        account.getUsername(),
+                        account.getEmail(),
+                        account.getRole().getId(),
+                        account.getRole().getName()
+                ));
     }
 
     private String createValueForToken(String username) {
