@@ -4,7 +4,7 @@ import it.proactivity.recruiting.model.CompanyRole;
 
 public class CompanyRoleBuilder {
 
-    private String name;
+    private final String name;
 
     private Boolean isActive;
 

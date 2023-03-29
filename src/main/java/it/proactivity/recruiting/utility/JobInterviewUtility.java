@@ -117,8 +117,7 @@ public class JobInterviewUtility {
     }
 
 
-    public Boolean jobInterviewStatusNextStep(JobInterviewStatus newJobInterviewStatus, Candidate candidate,
-                                              JobInterview lastCandidateJobInterview) {
+    public Boolean jobInterviewStatusNextStep(JobInterviewStatus newJobInterviewStatus, JobInterview lastCandidateJobInterview) {
 
 
         if (lastCandidateJobInterview.getJobInterviewStatus().getName().equals(FAILED_INTERVIEW_STATUS) ||
@@ -181,7 +180,7 @@ public class JobInterviewUtility {
     public JobInterview createNextStepJobInterview(Candidate candidate, JobInterviewStatus jobInterviewStatus,
                                                    JobInterview lastCandidateJobInterview, JobInterviewInsertionDto dto) {
 
-        if (jobInterviewStatusNextStep(jobInterviewStatus, candidate, lastCandidateJobInterview)) {
+        if (jobInterviewStatusNextStep(jobInterviewStatus, lastCandidateJobInterview)) {
             try {
                 return createJobInterview(candidate, jobInterviewStatus, dto);
             } catch (IllegalArgumentException | NoResultException e) {

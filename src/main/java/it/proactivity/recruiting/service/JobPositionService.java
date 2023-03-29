@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -76,7 +75,7 @@ public class JobPositionService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository.findByName(JobPosition.NEW_STATUS);
-        List<SkillLevel> skillLevels = jobPositionWithSkillsDto.getSkillLevelDtos().stream()
+        List<SkillLevel> skillLevels = jobPositionWithSkillsDto.getSkillLevelDtoList().stream()
                 .map(s -> skillLevelUtility.createSkillLevelFromDto(s))
                 .collect(Collectors.toList());
         JobPosition jobPosition = JobPositionBuilder.newBuilder(jobPositionWithSkillsDto.getTitle())

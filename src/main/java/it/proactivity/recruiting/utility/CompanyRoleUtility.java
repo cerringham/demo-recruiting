@@ -1,8 +1,7 @@
 package it.proactivity.recruiting.utility;
 
-import it.proactivity.recruiting.builder.CompanyRoleBuilder;
+
 import it.proactivity.recruiting.builder.CompanyRoleDtoBuilder;
-import it.proactivity.recruiting.model.CompanyRole;
 import it.proactivity.recruiting.model.dto.CompanyRoleDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
@@ -35,9 +34,6 @@ public class CompanyRoleUtility {
     }
 
     public Boolean checkIfDefaultRole(String companyName) {
-        if (defaultRoles.contains(companyName)) {
-            return true;
-        }
-        return false;
+        return defaultRoles.contains(companyName);
     }
 }

@@ -99,10 +99,8 @@ public class CandidateService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The candidate phoneNumber is wrong");
         }
 
-        //salvataggio ed inserimento delle nuove skill e creazione mappa skill level
         Map<Skill, Level> skillLevelMap = candidateUtility.insertNewSkillsAndReturnSkillLevelMap(dto.getSkillLevelMap());
 
-        //Creo il candidate e inserisco le skill che non sono presenti nel db
         Candidate candidate;
         try {
             candidate = candidateUtility.createCandidate(dto);
@@ -110,7 +108,7 @@ public class CandidateService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
-        //creazione lista di cv associate al candidate
+
         List<Curriculum> curriculumList = candidateUtility.createCurriculumList(skillLevelMap, candidate);
         candidate.setCandidateSkillList(curriculumList);
         candidateRepository.save(candidate);
@@ -145,7 +143,7 @@ public class CandidateService {
         if (parsedDate == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The Impossible to parse the date");
         }
-        //Setto tutti gli attributi di tipo stringa per il candidate
+
         candidateUtility.setAllStringParametersForCandidate(dto, candidate.get());
 
         candidate.get().setBirthDate(parsedDate);
@@ -158,7 +156,6 @@ public class CandidateService {
 
         Map<Skill, Level> skillLevelMap = candidateUtility.insertNewSkillsAndReturnSkillLevelMap(dto.getSkillLevelMap());
 
-        //creazione  lista di cv
         List<Curriculum> curriculumList = candidateUtility.createCurriculumList(skillLevelMap, candidate.get());
 
         candidate.get().setCandidateSkillList(curriculumList);

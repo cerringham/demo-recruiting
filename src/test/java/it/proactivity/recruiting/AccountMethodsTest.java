@@ -11,7 +11,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @SpringBootTest
-public class AccountMethodsTest {
+class AccountMethodsTest {
 
     @Autowired
     AccountMethods accountMethods;
@@ -20,9 +20,7 @@ public class AccountMethodsTest {
     void retrieveAccountInformationTest() {
 
         Optional<AccountInformationDto> dto = accountMethods.retrieveAccountInformation("alessio.cassarino@proactivity.it");
-        if (dto.isPresent()) {
-            assertTrue(dto.get().getAccountName().equals("Alessio"));
-        }
+        dto.ifPresent(accountInformationDto -> assertTrue(accountInformationDto.getAccountName().equals("Alessio")));
     }
 
     @Test

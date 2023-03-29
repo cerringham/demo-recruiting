@@ -36,14 +36,12 @@ public class AccountInformationDto {
 
     @Override
     public String toString() {
-        return "AccountInformationDto{" +
-                "accountId=" + accountId +
-                ", accountName='" + accountName + '\'' +
-                ", accountSurname='" + accountSurname + '\'' +
-                ", accountUsername='" + accountUsername + '\'' +
-                ", accountEmail='" + accountEmail + '\'' +
-                ", roleId=" + roleId +
-                ", roleName='" + roleName + '\'' +
-                '}';
+        return """
+                Name : %s,
+                Surname : %s,
+                Username : %s,
+                Email : %s,
+                Role Name : %s
+                """.formatted(accountName, accountSurname, accountUsername, accountEmail, roleName);
     }
 }

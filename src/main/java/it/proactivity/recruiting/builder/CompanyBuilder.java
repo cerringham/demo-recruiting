@@ -18,11 +18,6 @@ public class CompanyBuilder {
         return new CompanyBuilder(name);
     }
 
-    public CompanyBuilder cooId(Long cooId) {
-        this.cooId = cooId;
-        return this;
-    }
-
     public CompanyBuilder isActive(Boolean isActive) {
         this.isActive = isActive;
         return this;

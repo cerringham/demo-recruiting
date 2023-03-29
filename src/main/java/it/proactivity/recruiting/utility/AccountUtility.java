@@ -2,10 +2,8 @@ package it.proactivity.recruiting.utility;
 
 import it.proactivity.recruiting.builder.AccessTokenBuilder;
 import it.proactivity.recruiting.builder.AccountBuilder;
-import it.proactivity.recruiting.builder.AccountInformationDtoBuilder;
 import it.proactivity.recruiting.model.AccessToken;
 import it.proactivity.recruiting.model.Account;
-import it.proactivity.recruiting.model.dto.AccountInformationDto;
 import it.proactivity.recruiting.model.dto.AddAccountDto;
 import it.proactivity.recruiting.repository.AccessTokenRepository;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -44,17 +42,6 @@ public class AccountUtility {
         }
     }
 
-    public AccountInformationDto createAccountInformationDto(Account account) {
-        return AccountInformationDtoBuilder.newBuilder(account.getId())
-                .accountName(account.getName())
-                .accountSurname(account.getSurname())
-                .accountEmail(account.getEmail())
-                .accountUsername(account.getUsername())
-                .roleId(account.getRole().getId())
-                .roleName(account.getRole().getName())
-                .build();
-    }
-
     public String createHashPassword(String password) {
         try {
             return hashPassword(password);
@@ -89,7 +76,7 @@ public class AccountUtility {
         }
     }
 
-    public static String encodeString(String stringToDecrypt) {
+    public  String encodeString(String stringToDecrypt) {
         return new String(Base64.encodeBase64(stringToDecrypt.getBytes()));
     }
 

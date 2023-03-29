@@ -51,14 +51,14 @@ public class AccountValidator {
         if (password.length() < PASSWORD_MIN_LENGTH || password.length() > PASSWORD_MAX_LENGTH) {
             return false;
         }
-        Pattern pattern = Pattern.compile("^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{6,12}$");
+        Pattern pattern = Pattern.compile("^(?=.*'\\d)(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{6,12}$");
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
     }
 
     private Boolean validateNameAndSurname(String name, String surname) {
-        return (globalValidator.vaidateStringAlpha(name) && name.length() < NAME_AND_SURNAME_MAX_LENGTH) &&
-                (globalValidator.vaidateStringAlpha(surname) && surname.length() < NAME_AND_SURNAME_MAX_LENGTH);
+        return (globalValidator.validateStringAlpha(name) && name.length() < NAME_AND_SURNAME_MAX_LENGTH) &&
+                (globalValidator.validateStringAlpha(surname) && surname.length() < NAME_AND_SURNAME_MAX_LENGTH);
     }
 
     public Boolean validateAddAccountDto(AddAccountDto dto) {

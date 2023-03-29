@@ -25,7 +25,7 @@ public class GlobalValidator {
         return StringUtils.isAlphanumericSpace(name);
     }
 
-    public Boolean vaidateStringAlpha(String s) {
+    public Boolean validateStringAlpha(String s) {
         if (StringUtils.isEmpty(s)) {
             return false;
         }
@@ -73,9 +73,6 @@ public class GlobalValidator {
     }
 
     public Boolean validateDescription(String description) {
-        if (StringUtils.isEmpty(description)) {
-            return false;
-        }
-        return true;
+        return !StringUtils.isEmpty(description);
     }
 }

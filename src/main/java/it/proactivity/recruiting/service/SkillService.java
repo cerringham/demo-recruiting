@@ -3,6 +3,7 @@ package it.proactivity.recruiting.service;
 
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
+import it.proactivity.recruiting.repository.JobInterviewStatusRepository;
 import it.proactivity.recruiting.repository.SkillRepository;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.SkillUtility;
@@ -26,6 +27,8 @@ public class SkillService {
 
     @Autowired
     SkillUtility skillUtility;
+    @Autowired
+    private JobInterviewStatusRepository jobInterviewStatusRepository;
 
     public ResponseEntity<List<SkillDto>> getAll() {
         List<Skill> skillList = skillRepository.findByIsActive(true);
@@ -53,13 +56,13 @@ public class SkillService {
             throw new IllegalArgumentException("skill dto can't be null");
         }
 
-        globalValidator.validateStringAlphaNumericSpace(dto.getName());
-        //cerco nel db se la skill esiste
+        if(globalValidator.validateStringAlphaNumericSpace(dto.getName())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         Optional<Skill> checkSkill = skillRepository.findByNameIgnoreCase(WordUtils.capitalizeFully(dto.getName()));
         if (checkSkill.isPresent()) {
             return ResponseEntity.status(HttpStatus.FOUND).build();
         }
-        //creo la skill inserendo il nome nel formato corretto
         Skill skill = skillUtility.createSkill(dto);
         skillRepository.save(skill);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -88,7 +91,6 @@ public class SkillService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        //controllo che il nuovo valore che assegnerò alla skill non sia già presente
         Optional<Skill> checkExistingSkill = skillRepository.findByNameIgnoreCase(dto.getName());
         if (checkExistingSkill.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

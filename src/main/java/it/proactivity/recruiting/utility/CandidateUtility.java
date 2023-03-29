@@ -85,7 +85,6 @@ public class CandidateUtility {
         Set<String> dtoSkills = dtoMap.keySet();
 
         Set<Skill> skills = skillRepository.findByNameIgnoreCaseIn(dtoSkills);
-        //salvataggio delle skill non presenti nel db
         if (skills.isEmpty()) {
             dtoSkills.forEach(s -> {
                 Skill skill = SkillBuilder.newBuilder(WordUtils.capitalizeFully(s)).isActive(true).build();
@@ -94,7 +93,6 @@ public class CandidateUtility {
             });
         }
 
-        //controllo eventuale che nella mappa ci siano skill esistenti e non
         if ((!skills.isEmpty()) && skills.size() != dtoSkills.size()) {
 
             Set<String> nonExistentSkillsName = dtoSkills.stream()

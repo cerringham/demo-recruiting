@@ -27,7 +27,7 @@ public class CurriculumDto {
         this.candidateName = candidateName;
         this.candidateSurname = candidateSurname;
         this.skillName = skillName;
-        this.level = level.toString();
+        this.level = level;
     }
 
     @Override

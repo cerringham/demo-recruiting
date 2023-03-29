@@ -47,23 +47,19 @@ public class JobPositionUtility {
 
     public Boolean validateParametersForInsert(JobPositionWithSkillsDto jobPositionWithSkillsDto) {
 
-        if (!globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getTitle()) ||
-                jobPositionWithSkillsDto.getTitle().length() > maxLength50 ||
-                !globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getArea()) ||
-                jobPositionWithSkillsDto.getArea().length() > maxLength20 ||
-                !globalValidator.validateDescription(jobPositionWithSkillsDto.getDescription()) ||
-                !globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCity()) ||
-                jobPositionWithSkillsDto.getCity().length() > maxLength50 ||
-                !globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getRegion()) ||
-                jobPositionWithSkillsDto.getRegion().length() > maxLength30 ||
-                !globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCountry()) ||
-                jobPositionWithSkillsDto.getCountry().length() > maxLength30 ||
-                        !jobPositionWithSkillsDto.getIsActive() ||
-                !globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCompanyName()) ||
-                jobPositionWithSkillsDto.getSkillLevelDtos().size() < minSkills)
-        {
-            return false;
-        }
-        return true;
+        return globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getTitle()) &&
+                jobPositionWithSkillsDto.getTitle().length() <= maxLength50 &&
+                globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getArea()) &&
+                jobPositionWithSkillsDto.getArea().length() <= maxLength20 &&
+                globalValidator.validateDescription(jobPositionWithSkillsDto.getDescription()) &&
+                globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCity()) &&
+                jobPositionWithSkillsDto.getCity().length() <= maxLength50 &&
+                globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getRegion()) &&
+                jobPositionWithSkillsDto.getRegion().length() <= maxLength30 &&
+                globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCountry()) &&
+                jobPositionWithSkillsDto.getCountry().length() <= maxLength30 &&
+                jobPositionWithSkillsDto.getIsActive() &&
+                globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCompanyName()) &&
+                jobPositionWithSkillsDto.getSkillLevelDtoList().size() >= minSkills;
     }
 }

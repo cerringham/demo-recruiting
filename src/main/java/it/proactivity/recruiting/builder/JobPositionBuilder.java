@@ -9,7 +9,7 @@ import java.util.List;
 
 public class JobPositionBuilder {
 
-    private String title;
+    private final String title;
     private String area;
     private String description;
     private String city;
