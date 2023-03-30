@@ -44,7 +44,7 @@ public class AccountServiceTest {
 
     @Test
     void loginPositiveTest() {
-        LoginDto dto = new LoginDto("ciccio.graziani@proactivity.it", "Graziani1!");
+        LoginDto dto = new LoginDto("luigi.cerrato@proactivity.it", "Password1!");
 
         ResponseEntity response = accountService.login(dto);
 

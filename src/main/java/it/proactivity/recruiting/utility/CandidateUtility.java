@@ -51,13 +51,13 @@ public class CandidateUtility {
         candidate.setFiscalCode(dto.getFiscalCode());
     }
 
-    public Candidate createCandidate(CandidateInformationDto dto) {
+    public Optional<Candidate> createCandidate(CandidateInformationDto dto) {
         Optional<Expertise> expertise = expertiseRepository.findByNameIgnoreCaseAndIsActive(dto.getExpertise(), true);
         if (expertise.isEmpty()) {
-            throw new IllegalArgumentException("Expertise doesn't exists");
+            return Optional.empty();
         }
 
-        return CandidateBuilder.newBuilder(dto.getName())
+        return Optional.of(CandidateBuilder.newBuilder(dto.getName())
                 .surname(dto.getSurname())
                 .fiscalCode(dto.getFiscalCode())
                 .cityOfBirth(dto.getCityOfBirth())
@@ -72,7 +72,7 @@ public class CandidateUtility {
                 .isActive(true)
                 .birthDate(parsingUtility.parseStringToLocalDate(dto.getBirthDate()))
                 .expertise(expertise.get())
-                .build();
+                .build());
     }
 
     public Map<Skill, Level> insertNewSkillsAndReturnSkillLevelMap(Map<String, Level> dtoMap) {

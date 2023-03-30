@@ -2,9 +2,13 @@ package it.proactivity.recruiting;
 
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateInformationDto;
+import it.proactivity.recruiting.model.dto.LoginDto;
 import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.repository.AccessTokenRepository;
 import it.proactivity.recruiting.repository.CandidateRepository;
+import it.proactivity.recruiting.service.AccountService;
 import it.proactivity.recruiting.service.CandidateService;
+import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -24,6 +29,9 @@ class CandidateServiceTest {
     CandidateService candidateService;
     @Autowired
     CandidateRepository candidateRepository;
+
+    @Autowired
+    AccessTokenRepository accessTokenRepository;
 
     @Test
     void getAllCandidateTest() {
@@ -43,17 +51,20 @@ class CandidateServiceTest {
         skillLevelMap.put("Azure", Level.ADVANCED);
         skillLevelMap.put("java", Level.BASIC);
 
+        Optional<String> token = getToken("alessio.cassarino@proactivity.it");
         CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRETU09O87L222I", "Catania",
                 "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
                 "m", "1995-12-09", "junior", skillLevelMap);
 
         long numberOfCandidateBeforeInsert = candidateRepository.findByIsActive(true).size();
-        candidateService.insertCandidate(dto);
+        candidateService.insertCandidate(dto, token.get());
 
         long numberOfCandidateAfterInsert = candidateRepository.findByIsActive(true).size();
 
         assertTrue(numberOfCandidateBeforeInsert < numberOfCandidateAfterInsert);
     }
+
+
 
     @Test
     void deleteCandidatePositiveTest() {
@@ -94,5 +105,9 @@ class CandidateServiceTest {
         candidateService.updateCandidate(dto);
 
 
+    }
+
+    private Optional<String> getToken(String accountUsername) {
+        return accessTokenRepository.findLatestTokenValueByUsername(accountUsername);
     }
 }

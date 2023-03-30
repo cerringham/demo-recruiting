@@ -7,6 +7,8 @@ import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateInformationDto;
 import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.repository.AccessTokenRepository;
+import it.proactivity.recruiting.repository.AccountRepository;
 import it.proactivity.recruiting.repository.CandidateRepository;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
 import it.proactivity.recruiting.utility.*;
@@ -40,6 +42,13 @@ public class CandidateService {
     @Autowired
     CandidateUtility candidateUtility;
 
+    @Autowired
+    AccessTokenRepository accessTokenRepository;
+
+    private static final String HR_ROLE = "hr";
+
+    private static final String ADMIN_ROLE = "admin";
+
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
@@ -71,47 +80,29 @@ public class CandidateService {
                 candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate())));
     }
 
-    public ResponseEntity insertCandidate(CandidateInformationDto dto) {
-        if (dto == null) {
+    public ResponseEntity insertCandidate(CandidateInformationDto dto, String accessToken) {
+        Optional<String> accountRoleName = accessTokenRepository.findRoleNameByTokenValue(accessToken);
+        if (accountRoleName.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        if (!accountRoleName.get().equals(ADMIN_ROLE) || !accountRoleName.get().equals(HR_ROLE)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!candidateValidator.validateCandidateInformationDtoParameters(dto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        Set<String> skills = dto.getSkillLevelMap().keySet();
-        if (Boolean.FALSE.equals(candidateValidator.validateSkill(skills))) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The candidate must have at least one skill");
-        }
-        if (!globalValidator.validateStringAlphaSpace(dto.getName())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The candidate name must be alphaSpace");
-        }
-
-        if (!globalValidator.validateStringAlphaSpace(dto.getSurname())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The candidate surname must be alphaSpace");
-        }
-
-        if (!globalValidator.validateEmail(dto.getEmail())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The candidate email format is wrong");
-        }
-
-        if (!globalValidator.validateAge(dto.getBirthDate())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The candidate is to young");
-        }
-
-        if (!globalValidator.validatePhoneNumber(dto.getPhoneNumber())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The candidate phoneNumber is wrong");
-        }
-
         Map<Skill, Level> skillLevelMap = candidateUtility.insertNewSkillsAndReturnSkillLevelMap(dto.getSkillLevelMap());
 
-        Candidate candidate;
-        try {
-            candidate = candidateUtility.createCandidate(dto);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        Optional<Candidate> candidate = candidateUtility.createCandidate(dto);
+        if (candidate.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-
-        List<Curriculum> curriculumList = candidateUtility.createCurriculumList(skillLevelMap, candidate);
-        candidate.setCandidateSkillList(curriculumList);
-        candidateRepository.save(candidate);
+        List<Curriculum> curriculumList = candidateUtility.createCurriculumList(skillLevelMap, candidate.get());
+        candidate.get().setCandidateSkillList(curriculumList);
+        candidateRepository.save(candidate.get());
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
