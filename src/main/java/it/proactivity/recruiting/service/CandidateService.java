@@ -43,12 +43,7 @@ public class CandidateService {
     CandidateUtility candidateUtility;
 
     @Autowired
-    AccessTokenRepository accessTokenRepository;
-
-    private static final String HR_ROLE = "hr";
-
-    private static final String ADMIN_ROLE = "admin";
-
+    AccessTokenUtility accessTokenUtility;
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
@@ -81,12 +76,7 @@ public class CandidateService {
     }
 
     public ResponseEntity insertCandidate(CandidateInformationDto dto, String accessToken) {
-        Optional<String> accountRoleName = accessTokenRepository.findRoleNameByTokenValue(accessToken);
-        if (accountRoleName.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        if (!accountRoleName.get().equals(ADMIN_ROLE) || !accountRoleName.get().equals(HR_ROLE)) {
+        if (!accessTokenUtility.verifyTokenForAdminAndHr(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 

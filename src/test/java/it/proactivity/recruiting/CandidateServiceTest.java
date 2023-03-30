@@ -31,7 +31,9 @@ class CandidateServiceTest {
     CandidateRepository candidateRepository;
 
     @Autowired
-    AccessTokenRepository accessTokenRepository;
+    AccountService accountService;
+    @Autowired
+    private AccessTokenRepository accessTokenRepository;
 
     @Test
     void getAllCandidateTest() {
@@ -51,12 +53,14 @@ class CandidateServiceTest {
         skillLevelMap.put("Azure", Level.ADVANCED);
         skillLevelMap.put("java", Level.BASIC);
 
-        Optional<String> token = getToken("alessio.cassarino@proactivity.it");
-        CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRETU09O87L222I", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi.castello@gmail.it", "+39 8763483928",
+
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRELU09O87L222I", "Catania",
+                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi1.castello@gmail.it", "+39 8963483928",
                 "m", "1995-12-09", "junior", skillLevelMap);
 
         long numberOfCandidateBeforeInsert = candidateRepository.findByIsActive(true).size();
+
         candidateService.insertCandidate(dto, token.get());
 
         long numberOfCandidateAfterInsert = candidateRepository.findByIsActive(true).size();
@@ -64,7 +68,23 @@ class CandidateServiceTest {
         assertTrue(numberOfCandidateBeforeInsert < numberOfCandidateAfterInsert);
     }
 
+    @Test
+    void insertCandidateUnauthorizedNegativeTest() {
+        Map<String, Level> skillLevelMap = new HashMap<>();
+        skillLevelMap.put("Azure", Level.ADVANCED);
+        skillLevelMap.put("java", Level.BASIC);
 
+
+        Optional<String> token = getToken("alessio.cassarino@proactivity.it", "Password1!");
+        CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRELU09O87L222I", "Catania",
+                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi1.castello@gmail.it", "+39 8963483928",
+                "m", "1995-12-09", "junior", skillLevelMap);
+
+
+
+        ResponseEntity response = candidateService.insertCandidate(dto, token.get());
+        assertTrue(response.getStatusCode().equals(HttpStatus.UNAUTHORIZED));
+    }
 
     @Test
     void deleteCandidatePositiveTest() {
@@ -107,7 +127,9 @@ class CandidateServiceTest {
 
     }
 
-    private Optional<String> getToken(String accountUsername) {
+    private Optional<String> getToken(String accountUsername, String password) {
+        LoginDto dto = new LoginDto(accountUsername, password);
+        accountService.login(dto);
         return accessTokenRepository.findLatestTokenValueByUsername(accountUsername);
     }
 }
