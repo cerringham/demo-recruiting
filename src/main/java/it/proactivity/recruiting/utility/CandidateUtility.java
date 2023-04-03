@@ -11,6 +11,7 @@ import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateInformationDto;
 import it.proactivity.recruiting.myEnum.Level;
+import it.proactivity.recruiting.repository.AccessTokenRepository;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
 import it.proactivity.recruiting.repository.SkillRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +36,11 @@ public class CandidateUtility {
 
     @Autowired
     PredicateUtility predicateUtility;
+
+    @Autowired
+    AccessTokenRepository accessTokenRepository;
+
+    private static final Set<String> ROLE_NAME_SET = Set.of("admin", "hr", "dev");
 
     public void setAllStringParametersForCandidate(CandidateInformationDto dto, Candidate candidate) {
         candidate.setName(dto.getName());
@@ -156,5 +162,18 @@ public class CandidateUtility {
             curriculumList.add(curriculum);
         }
         return curriculumList;
+    }
+
+    public Boolean verifyTokenForInsertCandidate(String token) {
+        if (StringUtils.isEmpty(token)) {
+            return false;
+        }
+
+        Set<String> filteredRoleNames = ROLE_NAME_SET.stream()
+                .filter(r -> predicateUtility.validateAdminRoleName(r) || predicateUtility.validateHrRoleName(r))
+                .collect(Collectors.toSet());
+
+        Optional<String> validToken = accessTokenRepository.findRoleNameByTokenValue(token, filteredRoleNames);
+        return validToken.isPresent();
     }
 }

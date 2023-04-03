@@ -3,7 +3,9 @@ package it.proactivity.recruiting.utility;
 import it.proactivity.recruiting.model.Skill;
 import org.springframework.stereotype.Component;
 
+
 import java.util.Set;
+
 
 @Component
 public class PredicateUtility {
@@ -18,5 +20,17 @@ public class PredicateUtility {
             }
         }
         return result;
+    }
+
+    public Boolean validateHrRoleName(String hrRole) {
+        return hrRole.equals("hr");
+    }
+
+    public Boolean validateAdminRoleName(String adminRole) {
+        return adminRole.equals("admin");
+    }
+
+    public Boolean validateDevRoleName(String devRole) {
+       return devRole.equals("dev");
     }
 }

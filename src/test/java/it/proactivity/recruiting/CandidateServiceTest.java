@@ -55,8 +55,8 @@ class CandidateServiceTest {
 
 
         Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
-        CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRELU09O87L222I", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi1.castello@gmail.it", "+39 8963483928",
+        CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FBRELU09O87L222I", "Catania",
+                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi2.castello@gmail.it", "+39 8993483928",
                 "m", "1995-12-09", "junior", skillLevelMap);
 
         long numberOfCandidateBeforeInsert = candidateRepository.findByIsActive(true).size();

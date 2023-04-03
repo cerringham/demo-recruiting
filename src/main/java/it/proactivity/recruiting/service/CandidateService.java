@@ -7,8 +7,6 @@ import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateInformationDto;
 import it.proactivity.recruiting.myEnum.Level;
-import it.proactivity.recruiting.repository.AccessTokenRepository;
-import it.proactivity.recruiting.repository.AccountRepository;
 import it.proactivity.recruiting.repository.CandidateRepository;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
 import it.proactivity.recruiting.utility.*;
@@ -42,9 +40,6 @@ public class CandidateService {
     @Autowired
     CandidateUtility candidateUtility;
 
-    @Autowired
-    AccessTokenUtility accessTokenUtility;
-
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
         List<Candidate> candidateList = candidateRepository.findByIsActive(true);
@@ -76,7 +71,8 @@ public class CandidateService {
     }
 
     public ResponseEntity insertCandidate(CandidateInformationDto dto, String accessToken) {
-        if (!accessTokenUtility.verifyTokenForAdminAndHr(accessToken)) {
+
+        if (!candidateUtility.verifyTokenForInsertCandidate(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
