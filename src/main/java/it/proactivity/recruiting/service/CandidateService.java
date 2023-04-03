@@ -40,6 +40,8 @@ public class CandidateService {
     @Autowired
     CandidateUtility candidateUtility;
 
+    private static final Set<String> ROLE_NAME_SET = Set.of("admin", "hr", "dev");
+
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
         List<Candidate> candidateList = candidateRepository.findByIsActive(true);
@@ -72,7 +74,9 @@ public class CandidateService {
 
     public ResponseEntity insertCandidate(CandidateInformationDto dto, String accessToken) {
 
-        if (!candidateUtility.verifyTokenForInsertCandidate(accessToken)) {
+        Set<String> authorizedRoleName = candidateUtility.createAuthorizedRoleNameSet(ROLE_NAME_SET);
+
+        if (!candidateUtility.verifyIfTokenBelongToAdminOrHr(accessToken, authorizedRoleName)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 

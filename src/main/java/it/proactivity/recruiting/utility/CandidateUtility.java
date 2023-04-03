@@ -40,7 +40,7 @@ public class CandidateUtility {
     @Autowired
     AccessTokenRepository accessTokenRepository;
 
-    private static final Set<String> ROLE_NAME_SET = Set.of("admin", "hr", "dev");
+
 
     public void setAllStringParametersForCandidate(CandidateInformationDto dto, Candidate candidate) {
         candidate.setName(dto.getName());
@@ -164,16 +164,18 @@ public class CandidateUtility {
         return curriculumList;
     }
 
-    public Boolean verifyTokenForInsertCandidate(String token) {
+    public Boolean verifyIfTokenBelongToAdminOrHr(String token, Set<String> authorizedRoleNames) {
         if (StringUtils.isEmpty(token)) {
             return false;
         }
 
-        Set<String> filteredRoleNames = ROLE_NAME_SET.stream()
-                .filter(r -> predicateUtility.validateAdminRoleName(r) || predicateUtility.validateHrRoleName(r))
-                .collect(Collectors.toSet());
-
-        Optional<String> validToken = accessTokenRepository.findRoleNameByTokenValue(token, filteredRoleNames);
+        Optional<String> validToken = accessTokenRepository.findRoleNameByTokenValue(token, authorizedRoleNames);
         return validToken.isPresent();
+    }
+
+    public Set<String> createAuthorizedRoleNameSet(Set<String> roleNameSet) {
+       return roleNameSet.stream()
+                .filter(predicateUtility.FILTER_ADMIN.or(predicateUtility.FILTER_HR))
+                .collect(Collectors.toSet());
     }
 }
