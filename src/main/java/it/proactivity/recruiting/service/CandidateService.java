@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,7 +41,9 @@ public class CandidateService {
     @Autowired
     CandidateUtility candidateUtility;
 
-    private static final Set<String> ROLE_NAME_SET = Set.of("admin", "hr", "dev");
+    public static final Predicate<String> FILTER_ADMIN = s -> s.equals("admin");
+
+    public static final Predicate<String> FILTER_HR = s -> s.equals("hr");
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
@@ -74,9 +77,7 @@ public class CandidateService {
 
     public ResponseEntity insertCandidate(CandidateInformationDto dto, String accessToken) {
 
-        Set<String> authorizedRoleName = candidateUtility.createAuthorizedRoleNameSet(ROLE_NAME_SET);
-
-        if (!candidateUtility.verifyIfTokenBelongToAdminOrHr(accessToken, authorizedRoleName)) {
+        if (!candidateUtility.verifyIfTokenBelongToAdminOrHr(accessToken, FILTER_ADMIN, FILTER_HR)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 

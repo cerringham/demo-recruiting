@@ -13,6 +13,7 @@ import it.proactivity.recruiting.model.dto.CandidateInformationDto;
 import it.proactivity.recruiting.myEnum.Level;
 import it.proactivity.recruiting.repository.AccessTokenRepository;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
+import it.proactivity.recruiting.repository.RoleRepository;
 import it.proactivity.recruiting.repository.SkillRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
@@ -40,7 +42,8 @@ public class CandidateUtility {
     @Autowired
     AccessTokenRepository accessTokenRepository;
 
-
+    @Autowired
+    RoleRepository roleRepository;
 
     public void setAllStringParametersForCandidate(CandidateInformationDto dto, Candidate candidate) {
         candidate.setName(dto.getName());
@@ -164,18 +167,20 @@ public class CandidateUtility {
         return curriculumList;
     }
 
-    public Boolean verifyIfTokenBelongToAdminOrHr(String token, Set<String> authorizedRoleNames) {
+    public Boolean verifyIfTokenBelongToAdminOrHr(String token, Predicate<String> filterAdmin, Predicate<String> filterHr) {
         if (StringUtils.isEmpty(token)) {
             return false;
         }
+        Set<String> authorizedSet = createAuthorizedRoleNameSet(filterAdmin, filterHr);
 
-        Optional<String> validToken = accessTokenRepository.findRoleNameByTokenValue(token, authorizedRoleNames);
+        Optional<String> validToken = accessTokenRepository.findRoleNameByTokenValue(token, authorizedSet);
         return validToken.isPresent();
     }
+    private Set<String> createAuthorizedRoleNameSet(Predicate<String> filterAdmin, Predicate<String> filterHr) {
+        List<String> roleNames = roleRepository.findAllNames();
 
-    public Set<String> createAuthorizedRoleNameSet(Set<String> roleNameSet) {
-       return roleNameSet.stream()
-                .filter(predicateUtility.FILTER_ADMIN.or(predicateUtility.FILTER_HR))
+        return roleNames.stream()
+                .filter(filterAdmin.or(filterHr))
                 .collect(Collectors.toSet());
     }
 }
