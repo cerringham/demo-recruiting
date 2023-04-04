@@ -5,6 +5,7 @@ import it.proactivity.recruiting.model.AccessToken;
 import it.proactivity.recruiting.model.Account;
 import it.proactivity.recruiting.model.dto.AccountDto;
 import it.proactivity.recruiting.model.dto.LoginDto;
+import it.proactivity.recruiting.repository.AccountRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,9 @@ public class AccountUtility {
 
     @Autowired
     GlobalValidator globalValidator;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     public Boolean validatePassword(String password) {
         if (StringUtils.isEmpty(password)) {
@@ -66,5 +70,13 @@ public class AccountUtility {
             return false;
         }
         return true;
+    }
+
+    public Account getAccountFromUsername(String username) {
+        Optional<Account> account = accountRepository.findByUsername(username);
+        if (account.isEmpty()) {
+            return null;
+        }
+        return account.get();
     }
 }

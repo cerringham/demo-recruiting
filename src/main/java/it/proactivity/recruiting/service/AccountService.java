@@ -6,6 +6,7 @@ import it.proactivity.recruiting.model.AccessToken;
 import it.proactivity.recruiting.model.Account;
 import it.proactivity.recruiting.model.dto.AccountDto;
 import it.proactivity.recruiting.model.dto.LoginDto;
+import it.proactivity.recruiting.repository.AccessTokenRepository;
 import it.proactivity.recruiting.repository.AccountRepository;
 import it.proactivity.recruiting.utility.AccessTokenUtility;
 import it.proactivity.recruiting.utility.AccountUtility;
@@ -30,6 +31,9 @@ public class AccountService {
 
     @Autowired
     AccessTokenUtility accessTokenUtility;
+
+    @Autowired
+    AccessTokenRepository accessTokenRepository;
 
     public ResponseEntity addAccount(AccountDto accountDto){
         if (!accountUtility.validateAccountDto(accountDto)) {
@@ -59,10 +63,9 @@ public class AccountService {
         if (account.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        String tokenName = accessTokenUtility.createStringAccessToken(loginDto.getUsername());
-        AccessToken accessToken =
-
-
-
+        AccessToken accessToken = accessTokenUtility.createAccessToken(loginDto.getUsername());
+        accessTokenUtility.setAccessTokenToFalse();
+        accessTokenRepository.save(accessToken);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

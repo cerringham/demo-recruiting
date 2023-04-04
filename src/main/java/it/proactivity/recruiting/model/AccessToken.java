@@ -20,8 +20,8 @@ public class AccessToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "duration")
-    private LocalTime duration;
+    @Column(name = "expiration")
+    private LocalTime expiration;
 
     @ManyToOne
     private Account account;
@@ -32,8 +32,8 @@ public class AccessToken {
     @Column(name = "name")
     private String name;
 
-    public AccessToken(LocalTime duration, Account account, Boolean isActive, String name) {
-        this.duration = duration;
+    public AccessToken(LocalTime expiration, Account account, Boolean isActive, String name) {
+        this.expiration = expiration;
         this.account = account;
         this.isActive = isActive;
         this.name = name;

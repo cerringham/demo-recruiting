@@ -209,3 +209,4 @@ FOREIGN KEY (account_id) REFERENCES account(id)
 
 ALTER TABLE access_token DROP COLUMN name;
 ALTER TABLE access_token ADD COLUMN name VARCHAR (250) NOT NULL;
+ALTER TABLE access_token RENAME COLUMN duration TO expiration;
