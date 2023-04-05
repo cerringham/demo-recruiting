@@ -7,6 +7,7 @@ import it.proactivity.recruiting.repository.AccessTokenRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.el.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,15 +25,16 @@ public class AccessTokenUtility {
     @Autowired
     AccessTokenRepository accessTokenRepository;
 
+    private static String TOKEN_SEPARATOR = ".";
+
     public AccessToken createAccessToken(String username) {
 
         String random = RandomStringUtils.randomAlphabetic(12);
         String encoded = encodeString(username);
         Long instant = Instant.now().toEpochMilli();
         LocalTime duration = Instant.ofEpochMilli(instant + 600000L).atZone(ZoneId.systemDefault()).toLocalTime();
-        String dot = ".";
 
-        String name = random + dot + encoded + dot + instant;
+        String name = random + TOKEN_SEPARATOR + encoded + TOKEN_SEPARATOR + instant;
 
         return AccessTokenBuilder.newBuilder(accountUtility.getAccountFromUsername(username))
                 .name(name)

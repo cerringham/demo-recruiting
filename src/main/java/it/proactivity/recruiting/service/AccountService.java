@@ -1,6 +1,5 @@
 package it.proactivity.recruiting.service;
 
-import it.proactivity.recruiting.builder.AccessTokenBuilder;
 import it.proactivity.recruiting.builder.AccountBuilder;
 import it.proactivity.recruiting.model.AccessToken;
 import it.proactivity.recruiting.model.Account;
@@ -15,9 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 @Service
@@ -39,7 +35,7 @@ public class AccountService {
         if (!accountUtility.validateAccountDto(accountDto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        String correctPassword = accountUtility.correctPassword(accountDto.getPassword());
+        String correctPassword = accountUtility.generateHashedPassword(accountDto.getPassword());
         if (correctPassword == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -58,8 +54,8 @@ public class AccountService {
         if (!accountUtility.validateAccountForLogin(loginDto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        String correctPassword = accountUtility.correctPassword(loginDto.getPassword());
-        Optional<Account> account = accountRepository.findByUsernameAndPassword(loginDto.getUsername(), correctPassword);
+        String correctPassword = accountUtility.generateHashedPassword(loginDto.getPassword());
+        Optional<Account> account = accountRepository.findByUsernamePasswordAndIsActive(loginDto.getUsername(), correctPassword, true);
         if (account.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

@@ -1,7 +1,5 @@
 package it.proactivity.recruiting.utility;
 
-import it.proactivity.recruiting.builder.AccountBuilder;
-import it.proactivity.recruiting.model.AccessToken;
 import it.proactivity.recruiting.model.Account;
 import it.proactivity.recruiting.model.dto.AccountDto;
 import it.proactivity.recruiting.model.dto.LoginDto;
@@ -47,7 +45,7 @@ public class AccountUtility {
         return true;
     }
 
-    public String correctPassword(String password) {
+    public String generateHashedPassword(String password) {
         try {
             String correctPassword = hashPassword(password);
             return correctPassword;
