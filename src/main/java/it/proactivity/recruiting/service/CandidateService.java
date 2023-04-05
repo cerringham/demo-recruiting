@@ -77,7 +77,7 @@ public class CandidateService {
 
     public ResponseEntity insertCandidate(CandidateInformationDto dto, String accessToken) {
 
-        if (!candidateUtility.verifyIfTokenBelongToAdminOrHr(accessToken, FILTER_ADMIN, FILTER_HR)) {
+        if (!candidateUtility.verifyToken(accessToken, FILTER_ADMIN, FILTER_HR)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 

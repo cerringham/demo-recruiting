@@ -13,12 +13,12 @@ import it.proactivity.recruiting.model.dto.CandidateInformationDto;
 import it.proactivity.recruiting.myEnum.Level;
 import it.proactivity.recruiting.repository.AccessTokenRepository;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
-import it.proactivity.recruiting.repository.RoleRepository;
 import it.proactivity.recruiting.repository.SkillRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -42,8 +42,7 @@ public class CandidateUtility {
     @Autowired
     AccessTokenRepository accessTokenRepository;
 
-    @Autowired
-    RoleRepository roleRepository;
+    private static final Set<String> ROLE_NAME_SET = Set.of("admin", "hr", "dev");
 
     public void setAllStringParametersForCandidate(CandidateInformationDto dto, Candidate candidate) {
         candidate.setName(dto.getName());
@@ -167,7 +166,7 @@ public class CandidateUtility {
         return curriculumList;
     }
 
-    public Boolean verifyIfTokenBelongToAdminOrHr(String token, Predicate<String> filterAdmin, Predicate<String> filterHr) {
+    public Boolean verifyToken(String token, Predicate<String> filterAdmin, Predicate<String> filterHr) {
         if (StringUtils.isEmpty(token)) {
             return false;
         }
@@ -177,9 +176,7 @@ public class CandidateUtility {
         return validToken.isPresent();
     }
     private Set<String> createAuthorizedRoleNameSet(Predicate<String> filterAdmin, Predicate<String> filterHr) {
-        List<String> roleNames = roleRepository.findAllNames();
-
-        return roleNames.stream()
+        return ROLE_NAME_SET.stream()
                 .filter(filterAdmin.or(filterHr))
                 .collect(Collectors.toSet());
     }
