@@ -42,6 +42,9 @@ public class Account {
     @JoinColumn(name = "account_id")
     List<AccessToken> accessTokenList;
 
+    @ManyToOne
+    private Role role;
+
     public Account(String name, String surname, String email, String username, String password, Boolean isActive) {
         this.name = name;
         this.surname = surname;

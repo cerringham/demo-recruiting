@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    Optional<Account> findByUsernamePasswordAndIsActive(String username, String password, Boolean isActive);
+    Optional<Account> findByUsernameAndPasswordAndIsActive(String username, String password, Boolean isActive);
 
     Optional<Account> findByUsername(String username);
 }

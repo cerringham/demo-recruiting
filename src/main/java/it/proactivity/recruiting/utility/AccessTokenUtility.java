@@ -7,7 +7,6 @@ import it.proactivity.recruiting.repository.AccessTokenRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.el.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

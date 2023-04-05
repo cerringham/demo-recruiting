@@ -1,5 +1,6 @@
 package it.proactivity.recruiting;
 import it.proactivity.recruiting.model.dto.AccountDto;
+import it.proactivity.recruiting.model.dto.AccountWithRoleDto;
 import it.proactivity.recruiting.model.dto.LoginDto;
 import org.junit.jupiter.api.Test;
 import it.proactivity.recruiting.service.AccountService;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -63,5 +66,16 @@ public class AccountServiceTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
+    @Test
+    void getInformationFromUserTest() {
+        Optional<AccountWithRoleDto> account = accountService.getInformationFromUser("juandavis@gmail.com");
+
+        assertTrue(account.isPresent());
+
+        //wrong email
+        Optional<AccountWithRoleDto> account2 = accountService.getInformationFromUser("juanvis@gmail.com");
+
+        assertTrue(account2.isEmpty());
+    }
 
 }

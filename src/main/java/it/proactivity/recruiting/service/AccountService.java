@@ -1,14 +1,17 @@
 package it.proactivity.recruiting.service;
 
 import it.proactivity.recruiting.builder.AccountBuilder;
+import it.proactivity.recruiting.builder.AccountWithRoleDtoBuilder;
 import it.proactivity.recruiting.model.AccessToken;
 import it.proactivity.recruiting.model.Account;
 import it.proactivity.recruiting.model.dto.AccountDto;
+import it.proactivity.recruiting.model.dto.AccountWithRoleDto;
 import it.proactivity.recruiting.model.dto.LoginDto;
 import it.proactivity.recruiting.repository.AccessTokenRepository;
 import it.proactivity.recruiting.repository.AccountRepository;
 import it.proactivity.recruiting.utility.AccessTokenUtility;
 import it.proactivity.recruiting.utility.AccountUtility;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +58,7 @@ public class AccountService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         String correctPassword = accountUtility.generateHashedPassword(loginDto.getPassword());
-        Optional<Account> account = accountRepository.findByUsernamePasswordAndIsActive(loginDto.getUsername(), correctPassword, true);
+        Optional<Account> account = accountRepository.findByUsernameAndPasswordAndIsActive(loginDto.getUsername(), correctPassword, true);
         if (account.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -63,5 +66,24 @@ public class AccountService {
         accessTokenUtility.setAccessTokenToFalse();
         accessTokenRepository.save(accessToken);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    public Optional<AccountWithRoleDto> getInformationFromUser(String username) {
+        if (!StringUtils.isEmpty(username)) {
+            Optional<Account> account = accountRepository.findByUsername(username);
+            if (account.isEmpty()) {
+                return Optional.empty();
+            }
+            AccountWithRoleDto accountWithRoleDto = AccountWithRoleDtoBuilder.newBuilder(account.get().getId())
+                    .accountName(account.get().getName())
+                    .accountSurname(account.get().getSurname())
+                    .accountUsername(account.get().getUsername())
+                    .accountEmail(account.get().getEmail())
+                    .roleId(account.get().getRole().getId())
+                    .roleName(account.get().getRole().getName())
+                    .build();
+            return Optional.of(accountWithRoleDto);
+        }
+        return Optional.empty();
     }
 }
