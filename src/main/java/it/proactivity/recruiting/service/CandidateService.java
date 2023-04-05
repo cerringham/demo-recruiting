@@ -41,9 +41,7 @@ public class CandidateService {
     @Autowired
     CandidateUtility candidateUtility;
 
-    public static final Predicate<String> FILTER_ADMIN = s -> s.equals("admin");
-
-    public static final Predicate<String> FILTER_HR = s -> s.equals("hr");
+    private static final List<String> AUTHORIZED_ROLE = Arrays.asList("hr", "admin");
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
@@ -77,7 +75,9 @@ public class CandidateService {
 
     public ResponseEntity insertCandidate(CandidateInformationDto dto, String accessToken) {
 
-        if (!candidateUtility.verifyToken(accessToken, FILTER_ADMIN, FILTER_HR)) {
+        Set<Predicate<String>> predicateSet = candidateUtility.createPredicateSet(AUTHORIZED_ROLE);
+
+        if (!candidateUtility.verifyAccountCredential(accessToken, predicateSet)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 

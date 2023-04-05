@@ -110,11 +110,11 @@ public class CandidateUtility {
             skills.forEach(s -> skillLevelMap.put(s, dtoCapitalizeMap.get(s.getName())));
 
             nonExistentSkillsName.forEach(s -> {
-                        String correctSkillName = WordUtils.capitalizeFully(s);
-                        Skill skill = SkillBuilder.newBuilder(correctSkillName).isActive(true).build();
-                        skillLevelMap.put(skill, dtoCapitalizeMap.get(s));
-                        skillRepository.save(skill);
-                    });
+                String correctSkillName = WordUtils.capitalizeFully(s);
+                Skill skill = SkillBuilder.newBuilder(correctSkillName).isActive(true).build();
+                skillLevelMap.put(skill, dtoCapitalizeMap.get(s));
+                skillRepository.save(skill);
+            });
         }
         return skillLevelMap;
     }
@@ -166,18 +166,30 @@ public class CandidateUtility {
         return curriculumList;
     }
 
-    public Boolean verifyToken(String token, Predicate<String> filterAdmin, Predicate<String> filterHr) {
+    public Boolean verifyAccountCredential(String token, Set<Predicate<String>> predicateSet) {
         if (StringUtils.isEmpty(token)) {
             return false;
         }
-        Set<String> authorizedSet = createAuthorizedRoleNameSet(filterAdmin, filterHr);
+        Set<String> authorizedSet = createAuthorizedRoleNameSet(predicateSet);
 
         Optional<String> validToken = accessTokenRepository.findRoleNameByTokenValue(token, authorizedSet);
         return validToken.isPresent();
     }
-    private Set<String> createAuthorizedRoleNameSet(Predicate<String> filterAdmin, Predicate<String> filterHr) {
-        return ROLE_NAME_SET.stream()
-                .filter(filterAdmin.or(filterHr))
-                .collect(Collectors.toSet());
+
+    public Set<Predicate<String>> createPredicateSet(List<String> roleNameAuthorizedList) {
+        Set<Predicate<String>> predicateSet = new HashSet<>();
+        roleNameAuthorizedList.stream()
+                .forEach(r -> {
+                    Predicate<String> authorizedPredicate = s -> s.equals(r);
+                    predicateSet.add(authorizedPredicate);
+                });
+        return predicateSet;
+    }
+
+    private Set<String> createAuthorizedRoleNameSet(Set<Predicate<String>> predicateSet) {
+        return predicateSet.stream()
+                .flatMap(p -> ROLE_NAME_SET.stream()
+                        .filter(p)
+                ).collect(Collectors.toSet());
     }
 }
