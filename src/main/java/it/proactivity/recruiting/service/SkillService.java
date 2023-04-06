@@ -3,7 +3,6 @@ package it.proactivity.recruiting.service;
 
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
-import it.proactivity.recruiting.repository.JobInterviewStatusRepository;
 import it.proactivity.recruiting.repository.SkillRepository;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.SkillUtility;
@@ -27,10 +26,14 @@ public class SkillService {
 
     @Autowired
     SkillUtility skillUtility;
-    @Autowired
-    private JobInterviewStatusRepository jobInterviewStatusRepository;
 
-    public ResponseEntity<List<SkillDto>> getAll() {
+
+    public ResponseEntity<List<SkillDto>> getAll(String accessToken) {
+
+        if (!skillUtility.authorizeSkillService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         List<Skill> skillList = skillRepository.findByIsActive(true);
 
         List<SkillDto> dtoList = skillList.stream()
@@ -39,7 +42,12 @@ public class SkillService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<SkillDto> findById(Long id) {
+    public ResponseEntity<SkillDto> findById(Long id, String accessToken) {
+
+        if (!skillUtility.authorizeSkillService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         globalValidator.validateId(id);
 
         Optional<Skill> skill = skillRepository.findByIdAndIsActive(id, true);
@@ -51,12 +59,17 @@ public class SkillService {
         return ResponseEntity.ok(skillUtility.createSkillDto(skill.get().getName(), skill.get().getIsActive()));
     }
 
-    public ResponseEntity insertSkill(SkillDto dto) {
+    public ResponseEntity insertSkill(SkillDto dto, String accessToken) {
+
+        if (!skillUtility.authorizeSkillService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (dto == null) {
             throw new IllegalArgumentException("skill dto can't be null");
         }
 
-        if(globalValidator.validateStringAlphaNumericSpace(dto.getName())) {
+        if (globalValidator.validateStringAlphaNumericSpace(dto.getName())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         Optional<Skill> checkSkill = skillRepository.findByNameIgnoreCase(WordUtils.capitalizeFully(dto.getName()));
@@ -68,7 +81,12 @@ public class SkillService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity deleteSkill(Long id) {
+    public ResponseEntity deleteSkill(Long id, String accessToken) {
+
+        if (!skillUtility.authorizeSkillService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (id == null) {
             throw new IllegalArgumentException("Id can't be null");
         }
@@ -82,7 +100,12 @@ public class SkillService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity updateSkill(SkillDto dto) {
+    public ResponseEntity updateSkill(SkillDto dto, String accessToken) {
+
+        if (!skillUtility.authorizeSkillService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (dto == null) {
             throw new IllegalArgumentException("Dto can't be null");
         }

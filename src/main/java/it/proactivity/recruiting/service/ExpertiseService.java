@@ -27,7 +27,11 @@ public class ExpertiseService {
     ExpertiseUtility expertiseUtility;
 
 
-    public ResponseEntity<List<ExpertiseDto>> getAll() {
+    public ResponseEntity<List<ExpertiseDto>> getAll(String accessToken) {
+
+        if (expertiseUtility.authorizeExpertiseService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         List<Expertise> expertiseDtoList = expertiseRepository.findByIsActive(true);
 
@@ -38,9 +42,15 @@ public class ExpertiseService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<ExpertiseDto> findById(Long id) {
+    public ResponseEntity<ExpertiseDto> findById(Long id, String accessToken) {
 
-        globalValidator.validateId(id);
+        if (expertiseUtility.authorizeExpertiseService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Optional<Expertise> expertise = expertiseRepository.findByIdAndIsActive(id, true);
 

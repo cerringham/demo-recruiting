@@ -26,7 +26,12 @@ public class JobInterviewTypeService {
     @Autowired
     JobInterviewTypeUtility jobInterviewTypeUtility;
 
-    public ResponseEntity<List<JobInterviewTypeDto>> getAll() {
+    public ResponseEntity<List<JobInterviewTypeDto>> getAll(String accessToken) {
+
+        if (!jobInterviewTypeUtility.authorizeJobInterviewTypeService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         List<JobInterviewType> jobInterviewTypeList = jobInterviewTypeRepository.findByIsActive(true);
 
         List<JobInterviewTypeDto> dtoList = jobInterviewTypeList.stream()
@@ -36,8 +41,15 @@ public class JobInterviewTypeService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<JobInterviewTypeDto> findById(Long id) {
-        globalValidator.validateId(id);
+    public ResponseEntity<JobInterviewTypeDto> findById(Long id, String accessToken) {
+
+        if (!jobInterviewTypeUtility.authorizeJobInterviewTypeService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Optional<JobInterviewType> jobInterviewType = jobInterviewTypeRepository.findByIdAndIsActive(id, true);
 

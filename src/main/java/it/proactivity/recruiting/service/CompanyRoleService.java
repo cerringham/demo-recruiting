@@ -27,7 +27,12 @@ public class CompanyRoleService {
     @Autowired
     CompanyRoleUtility companyRoleUtility;
 
-    public ResponseEntity<List<CompanyRoleDto>> getAll() {
+    public ResponseEntity<List<CompanyRoleDto>> getAll(String accessToken) {
+
+        if (!companyRoleUtility.authorizeCompanyRoleService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         List<CompanyRole> companyRoleList = companyRoleRepository.findByIsActive(true);
 
         List<CompanyRoleDto> dtoList = companyRoleList.stream()
@@ -37,8 +42,15 @@ public class CompanyRoleService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CompanyRoleDto> findById(Long id) {
-        globalValidator.validateId(id);
+    public ResponseEntity<CompanyRoleDto> findById(Long id, String accessToken) {
+
+        if (!companyRoleUtility.authorizeCompanyRoleService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Optional<CompanyRole> companyRole = companyRoleRepository.findByIdAndIsActive(id, true);
 
@@ -50,12 +62,17 @@ public class CompanyRoleService {
                 companyRole.get().getIsActive()));
     }
 
-    public ResponseEntity insertCompanyRole(CompanyRoleDto companyRoleDto) {
+    public ResponseEntity insertCompanyRole(CompanyRoleDto companyRoleDto, String accessToken) {
+
+        if (!companyRoleUtility.authorizeCompanyRoleService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         String companyRoleName = companyRoleUtility.transformCompanyRoleName(companyRoleDto.getName());
         Optional<CompanyRole> companyRole = companyRoleRepository.findByName(companyRoleName);
         if (companyRole.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }else {
+        } else {
             CompanyRole newCompanyRole = CompanyRoleBuilder.newBuilder(companyRoleName)
                     .isActive(true)
                     .build();
@@ -64,7 +81,12 @@ public class CompanyRoleService {
         }
     }
 
-    public ResponseEntity updateCompanyRole(CompanyRoleDto companyRoleDto) {
+    public ResponseEntity updateCompanyRole(CompanyRoleDto companyRoleDto, String accessToken) {
+
+        if (!companyRoleUtility.authorizeCompanyRoleService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (!globalValidator.validateId(companyRoleDto.getId())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -80,16 +102,21 @@ public class CompanyRoleService {
             companyRoleRepository.save(companyRole.get());
             return ResponseEntity.status(HttpStatus.OK).build();
         }
-       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    public ResponseEntity deleteCompanyRole(Long id) {
+    public ResponseEntity deleteCompanyRole(Long id, String accessToken) {
+
+        if (!companyRoleUtility.authorizeCompanyRoleService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (!globalValidator.validateId(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         Optional<CompanyRole> companyRole = companyRoleRepository.findById(id);
         if (companyRole.isPresent()) {
-            if (companyRoleUtility.checkIfDefaultRole(companyRole.get().getName())){
+            if (companyRoleUtility.checkIfDefaultRole(companyRole.get().getName())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
             int deleted = companyRoleRepository.inactivateCompanyRoleById(id);

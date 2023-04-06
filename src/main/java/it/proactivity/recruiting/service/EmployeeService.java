@@ -51,7 +51,12 @@ public class EmployeeService {
     @Autowired
     CompanyRoleRepository companyRoleRepository;
 
-    public ResponseEntity<Set<EmployeeDto>> getAll() {
+    public ResponseEntity<Set<EmployeeDto>> getAll(String accessToken) {
+
+        if (!employeeUtility.authorizeEmployeeService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         List<Employee> employeeList = employeeRepository.findByIsActive(true);
 
         Set<EmployeeDto> dtoList = employeeList.stream()
@@ -65,7 +70,12 @@ public class EmployeeService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<EmployeeDto> findById(Long id) {
+    public ResponseEntity<EmployeeDto> findById(Long id, String accessToken) {
+
+        if (!employeeUtility.authorizeEmployeeService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         globalValidator.validateId(id);
 
         Optional<Employee> employee = employeeRepository.findByIdAndIsActive(id, true);
@@ -83,7 +93,12 @@ public class EmployeeService {
                 employee.get().getCompany().getName(), employee.get().getCompanyRole().getName()));
     }
 
-    public ResponseEntity insertEmployee(EmployeeDto dto) {
+    public ResponseEntity insertEmployee(EmployeeDto dto, String accessToken) {
+
+        if (!employeeUtility.authorizeEmployeeService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (dto == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dto can't be null");
         }
@@ -129,7 +144,12 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity deleteEmployee(Long id) {
+    public ResponseEntity deleteEmployee(Long id, String accessToken) {
+
+        if (!employeeUtility.authorizeEmployeeService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (id == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id can't be null");
         }
@@ -145,7 +165,11 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity updateEmployee(EmployeeDto dto) {
+    public ResponseEntity updateEmployee(EmployeeDto dto, String accessToken) {
+
+        if (!employeeUtility.authorizeEmployeeService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         if (dto == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dto can't be null");

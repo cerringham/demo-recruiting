@@ -12,7 +12,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 
 @Component
 public class SkillLevelUtility {
@@ -20,7 +23,14 @@ public class SkillLevelUtility {
     @Autowired
     SkillRepository skillRepository;
 
+    @Autowired
+    AccessTokenUtility accessTokenUtility;
+
+    private static final List<String> AUTHORIZED_ROLE = List.of("hr", "admin");
+
     public SkillLevelDto createSkillLevelDto(Boolean isActive, String level, String skillName, String jobPositionTitle) {
+
+
         if (StringUtils.isEmpty(level) || StringUtils.isEmpty(skillName) || StringUtils.isEmpty(jobPositionTitle) ||
                 isActive == null) {
             throw new IllegalArgumentException("The parameters for the creation of SkillLevelDto can't be null or empty");
@@ -42,8 +52,13 @@ public class SkillLevelUtility {
             skillRepository.save(skill.get());
         }
         return SkillLevelBuilder.newBuilder(true)
-                    .skill(skill.get())
-                    .level(Level.valueOf(skillLevelDto.getLevel()))
-                    .build();
-        }
+                .skill(skill.get())
+                .level(Level.valueOf(skillLevelDto.getLevel()))
+                .build();
+    }
+
+    public Boolean authorizeSkillLevelService(String accessToken) {
+        Set<Predicate<String>> predicateSet = accessTokenUtility.createPredicateSet(AUTHORIZED_ROLE);
+        return accessTokenUtility.verifyAccountCredential(accessToken, predicateSet);
+    }
 }

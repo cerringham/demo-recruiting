@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -36,20 +35,28 @@ public class CompanyService {
     CompanyUtility companyUtility;
 
 
-    public ResponseEntity<List<CompanyDto>> getAll() {
+    public ResponseEntity<List<CompanyDto>> getAll(String accessToken) {
+
+        if (!companyUtility.authorizeCompanyService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         List<Company> companyList = companyRepository.findByIsActive(true);
 
-        List<CompanyDto> dtoList = companyList.stream()
-                .map(c -> companyUtility.createCompanyDto(c.getName(), c.getIsActive()))
-                .toList();
+        List<CompanyDto> dtoList = companyList.stream().map(c -> companyUtility.createCompanyDto(c.getName(), c.getIsActive())).toList();
 
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CompanyDto> findById(Long id) {
+    public ResponseEntity<CompanyDto> findById(Long id, String accessToken) {
 
-        globalValidator.validateId(id);
+        if (!companyUtility.authorizeCompanyService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Optional<Company> company = companyRepository.findByIdAndIsActive(id, true);
 
@@ -60,7 +67,12 @@ public class CompanyService {
         return ResponseEntity.ok(companyUtility.createCompanyDto(company.get().getName(), company.get().getIsActive()));
     }
 
-    public ResponseEntity checkCompanyPresence() {
+    public ResponseEntity checkCompanyPresence(String accessToken) {
+
+        if (!companyUtility.authorizeCompanyService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         List<Company> companies = companyRepository.findAll();
         List<String> companyNames = companies.stream().map(Company::getName).toList();
 
@@ -70,10 +82,9 @@ public class CompanyService {
         }
 
         //Check if there are correct company
-            if (companies.size() == maxCompanies && Boolean.FALSE.equals(companyUtility.checkCompanyNames(companyNames,
-                    expectedCompany))) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
+        if (companies.size() == maxCompanies && Boolean.FALSE.equals(companyUtility.checkCompanyNames(companyNames, expectedCompany))) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
 
 
         //If the companies are less than 4, I make the missing one with the flag set to true and set the flag to true for the
@@ -82,7 +93,7 @@ public class CompanyService {
             Set<Company> missingCompanies = companyUtility.createMissingCompany(companies, expectedCompany);
 
             missingCompanies.forEach(c -> companyRepository.save(c));
-            
+
             companies.forEach(c -> {
                 c.setIsActive(true);
                 companyRepository.save(c);
@@ -92,9 +103,7 @@ public class CompanyService {
         }
 
         //Retrieve any possible companies with flag false
-        List<Company> companiesNotActive = companies.stream()
-                .filter(c -> c.getIsActive().equals(false))
-                .toList();
+        List<Company> companiesNotActive = companies.stream().filter(c -> c.getIsActive().equals(false)).toList();
         /*
         If the companies are 4 and there are companies with the flag set to false , I set all the flag to true,
         else I return response ok

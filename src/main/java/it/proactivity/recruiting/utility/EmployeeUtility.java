@@ -16,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 
 @Component
 public class EmployeeUtility {
@@ -34,6 +37,11 @@ public class EmployeeUtility {
 
     @Autowired
     CompanyRoleRepository companyRoleRepository;
+
+    @Autowired
+    AccessTokenUtility accessTokenUtility;
+
+    private static final List<String> AUTHORIZED_ROLE = List.of("hr");
 
     public void setAllStringParameters(Employee employee, EmployeeDto dto) {
         employee.setName(dto.getName());
@@ -150,5 +158,10 @@ public class EmployeeUtility {
                 .isActive(true)
                 .birthDate(parsedBirthDate)
                 .build();
+    }
+
+    public Boolean authorizeEmployeeService(String accessToken) {
+        Set<Predicate<String>> predicateSet = accessTokenUtility.createPredicateSet(AUTHORIZED_ROLE);
+        return accessTokenUtility.verifyAccountCredential(accessToken, predicateSet);
     }
 }

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,9 +40,11 @@ public class CandidateService {
     @Autowired
     CandidateUtility candidateUtility;
 
-    private static final List<String> AUTHORIZED_ROLE = Arrays.asList("hr", "admin");
+    public ResponseEntity<Set<CandidateDto>> getAll(String accessToken) {
 
-    public ResponseEntity<Set<CandidateDto>> getAll() {
+        if (!candidateUtility.authorizeCandidateService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         List<Candidate> candidateList = candidateRepository.findByIsActive(true);
 
@@ -57,8 +58,15 @@ public class CandidateService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CandidateDto> findById(Long id) {
-        globalValidator.validateId(id);
+    public ResponseEntity<CandidateDto> findById(Long id, String accessToken) {
+
+        if (!candidateUtility.authorizeCandidateService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Optional<Candidate> candidate = candidateRepository.findByIdAndIsActive(id, true);
 
@@ -75,9 +83,7 @@ public class CandidateService {
 
     public ResponseEntity insertCandidate(CandidateInformationDto dto, String accessToken) {
 
-        Set<Predicate<String>> predicateSet = candidateUtility.createPredicateSet(AUTHORIZED_ROLE);
-
-        if (!candidateUtility.verifyAccountCredential(accessToken, predicateSet)) {
+        if (!candidateUtility.authorizeCandidateService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
@@ -98,8 +104,15 @@ public class CandidateService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity deleteCandidateById(Long id) {
-        globalValidator.validateId(id);
+    public ResponseEntity deleteCandidateById(Long id, String accessToken) {
+
+        if (!candidateUtility.authorizeCandidateService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Optional<Candidate> candidate = candidateRepository.findByIdAndIsActive(id, true);
 
@@ -111,7 +124,11 @@ public class CandidateService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity updateCandidate(CandidateInformationDto dto) {
+    public ResponseEntity updateCandidate(CandidateInformationDto dto, String accessToken) {
+
+        if (!candidateUtility.authorizeCandidateService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         if (dto == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

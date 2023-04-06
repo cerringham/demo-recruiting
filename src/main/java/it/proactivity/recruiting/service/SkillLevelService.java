@@ -26,7 +26,12 @@ public class SkillLevelService {
     @Autowired
     SkillLevelUtility skillLevelUtility;
 
-    public ResponseEntity<List<SkillLevelDto>> getAll() {
+    public ResponseEntity<List<SkillLevelDto>> getAll(String accessToken) {
+
+        if (!skillLevelUtility.authorizeSkillLevelService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         List<SkillLevel> skillLevelList = skillLevelRepository.findByIsActive(true);
         List<SkillLevelDto> dtoList = skillLevelList.stream()
                 .map(s -> skillLevelUtility.createSkillLevelDto(s.getIsActive(), s.getLevel().toString(), s.getSkill().getName(),
@@ -34,7 +39,12 @@ public class SkillLevelService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<SkillLevelDto> findById(Long id) {
+    public ResponseEntity<SkillLevelDto> findById(Long id, String accessToken) {
+
+        if (!skillLevelUtility.authorizeSkillLevelService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         globalValidator.validateId(id);
         Optional<SkillLevel> skillLevel = skillLevelRepository.findByIdAndIsActive(id, true);
         if (skillLevel.isEmpty()) {

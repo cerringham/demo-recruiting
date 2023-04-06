@@ -15,27 +15,27 @@ public class CompanyRoleController {
     CompanyRoleService companyRoleService;
 
     @GetMapping("/get-all-companyRoles")
-    public ResponseEntity<List<CompanyRoleDto>> getAll() {
-        return companyRoleService.getAll();
+    public ResponseEntity<List<CompanyRoleDto>> getAll(@RequestHeader("Token") String accessToken) {
+        return companyRoleService.getAll(accessToken);
     }
 
     @GetMapping("/get-companyRole/{id}")
-    public ResponseEntity<CompanyRoleDto> findById(@PathVariable Long id) {
-        return companyRoleService.findById(id);
+    public ResponseEntity<CompanyRoleDto> findById(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
+        return companyRoleService.findById(id, accessToken);
     }
 
     @PostMapping("/insert-company-role")
-    public ResponseEntity insertCompanyRole(@RequestBody CompanyRoleDto companyRoleDto) {
-        return companyRoleService.insertCompanyRole(companyRoleDto);
+    public ResponseEntity insertCompanyRole(@RequestBody CompanyRoleDto companyRoleDto, @RequestHeader("Token") String accessToken) {
+        return companyRoleService.insertCompanyRole(companyRoleDto, accessToken);
     }
 
     @PostMapping("/update-company-role")
-    public ResponseEntity updateCompanyRole(@RequestBody CompanyRoleDto companyRoleDto) {
-        return companyRoleService.updateCompanyRole(companyRoleDto);
+    public ResponseEntity updateCompanyRole(@RequestBody CompanyRoleDto companyRoleDto, @RequestHeader("Token") String accessToken) {
+        return companyRoleService.updateCompanyRole(companyRoleDto, accessToken);
     }
 
     @PostMapping("/delete-company-role")
-    public ResponseEntity deleteCompanyRole(@RequestParam Long id) {
-        return companyRoleService.deleteCompanyRole(id);
+    public ResponseEntity deleteCompanyRole(@RequestParam Long id, @RequestHeader("Token") String accessToken) {
+        return companyRoleService.deleteCompanyRole(id, accessToken);
     }
 }

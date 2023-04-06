@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+
 @Component
 public class JobPositionUtility {
 
@@ -25,6 +29,11 @@ public class JobPositionUtility {
 
     @Value("${recruiting.minSkills}")
     private int minSkills;
+
+    @Autowired
+    AccessTokenUtility accessTokenUtility;
+
+    private static final List<String> AUTHORIZED_ROLE = List.of("hr", "admin");
 
     public JobPositionDto createJobPositionDto(String title, String area, String description, String city, String region,
                                                String country, Boolean isActive) {
@@ -61,5 +70,10 @@ public class JobPositionUtility {
                 jobPositionWithSkillsDto.getIsActive() &&
                 globalValidator.validateStringAlphaSpace(jobPositionWithSkillsDto.getCompanyName()) &&
                 jobPositionWithSkillsDto.getSkillLevelDtoList().size() >= minSkills;
+    }
+
+    public Boolean authorizeJobPositionService(String accessToken) {
+        Set<Predicate<String>> predicateSet = accessTokenUtility.createPredicateSet(AUTHORIZED_ROLE);
+        return accessTokenUtility.verifyAccountCredential(accessToken, predicateSet);
     }
 }

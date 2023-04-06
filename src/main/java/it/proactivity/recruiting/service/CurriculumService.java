@@ -26,7 +26,11 @@ public class CurriculumService {
     @Autowired
     CurriculumUtility curriculumUtility;
 
-    public ResponseEntity<List<CurriculumDto>> getAll() {
+    public ResponseEntity<List<CurriculumDto>> getAll(String accessToken) {
+
+        if (!curriculumUtility.authorizeCurriculumService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         List<Curriculum> curriculumListList = curriculumRepository.findAll();
 
@@ -37,8 +41,14 @@ public class CurriculumService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CurriculumDto> findById(Long id) {
-        globalValidator.validateId(id);
+    public ResponseEntity<CurriculumDto> findById(Long id, String accessToken) {
+        if (!curriculumUtility.authorizeCurriculumService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Optional<Curriculum> curriculum = curriculumRepository.findById(id);
 

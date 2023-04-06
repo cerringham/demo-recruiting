@@ -11,7 +11,6 @@ import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateInformationDto;
 import it.proactivity.recruiting.myEnum.Level;
-import it.proactivity.recruiting.repository.AccessTokenRepository;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
 import it.proactivity.recruiting.repository.SkillRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -40,9 +39,9 @@ public class CandidateUtility {
     PredicateUtility predicateUtility;
 
     @Autowired
-    AccessTokenRepository accessTokenRepository;
+    AccessTokenUtility accessTokenUtility;
 
-    private static final Set<String> ROLE_NAME_SET = Set.of("admin", "hr", "dev");
+    private static final List<String> AUTHORIZED_ROLE = Arrays.asList("hr", "admin");
 
     public void setAllStringParametersForCandidate(CandidateInformationDto dto, Candidate candidate) {
         candidate.setName(dto.getName());
@@ -166,30 +165,8 @@ public class CandidateUtility {
         return curriculumList;
     }
 
-    public Boolean verifyAccountCredential(String token, Set<Predicate<String>> predicateSet) {
-        if (StringUtils.isEmpty(token)) {
-            return false;
-        }
-        Set<String> authorizedSet = createAuthorizedRoleNameSet(predicateSet);
-
-        Optional<String> validToken = accessTokenRepository.findRoleNameByTokenValue(token, authorizedSet);
-        return validToken.isPresent();
-    }
-
-    public Set<Predicate<String>> createPredicateSet(List<String> roleNameAuthorizedList) {
-        Set<Predicate<String>> predicateSet = new HashSet<>();
-        roleNameAuthorizedList.stream()
-                .forEach(r -> {
-                    Predicate<String> authorizedPredicate = s -> s.equals(r);
-                    predicateSet.add(authorizedPredicate);
-                });
-        return predicateSet;
-    }
-
-    private Set<String> createAuthorizedRoleNameSet(Set<Predicate<String>> predicateSet) {
-        return predicateSet.stream()
-                .flatMap(p -> ROLE_NAME_SET.stream()
-                        .filter(p)
-                ).collect(Collectors.toSet());
+    public Boolean authorizeCandidateService(String accessToken) {
+        Set<Predicate<String>> predicateSet = accessTokenUtility.createPredicateSet(AUTHORIZED_ROLE);
+        return accessTokenUtility.verifyAccountCredential(accessToken, predicateSet);
     }
 }

@@ -40,7 +40,12 @@ public class JobInterviewService {
     @Autowired
     JobInterviewValidator jobInterviewValidator;
 
-    public ResponseEntity<List<JobInterviewDto>> getAll() {
+    public ResponseEntity<List<JobInterviewDto>> getAll(String accessToken) {
+
+        if (!jobInterviewUtility.authorizeJobInterviewService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         List<JobInterview> jobInterviewList = jobInterviewRepository.findByIsActive(true);
 
         List<JobInterviewDto> dtoList = jobInterviewList.stream()
@@ -51,8 +56,16 @@ public class JobInterviewService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<JobInterviewDto> findById(Long id) {
-        globalValidator.validateId(id);
+    public ResponseEntity<JobInterviewDto> findById(Long id, String accessToken) {
+
+        if (!jobInterviewUtility.authorizeJobInterviewService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         Optional<JobInterview> jobInterview = jobInterviewRepository.findByIdAndIsActive(id, true);
 
         if (jobInterview.isEmpty()) {
@@ -63,7 +76,12 @@ public class JobInterviewService {
                 jobInterview.get().getRating(), jobInterview.get().getNote(), jobInterview.get().getIsActive()));
     }
 
-    public ResponseEntity createJobInterview(JobInterviewInsertionDto dto) {
+    public ResponseEntity createJobInterview(JobInterviewInsertionDto dto, String accessToken) {
+
+        if (!jobInterviewUtility.authorizeJobInterviewService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (!jobInterviewValidator.validateAllParametersForJobInterviewInsertionDto(dto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -96,7 +114,12 @@ public class JobInterviewService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity updateJobInterview(JobInterviewUpdateDto dto) {
+    public ResponseEntity updateJobInterview(JobInterviewUpdateDto dto, String accessToken) {
+
+        if (!jobInterviewUtility.authorizeJobInterviewService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (!jobInterviewValidator.validateAllParametersForJobInterviewUpdateDto(dto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -125,13 +148,16 @@ public class JobInterviewService {
         }
     }
 
-    public ResponseEntity deleteJobInterview(Long id) {
+    public ResponseEntity deleteJobInterview(Long id, String accessToken) {
+
+        if (!jobInterviewUtility.authorizeJobInterviewService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (!globalValidator.validateId(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         jobInterviewRepository.deleteJobInterview(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
-
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
@@ -18,6 +19,11 @@ public class CompanyUtility {
 
     @Autowired
     CompanyRepository companyRepository;
+
+    @Autowired
+    AccessTokenUtility accessTokenUtility;
+
+    private static final List<String> AUTHORIZED_ROLE = Arrays.asList("hr", "admin");
 
     public CompanyDto createCompanyDto(String name, Boolean isActive) {
         if (StringUtils.isEmpty(name) || isActive == null) {
@@ -66,4 +72,8 @@ public class CompanyUtility {
                 });
     }
 
+    public Boolean authorizeCompanyService(String accessToken) {
+        Set<Predicate<String>> predicateSet = accessTokenUtility.createPredicateSet(AUTHORIZED_ROLE);
+        return accessTokenUtility.verifyAccountCredential(accessToken, predicateSet);
+    }
 }

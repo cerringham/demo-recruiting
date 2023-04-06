@@ -44,7 +44,12 @@ public class JobPositionService {
     @Autowired
     SkillLevelUtility skillLevelUtility;
 
-    public ResponseEntity<List<JobPositionDto>> getAll() {
+    public ResponseEntity<List<JobPositionDto>> getAll(String accessToken) {
+
+        if (!jobPositionUtility.authorizeJobPositionService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         List<JobPosition> jobPositionList = jobPositionRepository.findByIsActive(true);
 
         List<JobPositionDto> dtoList = jobPositionList.stream()
@@ -54,8 +59,16 @@ public class JobPositionService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<JobPositionDto> findById(Long id) {
-        globalValidator.validateId(id);
+    public ResponseEntity<JobPositionDto> findById(Long id, String accessToken) {
+
+        if (!jobPositionUtility.authorizeJobPositionService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         Optional<JobPosition> jobPosition = jobPositionRepository.findByIdAndIsActive(id, true);
 
         if (jobPosition.isEmpty()) {
@@ -66,7 +79,13 @@ public class JobPositionService {
                 jobPosition.get().getCountry(), jobPosition.get().getIsActive()));
     }
 
-    public ResponseEntity<JobPositionWithSkillsDto> insertJobPosition(JobPositionWithSkillsDto jobPositionWithSkillsDto) {
+    public ResponseEntity<JobPositionWithSkillsDto> insertJobPosition(JobPositionWithSkillsDto jobPositionWithSkillsDto,
+                                                                      String accessToken) {
+
+        if (!jobPositionUtility.authorizeJobPositionService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (!jobPositionUtility.validateParametersForInsert(jobPositionWithSkillsDto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -93,8 +112,16 @@ public class JobPositionService {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity<JobPositionDto> updateJobPosition(Long id, String newStatus) {
-        globalValidator.validateId(id);
+    public ResponseEntity<JobPositionDto> updateJobPosition(Long id, String newStatus, String accessToken) {
+
+        if (!jobPositionUtility.authorizeJobPositionService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         Optional<JobPosition> jobPosition = jobPositionRepository.findById(id);
         Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository.findByName(newStatus);
         if (jobPosition.isPresent()) {
@@ -108,7 +135,12 @@ public class JobPositionService {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    public ResponseEntity deleteJobPosition(Long id) {
+    public ResponseEntity deleteJobPosition(Long id, String accessToken) {
+
+        if (!jobPositionUtility.authorizeJobPositionService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (!globalValidator.validateId(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

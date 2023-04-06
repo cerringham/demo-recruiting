@@ -16,13 +16,13 @@ public class CandidateController {
     CandidateService candidateService;
 
     @GetMapping("/get-all-candidates")
-    public ResponseEntity<Set<CandidateDto>> getAll() {
-        return candidateService.getAll();
+    public ResponseEntity<Set<CandidateDto>> getAll(@RequestHeader("Token") String accessToken) {
+        return candidateService.getAll(accessToken);
     }
 
     @GetMapping("/get-candidate/{id}")
-    public ResponseEntity<CandidateDto> findById(@PathVariable Long id) {
-        return candidateService.findById(id);
+    public ResponseEntity<CandidateDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return candidateService.findById(id, accessToken);
     }
 
     @PostMapping("/insert-candidate")
@@ -31,12 +31,12 @@ public class CandidateController {
     }
 
     @GetMapping("/delete-candidate/{id}")
-    public ResponseEntity deleteCandidateById(@PathVariable Long id) {
-        return candidateService.deleteCandidateById(id);
+    public ResponseEntity deleteCandidateById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return candidateService.deleteCandidateById(id, accessToken);
     }
 
     @PostMapping("update-candidate")
-    public ResponseEntity updateCandidate(@RequestBody CandidateInformationDto dto) {
-        return candidateService.updateCandidate(dto);
+    public ResponseEntity updateCandidate(@RequestHeader("Token") String accessToken, @RequestBody CandidateInformationDto dto) {
+        return candidateService.updateCandidate(dto, accessToken);
     }
 }

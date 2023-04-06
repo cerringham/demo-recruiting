@@ -6,10 +6,21 @@ import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 @Component
 public class SkillUtility {
+
+    @Autowired
+    AccessTokenUtility accessTokenUtility;
+
+    private static final List<String> AUTHORIZED_ROLE = List.of("hr", "admin");
+
 
     public SkillDto createSkillDto(String name, Boolean isActive) {
         if (StringUtils.isEmpty(name) || isActive == null) {
@@ -25,5 +36,10 @@ public class SkillUtility {
         return SkillBuilder.newBuilder(WordUtils.capitalizeFully(dto.getName()))
                 .isActive(dto.getIsActive())
                 .build();
+    }
+
+    public Boolean authorizeSkillService(String accessToken) {
+        Set<Predicate<String>> predicateSet = accessTokenUtility.createPredicateSet(AUTHORIZED_ROLE);
+        return accessTokenUtility.verifyAccountCredential(accessToken, predicateSet);
     }
 }

@@ -19,7 +19,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 
 @Component
 public class AccountUtility {
@@ -31,6 +34,11 @@ public class AccountUtility {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    AccessTokenUtility accessTokenUtility;
+
+    private static final List<String> AUTHORIZED_ROLE = List.of("admin");
 
     public Account createAccount(AddAccountDto dto) {
 
@@ -114,5 +122,10 @@ public class AccountUtility {
         Instant instant = Instant.now();
         sb.append(instant.toEpochMilli());
         return sb.toString();
+    }
+
+    public Boolean authorizeCreateAccountService(String accessToken) {
+        Set<Predicate<String>> predicateSet = accessTokenUtility.createPredicateSet(AUTHORIZED_ROLE);
+        return accessTokenUtility.verifyAccountCredential(accessToken, predicateSet);
     }
 }

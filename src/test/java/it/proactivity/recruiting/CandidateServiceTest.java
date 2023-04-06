@@ -76,8 +76,8 @@ class CandidateServiceTest {
 
 
         Optional<String> token = getToken("alessio.cassarino@proactivity.it", "Password1!");
-        CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDRELU09O87L222I", "Catania",
-                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi1.castello@gmail.it", "+39 8963483928",
+        CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDREoU09O87L222I", "Catania",
+                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigi199.castello@gmail.it", "+39 8903483928",
                 "m", "1995-12-09", "junior", skillLevelMap);
 
 

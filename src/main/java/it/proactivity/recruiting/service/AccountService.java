@@ -31,7 +31,11 @@ public class AccountService {
     @Autowired
     AccessTokenRepository accessTokenRepository;
 
-    public ResponseEntity addAccount(AddAccountDto dto) {
+    public ResponseEntity addAccount(AddAccountDto dto, String accessToken) {
+        if (!accountUtility.authorizeCreateAccountService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (!accountValidator.validateAddAccountDto(dto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

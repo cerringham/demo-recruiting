@@ -26,7 +26,11 @@ public class JobPositionStatusService {
     @Autowired
     JobPositionStatusUtility jobPositionStatusUtility;
 
-    public ResponseEntity<List<JobPositionStatusDto>> getAll() {
+    public ResponseEntity<List<JobPositionStatusDto>> getAll(String accessToken) {
+
+        if (!jobPositionStatusUtility.authorizeJobPositionStatusService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         List<JobPositionStatus> jobPositionStatusList = jobPositionStatusRepository.findByIsActive(true);
 
@@ -38,8 +42,15 @@ public class JobPositionStatusService {
 
     }
 
-    public ResponseEntity<JobPositionStatusDto> findById(Long id) {
-        globalValidator.validateId(id);
+    public ResponseEntity<JobPositionStatusDto> findById(Long id, String accessToken) {
+
+        if (!jobPositionStatusUtility.authorizeJobPositionStatusService(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!globalValidator.validateId(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository.findByIdAndIsActive(id, true);
         if (jobPositionStatus.isEmpty()) {

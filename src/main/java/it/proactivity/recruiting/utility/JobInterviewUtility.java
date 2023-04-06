@@ -14,7 +14,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 
 @Component
 public class JobInterviewUtility {
@@ -47,6 +50,11 @@ public class JobInterviewUtility {
     JobInterviewTypeRepository jobInterviewTypeRepository;
     @Autowired
     JobInterviewRepository jobInterviewRepository;
+
+    @Autowired
+    AccessTokenUtility accessTokenUtility;
+
+    private static final List<String> AUTHORIZED_ROLE = List.of("hr", "dev");
 
     public JobInterviewDto createJobInterviewDto(String date, String hour, String place, Integer rating, String note,
                                                  Boolean isActive) {
@@ -189,5 +197,10 @@ public class JobInterviewUtility {
         } else {
             return null;
         }
+    }
+
+    public Boolean authorizeJobInterviewService(String accessToken) {
+        Set<Predicate<String>> predicateSet = accessTokenUtility.createPredicateSet(AUTHORIZED_ROLE);
+        return accessTokenUtility.verifyAccountCredential(accessToken, predicateSet);
     }
 }
