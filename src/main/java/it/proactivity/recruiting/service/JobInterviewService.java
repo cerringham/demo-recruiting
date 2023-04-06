@@ -56,7 +56,7 @@ public class JobInterviewService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<JobInterviewDto> findById(Long id, String accessToken) {
+    public ResponseEntity<JobInterviewDto> findById(String accessToken, Long id) {
 
         if (!jobInterviewUtility.authorizeJobInterviewService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -76,7 +76,7 @@ public class JobInterviewService {
                 jobInterview.get().getRating(), jobInterview.get().getNote(), jobInterview.get().getIsActive()));
     }
 
-    public ResponseEntity createJobInterview(JobInterviewInsertionDto dto, String accessToken) {
+    public ResponseEntity createJobInterview(String accessToken, JobInterviewInsertionDto dto) {
 
         if (!jobInterviewUtility.authorizeJobInterviewService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -114,7 +114,7 @@ public class JobInterviewService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity updateJobInterview(JobInterviewUpdateDto dto, String accessToken) {
+    public ResponseEntity updateJobInterview(String accessToken, JobInterviewUpdateDto dto) {
 
         if (!jobInterviewUtility.authorizeJobInterviewService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -148,7 +148,7 @@ public class JobInterviewService {
         }
     }
 
-    public ResponseEntity deleteJobInterview(Long id, String accessToken) {
+    public ResponseEntity deleteJobInterview(String accessToken,Long id) {
 
         if (!jobInterviewUtility.authorizeJobInterviewService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

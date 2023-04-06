@@ -59,7 +59,7 @@ public class JobPositionService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<JobPositionDto> findById(Long id, String accessToken) {
+    public ResponseEntity<JobPositionDto> findById(String accessToken, Long id) {
 
         if (!jobPositionUtility.authorizeJobPositionService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -79,8 +79,8 @@ public class JobPositionService {
                 jobPosition.get().getCountry(), jobPosition.get().getIsActive()));
     }
 
-    public ResponseEntity<JobPositionWithSkillsDto> insertJobPosition(JobPositionWithSkillsDto jobPositionWithSkillsDto,
-                                                                      String accessToken) {
+    public ResponseEntity<JobPositionWithSkillsDto> insertJobPosition(String accessToken,
+                                                                      JobPositionWithSkillsDto jobPositionWithSkillsDto) {
 
         if (!jobPositionUtility.authorizeJobPositionService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -112,7 +112,7 @@ public class JobPositionService {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity<JobPositionDto> updateJobPosition(Long id, String newStatus, String accessToken) {
+    public ResponseEntity<JobPositionDto> updateJobPosition(String accessToken, Long id, String newStatus) {
 
         if (!jobPositionUtility.authorizeJobPositionService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -135,7 +135,7 @@ public class JobPositionService {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    public ResponseEntity deleteJobPosition(Long id, String accessToken) {
+    public ResponseEntity deleteJobPosition(String accessToken, Long id) {
 
         if (!jobPositionUtility.authorizeJobPositionService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

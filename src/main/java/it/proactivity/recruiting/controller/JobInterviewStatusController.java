@@ -23,7 +23,7 @@ public class JobInterviewStatusController {
     }
 
     @GetMapping("/get-JobInterviewStatus/{id}")
-    public ResponseEntity<JobInterviewStatusDto> findById(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
-        return jobInterviewStatusService.findById(id, accessToken);
+    public ResponseEntity<JobInterviewStatusDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return jobInterviewStatusService.findById(accessToken, id);
     }
 }

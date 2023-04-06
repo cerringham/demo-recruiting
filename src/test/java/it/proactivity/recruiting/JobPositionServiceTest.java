@@ -4,8 +4,11 @@ import it.proactivity.recruiting.builder.SkillLevelDtoBuilder;
 import it.proactivity.recruiting.model.JobPosition;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
+import it.proactivity.recruiting.model.dto.LoginDto;
 import it.proactivity.recruiting.model.dto.SkillLevelDto;
+import it.proactivity.recruiting.repository.AccessTokenRepository;
 import it.proactivity.recruiting.repository.JobPositionRepository;
+import it.proactivity.recruiting.service.AccountService;
 import it.proactivity.recruiting.service.JobPositionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +31,23 @@ import static org.junit.Assert.*;
     @Autowired
     JobPositionRepository jobPositionRepository;
 
+    @Autowired
+    AccessTokenRepository accessTokenRepository;
+
+    @Autowired
+    AccountService accountService;
+
     @Test
     void getAllJobPositionTest() {
-        List<JobPositionDto> dtoList = jobPositionService.getAll().getBody();
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        List<JobPositionDto> dtoList = jobPositionService.getAll(token.get()).getBody();
         assertTrue(dtoList.size() != 0);
     }
 
     @Test
     void getJobPositionByIdTest() {
-        JobPositionDto dto = jobPositionService.findById(11L).getBody();
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        JobPositionDto dto = jobPositionService.findById(token.get(), 11L).getBody();
         assertNotNull(dto);
         System.out.println(dto);
     }
@@ -44,28 +55,32 @@ import static org.junit.Assert.*;
     @Test
     void deleteJobPositionPositiveTest() {
         Optional<JobPosition> jobPosition = jobPositionRepository.findById(16l);
-        ResponseEntity response = jobPositionService.deleteJobPosition(jobPosition.get().getId());
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = jobPositionService.deleteJobPosition(token.get(), jobPosition.get().getId());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void deleteJobPositionNegativeTest() {
-        ResponseEntity response = jobPositionService.deleteJobPosition(51l);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = jobPositionService.deleteJobPosition(token.get(), 51l);
 
         assertNotEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void updateJobPositionPositiveTest() {
-        ResponseEntity response = jobPositionService.updateJobPosition(15l, "Closed");
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = jobPositionService.updateJobPosition(token.get(), 15l, "Closed");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void updateJobPositionNegativeTest() {
-        ResponseEntity response = jobPositionService.updateJobPosition(15l, "Abierto");
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = jobPositionService.updateJobPosition(token.get(), 15l, "Abierto");
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -81,7 +96,8 @@ import static org.junit.Assert.*;
         JobPositionWithSkillsDto jobPositionWithSkillsDto = new JobPositionWithSkillsDto("Python Developer",
                 "Software Development","Description description description", "Milan", "Lombardy", "IT", true, "Fortitude",
                 skillLevels);
-        ResponseEntity response = jobPositionService.insertJobPosition(jobPositionWithSkillsDto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = jobPositionService.insertJobPosition(token.get(), jobPositionWithSkillsDto);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
@@ -93,7 +109,9 @@ import static org.junit.Assert.*;
         JobPositionWithSkillsDto jobPositionWithSkillsDto = new JobPositionWithSkillsDto("Python Developer",
                 "Software Development","Description description description", "Milan", "Lombardy", "IT", true, "Fortitude",
                 skillLevels);
-        ResponseEntity response = jobPositionService.insertJobPosition(jobPositionWithSkillsDto);
+
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = jobPositionService.insertJobPosition(token.get(), jobPositionWithSkillsDto);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
@@ -109,9 +127,15 @@ import static org.junit.Assert.*;
         JobPositionWithSkillsDto jobPositionWithSkillsDto = new JobPositionWithSkillsDto(null ,"Software Development",null,
                 "Milan", "Lombardy", "IT", true, "Fortitude",
                 skillLevels);
-        ResponseEntity response = jobPositionService.insertJobPosition(jobPositionWithSkillsDto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = jobPositionService.insertJobPosition(token.get(), jobPositionWithSkillsDto);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
+    private Optional<String> getToken(String accountUsername, String password) {
+        LoginDto dto = new LoginDto(accountUsername, password);
+        accountService.login(dto);
+        return accessTokenRepository.findLatestTokenValueByUsername(accountUsername);
+    }
 }

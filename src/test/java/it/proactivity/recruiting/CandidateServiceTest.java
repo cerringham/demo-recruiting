@@ -37,13 +37,15 @@ class CandidateServiceTest {
 
     @Test
     void getAllCandidateTest() {
-        Set<CandidateDto> dtoList = candidateService.getAll().getBody();
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        Set<CandidateDto> dtoList = candidateService.getAll(token.get()).getBody();
         assertTrue(dtoList.size() != 0);
     }
 
     @Test
     void getCandidateById() {
-        CandidateDto candidateDto = candidateService.findById(1L).getBody();
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        CandidateDto candidateDto = candidateService.findById(token.get(), 1L).getBody();
         assertNotNull(candidateDto);
     }
 
@@ -61,7 +63,7 @@ class CandidateServiceTest {
 
         long numberOfCandidateBeforeInsert = candidateRepository.findByIsActive(true).size();
 
-        candidateService.insertCandidate(dto, token.get());
+        candidateService.insertCandidate(token.get(), dto);
 
         long numberOfCandidateAfterInsert = candidateRepository.findByIsActive(true).size();
 
@@ -82,7 +84,7 @@ class CandidateServiceTest {
 
 
 
-        ResponseEntity response = candidateService.insertCandidate(dto, token.get());
+        ResponseEntity response = candidateService.insertCandidate(token.get(), dto);
         assertTrue(response.getStatusCode().equals(HttpStatus.UNAUTHORIZED));
     }
 
@@ -90,7 +92,8 @@ class CandidateServiceTest {
     void deleteCandidatePositiveTest() {
         long numberOfCandidateBeforeDelete = candidateRepository.findByIsActive(true).size();
 
-        candidateService.deleteCandidateById(1L);
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        candidateService.deleteCandidateById(token.get(), 1L);
 
         long numberOfCandidateAfterDelete = candidateRepository.findByIsActive(true).size();
 
@@ -102,7 +105,8 @@ class CandidateServiceTest {
 
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        assertEquals(candidateService.deleteCandidateById(100L).getStatusCode(), response.getStatusCode());
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        assertEquals(candidateService.deleteCandidateById(token.get(), 100L).getStatusCode(), response.getStatusCode());
     }
 
     @Test
@@ -121,8 +125,9 @@ class CandidateServiceTest {
                 "Via  Tornabuoni", "Toscana", "Italia",
                 "paola.liconasti@gmail.com", "+39 3204567890", "f", "1992-05-04",
                 "Senior", skillLevelMap);
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
 
-        candidateService.updateCandidate(dto);
+        candidateService.updateCandidate(token.get(), dto);
 
 
     }

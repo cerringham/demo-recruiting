@@ -21,23 +21,23 @@ public class SkillController {
     }
 
     @GetMapping("/get-Skill/{id}")
-    public ResponseEntity<SkillDto> findById(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
-        return skillService.findById(id, accessToken);
+    public ResponseEntity<SkillDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return skillService.findById(accessToken, id);
     }
 
 
     @PostMapping("insert-skill")
-    public ResponseEntity insertSkill(@RequestBody SkillDto dto, @RequestHeader("Token") String accessToken) {
-        return skillService.insertSkill(dto, accessToken);
+    public ResponseEntity insertSkill(@RequestHeader("Token") String accessToken, @RequestBody SkillDto dto) {
+        return skillService.insertSkill(accessToken, dto);
     }
 
     @GetMapping("/delete-skill/{id}")
-    public ResponseEntity deleteSkill(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
-        return skillService.deleteSkill(id, accessToken);
+    public ResponseEntity deleteSkill(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return skillService.deleteSkill(accessToken, id);
     }
 
     @PostMapping("update-skill")
-    public ResponseEntity updateSkill(@RequestBody SkillDto dto, @RequestHeader("Token") String accessToken) {
-        return skillService.updateSkill(dto, accessToken);
+    public ResponseEntity updateSkill(@RequestHeader("Token") String accessToken, @RequestBody SkillDto dto) {
+        return skillService.updateSkill(accessToken, dto);
     }
 }

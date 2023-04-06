@@ -39,7 +39,7 @@ public class SkillLevelService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<SkillLevelDto> findById(Long id, String accessToken) {
+    public ResponseEntity<SkillLevelDto> findById(String accessToken, Long id) {
 
         if (!skillLevelUtility.authorizeSkillLevelService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

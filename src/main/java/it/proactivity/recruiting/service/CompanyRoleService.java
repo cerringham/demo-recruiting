@@ -42,7 +42,7 @@ public class CompanyRoleService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CompanyRoleDto> findById(Long id, String accessToken) {
+    public ResponseEntity<CompanyRoleDto> findById(String accessToken, Long id) {
 
         if (!companyRoleUtility.authorizeCompanyRoleService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -62,7 +62,7 @@ public class CompanyRoleService {
                 companyRole.get().getIsActive()));
     }
 
-    public ResponseEntity insertCompanyRole(CompanyRoleDto companyRoleDto, String accessToken) {
+    public ResponseEntity insertCompanyRole(String accessToken, CompanyRoleDto companyRoleDto) {
 
         if (!companyRoleUtility.authorizeCompanyRoleService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -81,7 +81,7 @@ public class CompanyRoleService {
         }
     }
 
-    public ResponseEntity updateCompanyRole(CompanyRoleDto companyRoleDto, String accessToken) {
+    public ResponseEntity updateCompanyRole(String accessToken, CompanyRoleDto companyRoleDto) {
 
         if (!companyRoleUtility.authorizeCompanyRoleService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -105,7 +105,7 @@ public class CompanyRoleService {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    public ResponseEntity deleteCompanyRole(Long id, String accessToken) {
+    public ResponseEntity deleteCompanyRole(String accessToken, Long id) {
 
         if (!companyRoleUtility.authorizeCompanyRoleService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

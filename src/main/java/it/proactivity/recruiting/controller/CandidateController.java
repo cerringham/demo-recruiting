@@ -22,21 +22,21 @@ public class CandidateController {
 
     @GetMapping("/get-candidate/{id}")
     public ResponseEntity<CandidateDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
-        return candidateService.findById(id, accessToken);
+        return candidateService.findById(accessToken, id);
     }
 
     @PostMapping("/insert-candidate")
     public ResponseEntity insertCandidate(@RequestHeader("Token") String accessToken, @RequestBody CandidateInformationDto dto) {
-        return candidateService.insertCandidate(dto, accessToken);
+        return candidateService.insertCandidate(accessToken, dto);
     }
 
     @GetMapping("/delete-candidate/{id}")
     public ResponseEntity deleteCandidateById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
-        return candidateService.deleteCandidateById(id, accessToken);
+        return candidateService.deleteCandidateById(accessToken, id);
     }
 
     @PostMapping("update-candidate")
     public ResponseEntity updateCandidate(@RequestHeader("Token") String accessToken, @RequestBody CandidateInformationDto dto) {
-        return candidateService.updateCandidate(dto, accessToken);
+        return candidateService.updateCandidate(accessToken, dto);
     }
 }

@@ -2,7 +2,10 @@ package it.proactivity.recruiting;
 
 import it.proactivity.recruiting.model.Company;
 import it.proactivity.recruiting.model.dto.CompanyDto;
+import it.proactivity.recruiting.model.dto.LoginDto;
+import it.proactivity.recruiting.repository.AccessTokenRepository;
 import it.proactivity.recruiting.repository.CompanyRepository;
+import it.proactivity.recruiting.service.AccountService;
 import it.proactivity.recruiting.service.CompanyService;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -24,25 +27,34 @@ import static org.junit.Assert.*;
 
 
     @Autowired
-    private CompanyRepository companyRepository;
+    CompanyRepository companyRepository;
+
+    @Autowired
+    AccessTokenRepository accessTokenRepository;
+
+    @Autowired
+    AccountService accountService;
 
 
     @Test
     void getAllCompanyTest() {
-        List<CompanyDto> dtoList = companyService.getAll().getBody();
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        List<CompanyDto> dtoList = companyService.getAll(token.get()).getBody();
         assertNotEquals(dtoList.size() , 0);
     }
 
     @Test
     void getCompanyByIdTest() {
-        CompanyDto companyDto = companyService.findById(1L).getBody();
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        CompanyDto companyDto = companyService.findById(token.get(), 1L).getBody();
         assertNotNull(companyDto);
     }
 
     @Test
     void checkCompanyPresencePositiveTestStatus200() {
 
-        ResponseEntity response = companyService.checkCompanyPresence();
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        ResponseEntity response = companyService.checkCompanyPresence(token.get());
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.OK).build();
 
@@ -54,7 +66,8 @@ import static org.junit.Assert.*;
         logicalDeleteCompany("RadicalBit");
         logicalDeleteCompany("Bitrock");
 
-        ResponseEntity response = companyService.checkCompanyPresence();
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        ResponseEntity response = companyService.checkCompanyPresence(token.get());
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.CREATED).build();
 
@@ -66,7 +79,8 @@ import static org.junit.Assert.*;
         deleteCompany("Proactivity");
         deleteCompany("Bitrock");
 
-        ResponseEntity response = companyService.checkCompanyPresence();
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        ResponseEntity response = companyService.checkCompanyPresence(token.get());
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.CREATED).build();
 
@@ -91,5 +105,11 @@ import static org.junit.Assert.*;
 
             company.ifPresent(value -> companyRepository.delete(value));
         }
+    }
+
+    private Optional<String> getToken(String accountUsername, String password) {
+        LoginDto dto = new LoginDto(accountUsername, password);
+        accountService.login(dto);
+        return accessTokenRepository.findLatestTokenValueByUsername(accountUsername);
     }
 }

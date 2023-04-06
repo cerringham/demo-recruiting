@@ -23,8 +23,8 @@ public class CompanyController {
     }
 
     @GetMapping("/get-company/{id}")
-    public ResponseEntity<CompanyDto> findById(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
-        return companyService.findById(id, accessToken);
+    public ResponseEntity<CompanyDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return companyService.findById(accessToken, id);
     }
 
     @GetMapping("/check-company-presence")

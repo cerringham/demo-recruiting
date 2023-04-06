@@ -48,7 +48,7 @@ public class CompanyService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CompanyDto> findById(Long id, String accessToken) {
+    public ResponseEntity<CompanyDto> findById(String accessToken, Long id) {
 
         if (!companyUtility.authorizeCompanyService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

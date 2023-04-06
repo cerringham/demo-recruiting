@@ -41,7 +41,7 @@ public class CurriculumService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CurriculumDto> findById(Long id, String accessToken) {
+    public ResponseEntity<CurriculumDto> findById(String accessToken, Long id) {
         if (!curriculumUtility.authorizeCurriculumService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

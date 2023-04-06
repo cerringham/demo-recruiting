@@ -41,7 +41,7 @@ public class JobInterviewStatusService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<JobInterviewStatusDto> findById(Long id, String accessToken) {
+    public ResponseEntity<JobInterviewStatusDto> findById(String accessToken, Long id) {
 
         if (!jobInterviewStatusUtility.authorizeJobInterviewStatusService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

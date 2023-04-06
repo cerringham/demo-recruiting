@@ -42,7 +42,7 @@ public class JobPositionStatusService {
 
     }
 
-    public ResponseEntity<JobPositionStatusDto> findById(Long id, String accessToken) {
+    public ResponseEntity<JobPositionStatusDto> findById(String accessToken, Long id) {
 
         if (!jobPositionStatusUtility.authorizeJobPositionStatusService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

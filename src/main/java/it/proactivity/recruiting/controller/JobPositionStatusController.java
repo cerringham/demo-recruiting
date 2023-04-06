@@ -24,7 +24,7 @@ public class JobPositionStatusController {
     }
 
     @GetMapping("/get-JobPositionStatus/{id}")
-    public ResponseEntity<JobPositionStatusDto> findById(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
-        return jobPositionStatusService.findById(id, accessToken);
+    public ResponseEntity<JobPositionStatusDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return jobPositionStatusService.findById(accessToken, id);
     }
 }

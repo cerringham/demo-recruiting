@@ -2,7 +2,10 @@ package it.proactivity.recruiting;
 
 import it.proactivity.recruiting.model.Employee;
 import it.proactivity.recruiting.model.dto.EmployeeDto;
+import it.proactivity.recruiting.model.dto.LoginDto;
+import it.proactivity.recruiting.repository.AccessTokenRepository;
 import it.proactivity.recruiting.repository.EmployeeRepository;
+import it.proactivity.recruiting.service.AccountService;
 import it.proactivity.recruiting.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +27,23 @@ import static org.junit.Assert.*;
     @Autowired
     EmployeeRepository employeeRepository;
 
+    @Autowired
+    AccessTokenRepository accessTokenRepository;
+
+    @Autowired
+    AccountService accountService;
+
     @Test
     void getAllEmployeeTest() {
-        Set<EmployeeDto> dtoList = employeeService.getAll().getBody();
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        Set<EmployeeDto> dtoList = employeeService.getAll(token.get()).getBody();
         assertTrue(dtoList.size() != 0);
     }
 
     @Test
     void getEmployeeByIdTest() {
-        EmployeeDto employeeDto = employeeService.findById(1L).getBody();
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        EmployeeDto employeeDto = employeeService.findById(token.get(), 1L).getBody();
         assertNotNull(employeeDto);
         System.out.println(employeeDto);
     }
@@ -46,9 +57,10 @@ import static org.junit.Assert.*;
                 true, "1995-12-09", "junior", "fortitude", "hr");
 
 
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
         long numberOfEmployeeBeforeInsert = employeeRepository.findByIsActive(true).size();
 
-        employeeService.insertEmployee(dto);
+        employeeService.insertEmployee(token.get(), dto);
 
         long numberOfEmployeeAfterInsert = employeeRepository.findByIsActive(true).size();
 
@@ -58,7 +70,8 @@ import static org.junit.Assert.*;
 
     @Test
     void insertEmployeeNulldtoNegativeTest() {
-        ResponseEntity response = employeeService.insertEmployee(null);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), null);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -74,7 +87,8 @@ import static org.junit.Assert.*;
                 true, "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -89,8 +103,9 @@ import static org.junit.Assert.*;
                 "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
                 true, "1995-12-09", "junior", "fortitude", "coo");
 
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -105,8 +120,9 @@ import static org.junit.Assert.*;
                 "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
                 true, "1995-12-09", "junior", "fortitude", "coo");
 
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -121,8 +137,9 @@ import static org.junit.Assert.*;
                 "Italia", null, "+39 8763483928", "m", true,
                 "1995-12-09", "junior", "fortitude", "coo");
 
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -137,8 +154,9 @@ import static org.junit.Assert.*;
                 "Italia", "", "+39 8763483928", "m", true,
                 "1995-12-09", "junior", "fortitude", "coo");
 
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -153,8 +171,9 @@ import static org.junit.Assert.*;
                 "Italia", "@email", "+39 8763483928", "m", true,
                 "1995-12-09", "junior", "fortitude", "coo");
 
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -170,7 +189,8 @@ import static org.junit.Assert.*;
                 "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -186,7 +206,8 @@ import static org.junit.Assert.*;
                 "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -202,7 +223,8 @@ import static org.junit.Assert.*;
                 "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -218,7 +240,8 @@ import static org.junit.Assert.*;
                 true, "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -234,7 +257,8 @@ import static org.junit.Assert.*;
                 true, null, "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -250,7 +274,8 @@ import static org.junit.Assert.*;
                 true, "", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -266,7 +291,8 @@ import static org.junit.Assert.*;
                 true, "12/12/1998", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -282,7 +308,8 @@ import static org.junit.Assert.*;
                 true, "1995-12-12", "junior", "fortitude", null);
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -298,7 +325,8 @@ import static org.junit.Assert.*;
                 true, "1995-12-12", "junior", "fortitude", "");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -314,7 +342,8 @@ import static org.junit.Assert.*;
                 true, "1995-12-12", "junior", "fortitude", "CEO");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -330,7 +359,8 @@ import static org.junit.Assert.*;
                 true, "1995-12-12", "junior", "proactivity", "COO");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -345,8 +375,9 @@ import static org.junit.Assert.*;
                 "Italia", "gigi.castello@gmail.it", "+39 8763483928", "m",
                 true, "1995-12-09", "fantastic", "fortitude", "coo");
 
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -362,7 +393,8 @@ import static org.junit.Assert.*;
                 true, "1995-12-09", "junior", "fortitude2", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -378,7 +410,8 @@ import static org.junit.Assert.*;
                 true, "1995-12-09", "junior", "fortitude", "cio");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.insertEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -388,9 +421,10 @@ import static org.junit.Assert.*;
     @Test
     void deleteEmployeePositiveTest() {
 
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
         long numberOfEmployeeBeforeDelete = employeeRepository.findByIsActive(true).size();
 
-        employeeService.deleteEmployee(3L);
+        employeeService.deleteEmployee(token.get(), 3L);
 
         long numberOfEmployeeAfterDelete = employeeRepository.findByIsActive(true).size();
 
@@ -399,8 +433,9 @@ import static org.junit.Assert.*;
 
     @Test
     void deleteEmployeeNegativeTestTest() {
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
 
-        ResponseEntity response = employeeService.deleteEmployee(null);
+        ResponseEntity response = employeeService.deleteEmployee(token.get(), null);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -409,8 +444,9 @@ import static org.junit.Assert.*;
 
     @Test
     void deleteEmployeeNotFoundNegativeTestTest() {
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
 
-        ResponseEntity response = employeeService.deleteEmployee(100L);
+        ResponseEntity response = employeeService.deleteEmployee(token.get(), 100L);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -426,7 +462,8 @@ import static org.junit.Assert.*;
                 "+39 2229987654", "m", true, "1985-08-12", "junior",
                 "proactivity", "Software enginer");
 
-        employeeService.updateEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        employeeService.updateEmployee(token.get(), dto);
 
         Optional<Employee> employee = employeeRepository.findByIdAndIsActive(4L, true);
         employee.ifPresent(value -> assertTrue(value.getCompanyRole().getName().equals("Software engineer")));
@@ -439,8 +476,9 @@ import static org.junit.Assert.*;
                 "Sicilia", "Italia", "ludovico.brignani@email.it",
                 "+39 2229987654", "m", true, "1985-08-12", "junior",
                 "proactivity", "coo");
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
 
-        employeeService.updateEmployee(dto);
+        employeeService.updateEmployee(token.get(), dto);
 
         Optional<Employee> employee = employeeRepository.findByIdAndIsActive(4L, true);
 
@@ -454,8 +492,9 @@ import static org.junit.Assert.*;
                 "Sicilia", "Italia", "ludovico.brignani@email.it",
                 "+39 2229987654", "m", true, "1985-08-12", "junior",
                 "proactivity", "coo");
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
 
-        ResponseEntity response = employeeService.updateEmployee(dto);
+        ResponseEntity response = employeeService.updateEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -469,8 +508,9 @@ import static org.junit.Assert.*;
                 "Sicilia", "Italia", "ludovico.brignani@email.it",
                 "+39 2229987654", "m", true, "1985-08-12", "fantastic",
                 "proactivity", "coo");
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
 
-        ResponseEntity response = employeeService.updateEmployee(dto);
+        ResponseEntity response = employeeService.updateEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -485,7 +525,9 @@ import static org.junit.Assert.*;
                 "+39 2229987654", "m", true, "1985-08-12", "junior",
                 "proactivity2", "coo");
 
-        ResponseEntity response = employeeService.updateEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+
+        ResponseEntity response = employeeService.updateEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -500,7 +542,8 @@ import static org.junit.Assert.*;
                 "+39 2229987654", "m", true, "1985-08-12", "junior",
                 "proactivity2", "cooo");
 
-        ResponseEntity response = employeeService.updateEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.updateEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -515,10 +558,17 @@ import static org.junit.Assert.*;
                 "+39 2229987654", "m", true, "1985/08/12", "junior",
                 "proactivity", "coo");
 
-        ResponseEntity response = employeeService.updateEmployee(dto);
+        Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
+        ResponseEntity response = employeeService.updateEmployee(token.get(), dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         assertEquals(response.getStatusCode(), expectedResponse.getStatusCode());
+    }
+
+    private Optional<String> getToken(String accountUsername, String password) {
+        LoginDto dto = new LoginDto(accountUsername, password);
+        accountService.login(dto);
+        return accessTokenRepository.findLatestTokenValueByUsername(accountUsername);
     }
 }

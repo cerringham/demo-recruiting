@@ -17,8 +17,8 @@ public class AccountController {
     private AccountRepository accountRepository;
 
     @PostMapping("add-account")
-    public ResponseEntity addAccount(@RequestBody AddAccountDto dto, @RequestHeader("Token") String accessToken) {
-        return accountService.addAccount(dto, accessToken);
+    public ResponseEntity addAccount(@RequestHeader("Token") String accessToken, @RequestBody AddAccountDto dto) {
+        return accountService.addAccount(accessToken, dto);
     }
 
     @GetMapping("/login")

@@ -58,7 +58,7 @@ public class CandidateService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CandidateDto> findById(Long id, String accessToken) {
+    public ResponseEntity<CandidateDto> findById(String accessToken, Long id) {
 
         if (!candidateUtility.authorizeCandidateService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -81,7 +81,7 @@ public class CandidateService {
                 candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate())));
     }
 
-    public ResponseEntity insertCandidate(CandidateInformationDto dto, String accessToken) {
+    public ResponseEntity insertCandidate(String accessToken, CandidateInformationDto dto) {
 
         if (!candidateUtility.authorizeCandidateService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -104,7 +104,7 @@ public class CandidateService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity deleteCandidateById(Long id, String accessToken) {
+    public ResponseEntity deleteCandidateById(String accessToken, Long id) {
 
         if (!candidateUtility.authorizeCandidateService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -124,7 +124,7 @@ public class CandidateService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity updateCandidate(CandidateInformationDto dto, String accessToken) {
+    public ResponseEntity updateCandidate(String accessToken, CandidateInformationDto dto) {
 
         if (!candidateUtility.authorizeCandidateService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

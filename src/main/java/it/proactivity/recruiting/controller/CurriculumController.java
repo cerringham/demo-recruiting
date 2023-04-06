@@ -23,7 +23,7 @@ public class CurriculumController {
     }
 
     @GetMapping("/get-candidateSkill/{id}")
-    public ResponseEntity<CurriculumDto> findById(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
-        return curriculumService.findById(id, accessToken);
+    public ResponseEntity<CurriculumDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return curriculumService.findById(accessToken, id);
     }
 }

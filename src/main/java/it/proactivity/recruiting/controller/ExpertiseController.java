@@ -21,7 +21,7 @@ public class ExpertiseController {
     }
 
     @GetMapping("/get-expertise/{id}")
-    public ResponseEntity<ExpertiseDto> findById(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
-        return expertiseService.findById(id, accessToken);
+    public ResponseEntity<ExpertiseDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return expertiseService.findById(accessToken, id);
     }
 }

@@ -42,7 +42,7 @@ public class SkillService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<SkillDto> findById(Long id, String accessToken) {
+    public ResponseEntity<SkillDto> findById(String accessToken, Long id) {
 
         if (!skillUtility.authorizeSkillService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -59,7 +59,7 @@ public class SkillService {
         return ResponseEntity.ok(skillUtility.createSkillDto(skill.get().getName(), skill.get().getIsActive()));
     }
 
-    public ResponseEntity insertSkill(SkillDto dto, String accessToken) {
+    public ResponseEntity insertSkill(String accessToken, SkillDto dto) {
 
         if (!skillUtility.authorizeSkillService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -81,7 +81,7 @@ public class SkillService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity deleteSkill(Long id, String accessToken) {
+    public ResponseEntity deleteSkill(String accessToken, Long id) {
 
         if (!skillUtility.authorizeSkillService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -100,7 +100,7 @@ public class SkillService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity updateSkill(SkillDto dto, String accessToken) {
+    public ResponseEntity updateSkill(String accessToken, SkillDto dto) {
 
         if (!skillUtility.authorizeSkillService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

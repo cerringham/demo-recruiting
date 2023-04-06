@@ -21,22 +21,22 @@ public class EmployeeController {
     }
 
     @GetMapping("/get-employee/{id}")
-    public ResponseEntity<EmployeeDto> findById(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
-        return employeeService.findById(id, accessToken);
+    public ResponseEntity<EmployeeDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return employeeService.findById(accessToken, id);
     }
 
     @PostMapping("/insert-employee")
-    public ResponseEntity insertEmployee(@RequestBody EmployeeDto dto, @RequestHeader("Token") String accessToken) {
-        return employeeService.insertEmployee(dto, accessToken);
+    public ResponseEntity insertEmployee(@RequestHeader("Token") String accessToken, @RequestBody EmployeeDto dto) {
+        return employeeService.insertEmployee(accessToken, dto);
     }
 
     @GetMapping("/delete-employee/{id}")
     public ResponseEntity deleteEmployee(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
-        return employeeService.deleteEmployee(id, accessToken);
+        return employeeService.deleteEmployee(accessToken, id);
     }
 
     @PostMapping("/update-employee")
     public ResponseEntity updateEmployee(@RequestBody EmployeeDto dto, @RequestHeader("Token") String accessToken) {
-        return employeeService.updateEmployee(dto, accessToken);
+        return employeeService.updateEmployee(accessToken, dto);
     }
 }

@@ -42,7 +42,7 @@ public class ExpertiseService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<ExpertiseDto> findById(Long id, String accessToken) {
+    public ResponseEntity<ExpertiseDto> findById(String accessToken, Long id) {
 
         if (expertiseUtility.authorizeExpertiseService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

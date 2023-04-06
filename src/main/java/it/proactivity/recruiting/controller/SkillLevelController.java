@@ -23,8 +23,8 @@ public class SkillLevelController {
     }
 
     @GetMapping("/get-SkillLevel/{id}")
-    public ResponseEntity<SkillLevelDto> findById(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
-        return skillLevelService.findById(id, accessToken);
+    public ResponseEntity<SkillLevelDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return skillLevelService.findById(accessToken, id);
     }
 
 

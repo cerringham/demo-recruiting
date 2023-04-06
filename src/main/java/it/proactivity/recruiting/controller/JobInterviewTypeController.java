@@ -23,7 +23,7 @@ public class JobInterviewTypeController {
     }
 
     @GetMapping("/get-JobInterviewType/{id}")
-    public ResponseEntity<JobInterviewTypeDto> findById(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
-        return jobInterviewTypeService.findById(id, accessToken);
+    public ResponseEntity<JobInterviewTypeDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return jobInterviewTypeService.findById(accessToken, id);
     }
 }

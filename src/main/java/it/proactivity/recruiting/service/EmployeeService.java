@@ -70,7 +70,7 @@ public class EmployeeService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<EmployeeDto> findById(Long id, String accessToken) {
+    public ResponseEntity<EmployeeDto> findById(String accessToken, Long id) {
 
         if (!employeeUtility.authorizeEmployeeService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -93,7 +93,7 @@ public class EmployeeService {
                 employee.get().getCompany().getName(), employee.get().getCompanyRole().getName()));
     }
 
-    public ResponseEntity insertEmployee(EmployeeDto dto, String accessToken) {
+    public ResponseEntity insertEmployee(String accessToken, EmployeeDto dto) {
 
         if (!employeeUtility.authorizeEmployeeService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -144,7 +144,7 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity deleteEmployee(Long id, String accessToken) {
+    public ResponseEntity deleteEmployee(String accessToken, Long id) {
 
         if (!employeeUtility.authorizeEmployeeService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -165,7 +165,7 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity updateEmployee(EmployeeDto dto, String accessToken) {
+    public ResponseEntity updateEmployee(String accessToken, EmployeeDto dto) {
 
         if (!employeeUtility.authorizeEmployeeService(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

@@ -22,23 +22,24 @@ public class JobPositionController {
     }
 
     @GetMapping("/get-JobPosition/{id}")
-    public ResponseEntity<JobPositionDto> findById(@PathVariable Long id, @RequestHeader("Token") String accessToken) {
-        return jobPositionService.findById(id, accessToken);
+    public ResponseEntity<JobPositionDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return jobPositionService.findById(accessToken, id);
     }
 
     @PostMapping("/insert-job-position")
-    public ResponseEntity<JobPositionWithSkillsDto> insertJobPosition(@RequestBody JobPositionWithSkillsDto jobPositionWithSkillsDto,
-                                                                      @RequestHeader("Token") String accessToken) {
-        return jobPositionService.insertJobPosition(jobPositionWithSkillsDto, accessToken);
+    public ResponseEntity<JobPositionWithSkillsDto> insertJobPosition(@RequestHeader("Token") String accessToken,
+                                                                      @RequestBody JobPositionWithSkillsDto jobPositionWithSkillsDto) {
+        return jobPositionService.insertJobPosition(accessToken, jobPositionWithSkillsDto);
     }
 
     @PostMapping("/update-job-position")
-    public ResponseEntity updateJobPosition(@RequestParam Long id, @RequestParam String newStatus, @RequestHeader("Token") String accessToken) {
-        return jobPositionService.updateJobPosition(id, newStatus, accessToken);
+    public ResponseEntity updateJobPosition(@RequestHeader("Token") String accessToken, @RequestParam Long id,
+                                            @RequestParam String newStatus) {
+        return jobPositionService.updateJobPosition(accessToken, id, newStatus);
     }
 
     @PostMapping("/delete-job-position")
-    public ResponseEntity deleteJobPosition(@RequestParam Long id, @RequestHeader("Token") String accessToken) {
-        return jobPositionService.deleteJobPosition(id, accessToken);
+    public ResponseEntity deleteJobPosition(@RequestHeader("Token") String accessToken, @RequestParam Long id) {
+        return jobPositionService.deleteJobPosition(accessToken, id);
     }
 }

@@ -3,6 +3,7 @@ package it.proactivity.recruiting;
 import it.proactivity.recruiting.model.Account;
 import it.proactivity.recruiting.model.dto.AddAccountDto;
 import it.proactivity.recruiting.model.dto.LoginDto;
+import it.proactivity.recruiting.repository.AccessTokenRepository;
 import it.proactivity.recruiting.repository.AccountRepository;
 import it.proactivity.recruiting.service.AccountService;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,9 @@ public class AccountServiceTest {
     @Autowired
     AccountRepository accountRepository;
 
+    @Autowired
+    AccessTokenRepository accessTokenRepository;
+
     private static final ResponseEntity POSITIVE_RESPONSE = ResponseEntity.status(HttpStatus.OK).build();
 
     private static final ResponseEntity BAD_REQUEST_RESPONSE = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -33,7 +37,8 @@ public class AccountServiceTest {
         AddAccountDto dto = new AddAccountDto("Ciccio", "Graziani", "ciccio.graziani@proactivity.it",
                 "ciccio.graziani@proactivity.it", "Graziani1!");
 
-        ResponseEntity response = accountService.addAccount(dto);
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        ResponseEntity response = accountService.addAccount(token.get(), dto);
 
         Optional<Account> account = accountRepository.findByUsername(dto.getUsername());
         if (account.isPresent()) {
@@ -56,7 +61,8 @@ public class AccountServiceTest {
         AddAccountDto dto = new AddAccountDto("Emanuele", "Caracciolo", "emanuele.caracciolo@proactivity.it",
                 "emanuele.caracciolo@proactivity.it", "Emm1!");
 
-        ResponseEntity response = accountService.addAccount(dto);
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        ResponseEntity response = accountService.addAccount(token.get(), dto);
 
         assertEquals(BAD_REQUEST_RESPONSE.getStatusCode(), response.getStatusCode());
 
@@ -67,7 +73,8 @@ public class AccountServiceTest {
         AddAccountDto dto = new AddAccountDto("Emanuele", "Caracciolo", "emanuele.caracciolo@proactivity.it",
                 "emanuele.caracciolo@proactivity.it", "Emanuele1!!!!");
 
-        ResponseEntity response = accountService.addAccount(dto);
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        ResponseEntity response = accountService.addAccount(token.get(), dto);
 
         assertEquals(BAD_REQUEST_RESPONSE.getStatusCode(), response.getStatusCode());
 
@@ -78,7 +85,8 @@ public class AccountServiceTest {
         AddAccountDto dto = new AddAccountDto("Emanuele", "Caracciolo", "emanuele.caracciolo@proactivity.it",
                 "emanuele.caracciolo@proactivity.it", "emanuele1!");
 
-        ResponseEntity response = accountService.addAccount(dto);
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        ResponseEntity response = accountService.addAccount(token.get(), dto);
 
         assertEquals(BAD_REQUEST_RESPONSE.getStatusCode(), response.getStatusCode());
 
@@ -89,7 +97,8 @@ public class AccountServiceTest {
         AddAccountDto dto = new AddAccountDto("Emanuele", "Caracciolo", "emanuele.caracciolo@proactivity.it",
                 "emanuele.caracciolo@proactivity.it", "Emanuele!");
 
-        ResponseEntity response = accountService.addAccount(dto);
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        ResponseEntity response = accountService.addAccount(token.get(), dto);
 
         assertEquals(BAD_REQUEST_RESPONSE.getStatusCode(), response.getStatusCode());
 
@@ -100,7 +109,8 @@ public class AccountServiceTest {
         AddAccountDto dto = new AddAccountDto("Emanuele", "Caracciolo", "emanuele.caracciolo@proactivity.it",
                 "emanuele.caracciolo@proactivity.it", "Emanuele1");
 
-        ResponseEntity response = accountService.addAccount(dto);
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        ResponseEntity response = accountService.addAccount(token.get(), dto);
 
         assertEquals(BAD_REQUEST_RESPONSE.getStatusCode(), response.getStatusCode());
 
@@ -111,9 +121,16 @@ public class AccountServiceTest {
         AddAccountDto dto = new AddAccountDto("Emanuele", "Caracciolo", "Emmma.caracciolo@proactivity.it",
                 "emanuele.caracciolo@proactivity.it", "Emanuele1!");
 
-        ResponseEntity response = accountService.addAccount(dto);
+        Optional<String> token = getToken("luigi.cerrato@proactivity.it", "Password3!");
+        ResponseEntity response = accountService.addAccount(token.get(), dto);
 
         assertEquals(BAD_REQUEST_RESPONSE.getStatusCode(), response.getStatusCode());
 
+    }
+
+    private Optional<String> getToken(String accountUsername, String password) {
+        LoginDto dto = new LoginDto(accountUsername, password);
+        accountService.login(dto);
+        return accessTokenRepository.findLatestTokenValueByUsername(accountUsername);
     }
 }
