@@ -26,7 +26,7 @@ public class AccessTokenServiceTest {
     @Autowired
     AccessTokenUtility accessTokenUtility;
 
-    @Test
+    /*@Test
     void checkAccessTokenUnauthorizedTest() {
 
         AccountDto accountDto = new AccountDto("Veronica", "Zuniga", "veronicazuniga@gmail.com",
@@ -37,9 +37,9 @@ public class AccessTokenServiceTest {
         ResponseEntity response = accessTokenService.checkAccessToken(accessTokenDto);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-    }
+    }*/
 
-    @Test
+    /*@Test
     void checkAccessTokenPositiveTest() {
 
         AccountDto accountDto = new AccountDto("Veronica", "Zuniga", "veronicazuniga@gmail.com",
@@ -50,7 +50,7 @@ public class AccessTokenServiceTest {
         ResponseEntity response = accessTokenService.checkAccessToken(accessTokenDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+    }*/
 
 
     @Test

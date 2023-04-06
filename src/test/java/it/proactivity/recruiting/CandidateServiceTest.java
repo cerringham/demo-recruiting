@@ -37,7 +37,7 @@ class CandidateServiceTest {
         assertNotNull(candidateDto);
     }
 
-    /*@Test
+    @Test
     void insertCandidatePositiveTest() {
         Map<String, Level> skillLevelMap = new HashMap<>();
         skillLevelMap.put("Azure", Level.ADVANCED);
@@ -48,12 +48,31 @@ class CandidateServiceTest {
                 "m", "1995-12-09", "junior", skillLevelMap);
 
         long numberOfCandidateBeforeInsert = candidateRepository.findByIsActive(true).size();
-        candidateService.insertCandidate(dto);
+        candidateService.insertCandidate("PzEnDpYUZEVv.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680794469011",dto);
 
         long numberOfCandidateAfterInsert = candidateRepository.findByIsActive(true).size();
 
         assertTrue(numberOfCandidateBeforeInsert < numberOfCandidateAfterInsert);
-    }*/
+    }
+
+    @Test
+    void insertCandidateNEgativeTest() {
+        Map<String, Level> skillLevelMap = new HashMap<>();
+        skillLevelMap.put("Azure", Level.ADVANCED);
+        skillLevelMap.put("java", Level.BASIC);
+
+        CandidateInformationDto dto = new CandidateInformationDto("Gigi", "Castello", "FDROTU09O87L222I", "Catania",
+                "Italia", "Catania", "via catania 23", "Sicilia", "Italia", "gigicastello@gmail.it", "+39 8763403928",
+                "m", "1995-12-09", "junior", skillLevelMap);
+
+        long numberOfCandidateBeforeInsert = candidateRepository.findByIsActive(true).size();
+        //non-existing accessToken
+        candidateService.insertCandidate("nzEnDpYUZEVv.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680794469011",dto);
+
+        long numberOfCandidateAfterInsert = candidateRepository.findByIsActive(true).size();
+
+        assertTrue(numberOfCandidateBeforeInsert == numberOfCandidateAfterInsert);
+    }
 
     @Test
     void deleteCandidatePositiveTest() {

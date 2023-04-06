@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class AccountDto {
+
     private String name;
 
     private String surname;
@@ -20,10 +21,8 @@ public class AccountDto {
 
     private Boolean isActive;
 
-    public AccountDto(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+    private Long roleId;
+
 
     @Override
     public String toString() {

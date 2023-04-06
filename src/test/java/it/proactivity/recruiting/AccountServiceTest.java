@@ -1,4 +1,5 @@
 package it.proactivity.recruiting;
+import it.proactivity.recruiting.builder.LoginDtoBuilder;
 import it.proactivity.recruiting.model.dto.AccountDto;
 import it.proactivity.recruiting.model.dto.AccountWithRoleDto;
 import it.proactivity.recruiting.model.dto.LoginDto;
@@ -21,8 +22,8 @@ public class AccountServiceTest {
 
     @Test
     void addAccountPositiveTest() {
-        AccountDto accountDto = new AccountDto("Veronica", "Zuniga", "veronicazuniga@gmail.com",
-                "veronicazuniga@gmail.com", "Vero90%", true);
+        AccountDto accountDto = new AccountDto("Vernica", "Zuniga", "veronicazunga@gmail.com",
+                "veronicazunga@gmail.com", "Vero90%", true, 1l);
 
         ResponseEntity response = accountService.addAccount(accountDto);
 
@@ -32,7 +33,7 @@ public class AccountServiceTest {
     @Test
     void addAccountNegativeTest() {
         AccountDto accountDto = new AccountDto("Veronica", "Zuniga", "veronicazuniga@gmail.com",
-                "veronicazuniga@gmail.com", "abc", true);
+                "veronicazuniga@gmail.com", "abc", true, 1l);
 
         ResponseEntity response = accountService.addAccount(accountDto);
 
@@ -41,7 +42,7 @@ public class AccountServiceTest {
 
     @Test
     void loginPositiveTest() {
-        LoginDto loginDto = new LoginDto("veronicazuniga@gmail.com", "Vero90%");
+        LoginDto loginDto = LoginDtoBuilder.newBuilder("veronicazuniga@gmail.com").password("Vero90%").build();
 
         ResponseEntity response = accountService.login(loginDto);
 
