@@ -75,13 +75,15 @@ public class CandidateService {
     }
 
     public ResponseEntity insertCandidate(String accessToken, CandidateInformationDto dto) {
-        if (dto == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
         if (!accessTokenUtility.checkIfTokenIsActive(accessToken) &&
                 !accessTokenUtility.checkIfTokenBelongsToRequiredAccount(accessToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        if (dto == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         Set<String> skills = dto.getSkillLevelMap().keySet();
         if (Boolean.FALSE.equals(candidateValidator.validateSkill(skills))) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The candidate must have at least one skill");

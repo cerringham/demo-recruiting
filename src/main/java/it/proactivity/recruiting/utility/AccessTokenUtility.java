@@ -66,6 +66,8 @@ public class AccessTokenUtility {
         return false;
     }
 
+    // TODO la query deve gestire il flag isPresent
+    // occorre controllare che il token sia ancora valido ovvero non scaduto
     public Boolean checkIfTokenIsActive(String tokenName) {
         Optional<AccessToken> accessToken = accessTokenRepository.findByName(tokenName);
         if (accessToken.isPresent()) {
@@ -77,6 +79,13 @@ public class AccessTokenUtility {
         return false;
     }
 
+    // TODO Input token
+    // a - recupero l'account dal token
+    // b -verifico il ruolo associato all'account
+    // c - ruolo == HR || ruolo == admin
+    // la funzione deve essere il più generica possibile (esempio in input andiamo a prendere  una collection di ruoli)
+    // checkAccountPresence() --> fa solo a
+    // checkRoleAccount(account, set<Ruoli>) --> fa b e c
     public Boolean checkIfTokenBelongsToRequiredAccount(String tokenName) {
         Optional<AccessToken> accessToken = accessTokenRepository.findByName(tokenName);
         if (authorizedRoles.contains(accessToken.get().getAccount().getRole().getName())) {
