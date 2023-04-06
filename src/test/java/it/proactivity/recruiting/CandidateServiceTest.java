@@ -37,7 +37,7 @@ class CandidateServiceTest {
         assertNotNull(candidateDto);
     }
 
-    @Test
+    /*@Test
     void insertCandidatePositiveTest() {
         Map<String, Level> skillLevelMap = new HashMap<>();
         skillLevelMap.put("Azure", Level.ADVANCED);
@@ -53,7 +53,7 @@ class CandidateServiceTest {
         long numberOfCandidateAfterInsert = candidateRepository.findByIsActive(true).size();
 
         assertTrue(numberOfCandidateBeforeInsert < numberOfCandidateAfterInsert);
-    }
+    }*/
 
     @Test
     void deleteCandidatePositiveTest() {

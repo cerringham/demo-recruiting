@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface AccessTokenRepository extends JpaRepository<AccessToken, Long> {
+    Optional<AccessToken> findByNameAndIsActive(String name, Boolean isActive);
+
     Optional<AccessToken> findByName(String name);
 }

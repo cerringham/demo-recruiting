@@ -220,25 +220,3 @@ is_active BOOLEAN NOT NULL
 
 ALTER TABLE account ADD COLUMN role_id INTEGER;
 ALTER TABLE account ADD CONSTRAINT role_id FOREIGN KEY (role_id) REFERENCES role(id);
-
-INSERT INTO role (name, description, is_active)
-VALUES ('admin', 'an account that can do everything', true);
-INSERT INTO role (name, description, is_active)
-VALUES ('hr', 'an account that is member of hr staff', true);
-INSERT INTO role (name, description, is_active)
-VALUES ('dev', 'an account that is a sw engineer', true);
-
-
-INSERT INTO account (name, surname, email, username, password, is_active, role_id)
-VALUES ('Amira', 'Smith', 'amirasmith@gmail.com', 'amirasmith@gmail.com', 'amirAsss6&' , true, 1);
-INSERT INTO account (name, surname, email, username, password, is_active, role_id)
-VALUES ('Valerie', 'Brock', 'valeriebrock@gmail.com', 'valeriebrock@gmail.com', 'Valieri1e&' , true, 2);
-INSERT INTO account (name, surname, email, username, password, is_active, role_id)
-VALUES ('Guadalupe', 'Barton', 'guadalupebarton@gmail.com', 'guadalupebarton@gmail.com', 'guada4!' , true, 2);
-INSERT INTO account (name, surname, email, username, password, is_active, role_id)
-VALUES ('Juan', 'Davis', 'juandavis@gmail.com', 'juandavis@gmail.com', 'Juanes9%!' , true, 3);
-INSERT INTO account (name, surname, email, username, password, is_active, role_id)
-VALUES ('Kenneth', 'Foster', 'kennethfoster@gmail.com', 'kennethfoster@gmail.com', 'kennY8!' , true, 3);
-INSERT INTO account (name, surname, email, username, password, is_active, role_id)
-VALUES ('Gloria', 'Adams', 'gloriadams@gmail.com', 'gloriadams@gmail.com', 'Gloglo33!' , true, 3);
-

@@ -1,9 +1,6 @@
 package it.proactivity.recruiting.service;
 
-import it.proactivity.recruiting.model.Candidate;
-import it.proactivity.recruiting.model.Curriculum;
-import it.proactivity.recruiting.model.Expertise;
-import it.proactivity.recruiting.model.Skill;
+import it.proactivity.recruiting.model.*;
 import it.proactivity.recruiting.model.dto.CandidateDto;
 import it.proactivity.recruiting.model.dto.CandidateInformationDto;
 import it.proactivity.recruiting.myEnum.Level;
@@ -75,11 +72,14 @@ public class CandidateService {
     }
 
     public ResponseEntity insertCandidate(String accessToken, CandidateInformationDto dto) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        Account account = accessTokenUtility.getAccountFromToken(accessToken);
         if (!accessTokenUtility.checkIfTokenIsActive(accessToken) &&
-                !accessTokenUtility.checkIfTokenBelongsToRequiredAccount(accessToken)) {
+                !accessTokenUtility.checkIfRoleIsAuthorized(account, authorizedRoleNames)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
         if (dto == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
