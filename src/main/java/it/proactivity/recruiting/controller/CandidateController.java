@@ -26,8 +26,8 @@ public class CandidateController {
     }
 
     @PostMapping("/insert-candidate")
-    public ResponseEntity insertCandidate(@RequestBody CandidateInformationDto dto) {
-        return candidateService.insertCandidate(dto);
+    public ResponseEntity insertCandidate(@RequestHeader("Token") String accessToken ,@RequestBody CandidateInformationDto dto) {
+        return candidateService.insertCandidate(accessToken, dto);
     }
 
     @GetMapping("/delete-candidate/{id}")

@@ -40,6 +40,9 @@ public class CandidateService {
     @Autowired
     CandidateUtility candidateUtility;
 
+    @Autowired
+    AccessTokenUtility accessTokenUtility;
+
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
@@ -71,9 +74,13 @@ public class CandidateService {
                 candidate.get().getIsActive(), parsingUtility.parseDateToString(candidate.get().getBirthDate())));
     }
 
-    public ResponseEntity insertCandidate(CandidateInformationDto dto) {
+    public ResponseEntity insertCandidate(String accessToken, CandidateInformationDto dto) {
         if (dto == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        if (!accessTokenUtility.checkIfTokenIsActive(accessToken) &&
+                !accessTokenUtility.checkIfTokenBelongsToRequiredAccount(accessToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Set<String> skills = dto.getSkillLevelMap().keySet();
         if (Boolean.FALSE.equals(candidateValidator.validateSkill(skills))) {
