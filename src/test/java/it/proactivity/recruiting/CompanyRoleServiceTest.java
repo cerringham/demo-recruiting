@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
     @Test
     void getAllCompanyRolesTest() {
-        List<CompanyRoleDto> dtoList = companyRoleService.getAll().getBody();
+        List<CompanyRoleDto> dtoList = companyRoleService.getAll("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010").getBody();
         assertTrue(dtoList.size() != 0);
     }
 

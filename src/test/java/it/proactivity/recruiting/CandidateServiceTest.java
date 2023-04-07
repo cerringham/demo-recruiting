@@ -27,13 +27,13 @@ class CandidateServiceTest {
 
     @Test
     void getAllCandidateTest() {
-        Set<CandidateDto> dtoList = candidateService.getAll().getBody();
+        Set<CandidateDto> dtoList = candidateService.getAll("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010").getBody();
         assertTrue(dtoList.size() != 0);
     }
 
     @Test
     void getCandidateById() {
-        CandidateDto candidateDto = candidateService.findById(1L).getBody();
+        CandidateDto candidateDto = candidateService.findById("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", 1L).getBody();
         assertNotNull(candidateDto);
     }
 

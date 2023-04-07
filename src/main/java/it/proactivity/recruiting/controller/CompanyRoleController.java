@@ -15,13 +15,13 @@ public class CompanyRoleController {
     CompanyRoleService companyRoleService;
 
     @GetMapping("/get-all-companyRoles")
-    public ResponseEntity<List<CompanyRoleDto>> getAll() {
-        return companyRoleService.getAll();
+    public ResponseEntity<List<CompanyRoleDto>> getAll(@RequestHeader("Token") String accessToken) {
+        return companyRoleService.getAll(accessToken);
     }
 
     @GetMapping("/get-companyRole/{id}")
-    public ResponseEntity<CompanyRoleDto> findById(@PathVariable Long id) {
-        return companyRoleService.findById(id);
+    public ResponseEntity<CompanyRoleDto> findById(@RequestHeader("Token") String accessToken ,@PathVariable Long id) {
+        return companyRoleService.findById(accessToken, id);
     }
 
     @PostMapping("/insert-company-role")
