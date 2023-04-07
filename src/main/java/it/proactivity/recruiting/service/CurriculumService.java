@@ -5,14 +5,17 @@ import it.proactivity.recruiting.model.Curriculum;
 import it.proactivity.recruiting.model.dto.CurriculumDto;
 import it.proactivity.recruiting.repository.CurriculumRepository;
 import it.proactivity.recruiting.utility.CurriculumUtility;
+import it.proactivity.recruiting.utility.GlobalUtility;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CurriculumService {
@@ -26,8 +29,15 @@ public class CurriculumService {
     @Autowired
     CurriculumUtility curriculumUtility;
 
-    public ResponseEntity<List<CurriculumDto>> getAll() {
+    @Autowired
+    GlobalUtility globalUtility;
 
+    public ResponseEntity<List<CurriculumDto>> getAll(String accessToken) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         List<Curriculum> curriculumListList = curriculumRepository.findAll();
 
         List<CurriculumDto> dtoList = curriculumListList.stream()
@@ -37,7 +47,12 @@ public class CurriculumService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CurriculumDto> findById(Long id) {
+    public ResponseEntity<CurriculumDto> findById(String accessToken, Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         globalValidator.validateId(id);
 
         Optional<Curriculum> curriculum = curriculumRepository.findById(id);

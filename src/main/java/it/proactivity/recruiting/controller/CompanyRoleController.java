@@ -25,17 +25,17 @@ public class CompanyRoleController {
     }
 
     @PostMapping("/insert-company-role")
-    public ResponseEntity insertCompanyRole(@RequestBody CompanyRoleDto companyRoleDto) {
-        return companyRoleService.insertCompanyRole(companyRoleDto);
+    public ResponseEntity insertCompanyRole(@RequestHeader("Token") String accessToken ,@RequestBody CompanyRoleDto companyRoleDto) {
+        return companyRoleService.insertCompanyRole(accessToken, companyRoleDto);
     }
 
     @PostMapping("/update-company-role")
-    public ResponseEntity updateCompanyRole(@RequestBody CompanyRoleDto companyRoleDto) {
-        return companyRoleService.updateCompanyRole(companyRoleDto);
+    public ResponseEntity updateCompanyRole(@RequestHeader("Token") String accessToken ,@RequestBody CompanyRoleDto companyRoleDto) {
+        return companyRoleService.updateCompanyRole(accessToken, companyRoleDto);
     }
 
     @PostMapping("/delete-company-role")
-    public ResponseEntity deleteCompanyRole(@RequestParam Long id) {
-        return companyRoleService.deleteCompanyRole(id);
+    public ResponseEntity deleteCompanyRole(@RequestHeader("Token") String accessToken ,@RequestParam Long id) {
+        return companyRoleService.deleteCompanyRole(accessToken, id);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,8 +17,8 @@ public class AccountController {
     AccountService accountService;
 
     @PostMapping("/add-account")
-    public ResponseEntity addAccount(@RequestBody AccountDto accountDto) {
-        return accountService.addAccount(accountDto);
+    public ResponseEntity addAccount(@RequestHeader("Token") String accessToken , @RequestBody AccountDto accountDto) {
+        return accountService.addAccount(accessToken, accountDto);
     }
 
     @PostMapping("/login")

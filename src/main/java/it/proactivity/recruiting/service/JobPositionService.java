@@ -11,6 +11,7 @@ import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
 import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.repository.JobPositionRepository;
 import it.proactivity.recruiting.repository.JobPositionStatusRepository;
+import it.proactivity.recruiting.utility.GlobalUtility;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.JobPositionUtility;
 import it.proactivity.recruiting.utility.SkillLevelUtility;
@@ -19,9 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,7 +44,16 @@ public class JobPositionService {
     @Autowired
     SkillLevelUtility skillLevelUtility;
 
-    public ResponseEntity<List<JobPositionDto>> getAll() {
+    @Autowired
+    GlobalUtility globalUtility;
+
+    public ResponseEntity<List<JobPositionDto>> getAll(String accessToken) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         List<JobPosition> jobPositionList = jobPositionRepository.findByIsActive(true);
 
         List<JobPositionDto> dtoList = jobPositionList.stream()
@@ -55,7 +63,13 @@ public class JobPositionService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<JobPositionDto> findById(Long id) {
+    public ResponseEntity<JobPositionDto> findById(String accessToken, Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         globalValidator.validateId(id);
         Optional<JobPosition> jobPosition = jobPositionRepository.findByIdAndIsActive(id, true);
 
@@ -67,7 +81,13 @@ public class JobPositionService {
                 jobPosition.get().getCountry(), jobPosition.get().getIsActive()));
     }
 
-    public ResponseEntity<JobPositionWithSkillsDto> insertJobPosition(JobPositionWithSkillsDto jobPositionWithSkillsDto) {
+    public ResponseEntity<JobPositionWithSkillsDto> insertJobPosition(String accessToken, JobPositionWithSkillsDto jobPositionWithSkillsDto) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (!jobPositionUtility.validateParametersForInsert(jobPositionWithSkillsDto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -94,7 +114,13 @@ public class JobPositionService {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity<JobPositionDto> updateJobPosition(Long id, String newStatus) {
+    public ResponseEntity<JobPositionDto> updateJobPosition(String accessToken, Long id, String newStatus) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         globalValidator.validateId(id);
         Optional<JobPosition> jobPosition = jobPositionRepository.findById(id);
         Optional<JobPositionStatus> jobPositionStatus = jobPositionStatusRepository.findByName(newStatus);
@@ -109,7 +135,13 @@ public class JobPositionService {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    public ResponseEntity deleteJobPosition(Long id) {
+    public ResponseEntity deleteJobPosition(String accessToken, Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (!globalValidator.validateId(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

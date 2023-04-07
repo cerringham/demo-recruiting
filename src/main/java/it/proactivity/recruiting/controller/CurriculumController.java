@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -17,12 +18,12 @@ public class CurriculumController {
     CurriculumService curriculumService;
 
     @GetMapping("/get-all-candidateSkills")
-    public ResponseEntity<List<CurriculumDto>> getAll() {
-        return curriculumService.getAll();
+    public ResponseEntity<List<CurriculumDto>> getAll(@RequestHeader("Token") String accessToken) {
+        return curriculumService.getAll(accessToken);
     }
 
     @GetMapping("/get-candidateSkill/{id}")
-    public ResponseEntity<CurriculumDto> findById(@PathVariable Long id) {
-        return curriculumService.findById(id);
+    public ResponseEntity<CurriculumDto> findById(@RequestHeader("Token") String accessToken , @PathVariable Long id) {
+        return curriculumService.findById(accessToken, id);
     }
 }

@@ -30,13 +30,13 @@ import static org.junit.Assert.*;
 
     @Test
     void getAllJobPositionTest() {
-        List<JobPositionDto> dtoList = jobPositionService.getAll().getBody();
+        List<JobPositionDto> dtoList = jobPositionService.getAll("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010").getBody();
         assertTrue(dtoList.size() != 0);
     }
 
     @Test
     void getJobPositionByIdTest() {
-        JobPositionDto dto = jobPositionService.findById(11L).getBody();
+        JobPositionDto dto = jobPositionService.findById("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", 11L).getBody();
         assertNotNull(dto);
         System.out.println(dto);
     }
@@ -44,28 +44,28 @@ import static org.junit.Assert.*;
     @Test
     void deleteJobPositionPositiveTest() {
         Optional<JobPosition> jobPosition = jobPositionRepository.findById(16l);
-        ResponseEntity response = jobPositionService.deleteJobPosition(jobPosition.get().getId());
+        ResponseEntity response = jobPositionService.deleteJobPosition("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", jobPosition.get().getId());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void deleteJobPositionNegativeTest() {
-        ResponseEntity response = jobPositionService.deleteJobPosition(51l);
+        ResponseEntity response = jobPositionService.deleteJobPosition("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", 51l);
 
         assertNotEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void updateJobPositionPositiveTest() {
-        ResponseEntity response = jobPositionService.updateJobPosition(15l, "Closed");
+        ResponseEntity response = jobPositionService.updateJobPosition("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", 15l, "Closed");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void updateJobPositionNegativeTest() {
-        ResponseEntity response = jobPositionService.updateJobPosition(15l, "Abierto");
+        ResponseEntity response = jobPositionService.updateJobPosition("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", 15l, "Abierto");
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -81,7 +81,7 @@ import static org.junit.Assert.*;
         JobPositionWithSkillsDto jobPositionWithSkillsDto = new JobPositionWithSkillsDto("Python Developer",
                 "Software Development","Description description description", "Milan", "Lombardy", "IT", true, "Fortitude",
                 skillLevels);
-        ResponseEntity response = jobPositionService.insertJobPosition(jobPositionWithSkillsDto);
+        ResponseEntity response = jobPositionService.insertJobPosition("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", jobPositionWithSkillsDto);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
@@ -93,7 +93,7 @@ import static org.junit.Assert.*;
         JobPositionWithSkillsDto jobPositionWithSkillsDto = new JobPositionWithSkillsDto("Python Developer",
                 "Software Development","Description description description", "Milan", "Lombardy", "IT", true, "Fortitude",
                 skillLevels);
-        ResponseEntity response = jobPositionService.insertJobPosition(jobPositionWithSkillsDto);
+        ResponseEntity response = jobPositionService.insertJobPosition("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", jobPositionWithSkillsDto);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
@@ -109,7 +109,7 @@ import static org.junit.Assert.*;
         JobPositionWithSkillsDto jobPositionWithSkillsDto = new JobPositionWithSkillsDto(null ,"Software Development",null,
                 "Milan", "Lombardy", "IT", true, "Fortitude",
                 skillLevels);
-        ResponseEntity response = jobPositionService.insertJobPosition(jobPositionWithSkillsDto);
+        ResponseEntity response = jobPositionService.insertJobPosition("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", jobPositionWithSkillsDto);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }

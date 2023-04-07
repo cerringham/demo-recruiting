@@ -11,13 +11,16 @@ import it.proactivity.recruiting.repository.AccessTokenRepository;
 import it.proactivity.recruiting.repository.AccountRepository;
 import it.proactivity.recruiting.utility.AccessTokenUtility;
 import it.proactivity.recruiting.utility.AccountUtility;
+import it.proactivity.recruiting.utility.GlobalUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class AccountService {
@@ -34,7 +37,16 @@ public class AccountService {
     @Autowired
     AccessTokenRepository accessTokenRepository;
 
-    public ResponseEntity addAccount(AccountDto accountDto){
+    @Autowired
+    GlobalUtility globalUtility;
+
+    public ResponseEntity addAccount(String accessToken, AccountDto accountDto){
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (!accountUtility.validateAccountDto(accountDto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

@@ -25,7 +25,8 @@ public class AccountServiceTest {
         AccountDto accountDto = new AccountDto("Vernica", "Zuniga", "veronicazunga@gmail.com",
                 "veronicazunga@gmail.com", "Vero90%", true, 1l);
 
-        ResponseEntity response = accountService.addAccount(accountDto);
+        ResponseEntity response = accountService.addAccount("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010"
+                ,accountDto);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
@@ -35,7 +36,8 @@ public class AccountServiceTest {
         AccountDto accountDto = new AccountDto("Veronica", "Zuniga", "veronicazuniga@gmail.com",
                 "veronicazuniga@gmail.com", "abc", true, 1l);
 
-        ResponseEntity response = accountService.addAccount(accountDto);
+        ResponseEntity response = accountService.addAccount("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",
+                accountDto);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }

@@ -28,13 +28,13 @@ class JobInterviewServiceTest {
 
     @Test
     void getAllJobInterviewTest() {
-        List<JobInterviewDto> dtoList = jobInterviewService.getAll().getBody();
+        List<JobInterviewDto> dtoList = jobInterviewService.getAll("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010").getBody();
         assertTrue(dtoList.size() != 0);
     }
 
     @Test
     void getJobInterviewByIdTest() {
-        JobInterviewDto dto = jobInterviewService.findById(1L).getBody();
+        JobInterviewDto dto = jobInterviewService.findById("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",1L).getBody();
         assertNotNull(dto);
         System.out.println(dto);
     }
@@ -44,7 +44,7 @@ class JobInterviewServiceTest {
         JobInterviewInsertionDto dto = new JobInterviewInsertionDto("12:00", "2023-03-25", "Milan",
                 "Failed", 4L, 5L, 1L);
 
-        ResponseEntity response = jobInterviewService.createJobInterview(dto);
+        ResponseEntity response = jobInterviewService.createJobInterview("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         assertEquals(POSITIVE_RESPONSE.getStatusCode(), response.getStatusCode());
 
@@ -58,7 +58,7 @@ class JobInterviewServiceTest {
         JobInterview jobInterviewBeforeUpdate = jobInterviewRepository.findById(31L).get();
         assertTrue(jobInterviewBeforeUpdate.getRating() == 10);
 
-        jobInterviewService.updateJobInterview(dto);
+        jobInterviewService.updateJobInterview("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         JobInterview jobInterviewAfterUpdate = jobInterviewRepository.findById(31L).get();
 
@@ -68,7 +68,7 @@ class JobInterviewServiceTest {
 
     @Test
     void deleteJobInterviewPositiveTest() {
-        jobInterviewService.deleteJobInterview(31L);
+        jobInterviewService.deleteJobInterview("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",31L);
 
         JobInterview jobInterview = jobInterviewRepository.findById(31L).get();
 

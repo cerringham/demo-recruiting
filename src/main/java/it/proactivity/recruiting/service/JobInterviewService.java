@@ -6,17 +6,16 @@ import it.proactivity.recruiting.model.dto.JobInterviewDto;
 import it.proactivity.recruiting.model.dto.JobInterviewInsertionDto;
 import it.proactivity.recruiting.model.dto.JobInterviewUpdateDto;
 import it.proactivity.recruiting.repository.*;
-import it.proactivity.recruiting.utility.GlobalValidator;
-import it.proactivity.recruiting.utility.JobInterviewUtility;
-import it.proactivity.recruiting.utility.JobInterviewValidator;
-import it.proactivity.recruiting.utility.ParsingUtility;
+import it.proactivity.recruiting.utility.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class JobInterviewService {
@@ -34,13 +33,21 @@ public class JobInterviewService {
     @Autowired
     EmployeeRepository employeeRepository;
     @Autowired
-    JobPositionRepository jobPositionRepository;
-    @Autowired
     JobInterviewStatusRepository jobInterviewStatusRepository;
     @Autowired
     JobInterviewValidator jobInterviewValidator;
 
-    public ResponseEntity<List<JobInterviewDto>> getAll() {
+    @Autowired
+    GlobalUtility globalUtility;
+
+    public ResponseEntity<List<JobInterviewDto>> getAll(String accessToken) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        authorizedRoleNames.add("dev");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         List<JobInterview> jobInterviewList = jobInterviewRepository.findByIsActive(true);
 
         List<JobInterviewDto> dtoList = jobInterviewList.stream()
@@ -51,7 +58,14 @@ public class JobInterviewService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<JobInterviewDto> findById(Long id) {
+    public ResponseEntity<JobInterviewDto> findById(String accessToken,Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        authorizedRoleNames.add("dev");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         globalValidator.validateId(id);
         Optional<JobInterview> jobInterview = jobInterviewRepository.findByIdAndIsActive(id, true);
 
@@ -63,7 +77,14 @@ public class JobInterviewService {
                 jobInterview.get().getRating(), jobInterview.get().getNote(), jobInterview.get().getIsActive()));
     }
 
-    public ResponseEntity createJobInterview(JobInterviewInsertionDto dto) {
+    public ResponseEntity createJobInterview(String accessToken, JobInterviewInsertionDto dto) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        authorizedRoleNames.add("dev");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (!jobInterviewValidator.validateAllParametersForJobInterviewInsertionDto(dto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -96,7 +117,14 @@ public class JobInterviewService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity updateJobInterview(JobInterviewUpdateDto dto) {
+    public ResponseEntity updateJobInterview(String accessToken, JobInterviewUpdateDto dto) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        authorizedRoleNames.add("dev");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (!jobInterviewValidator.validateAllParametersForJobInterviewUpdateDto(dto)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -125,7 +153,14 @@ public class JobInterviewService {
         }
     }
 
-    public ResponseEntity deleteJobInterview(Long id) {
+    public ResponseEntity deleteJobInterview(String accessToken, Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        authorizedRoleNames.add("dev");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (!globalValidator.validateId(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

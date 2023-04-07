@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
     @Test
     void insertCompanyRolePositiveTest() {
         CompanyRoleDto companyRole = CompanyRoleDtoBuilder.newBuilder("New engineer role").isActive(true).build();
-        ResponseEntity response = companyRoleService.insertCompanyRole(companyRole);
+        ResponseEntity response = companyRoleService.insertCompanyRole("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", companyRole);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
@@ -37,10 +37,10 @@ import static org.junit.Assert.*;
     @Test
     void insertCompanyRoleNegativeTest() {
         CompanyRoleDto companyRole = CompanyRoleDtoBuilder.newBuilder("New engineer role").isActive(true).build();
-        ResponseEntity response1 = companyRoleService.insertCompanyRole(companyRole);
+        ResponseEntity response1 = companyRoleService.insertCompanyRole("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", companyRole);
 
         CompanyRoleDto companyRole2 = CompanyRoleDtoBuilder.newBuilder("Coo").isActive(true).build();
-        ResponseEntity response2 = companyRoleService.insertCompanyRole(companyRole2);
+        ResponseEntity response2 = companyRoleService.insertCompanyRole("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", companyRole2);
 
         assertEquals(response1.getStatusCode(), response2.getStatusCode());
     }
@@ -48,7 +48,7 @@ import static org.junit.Assert.*;
     @Test
     void updateCompanyRolePositiveTest() {
         CompanyRoleDto companyRoleDto = new CompanyRoleDto(7l, "New role");
-        ResponseEntity response = companyRoleService.updateCompanyRole(companyRoleDto);
+        ResponseEntity response = companyRoleService.updateCompanyRole("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", companyRoleDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -56,10 +56,10 @@ import static org.junit.Assert.*;
     @Test
     void updateCompanyRoleNegativeTest() {
         CompanyRoleDto companyRoleDto = new CompanyRoleDto(1l, "New role");
-        ResponseEntity response1 = companyRoleService.updateCompanyRole(companyRoleDto);
+        ResponseEntity response1 = companyRoleService.updateCompanyRole("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", companyRoleDto);
 
         CompanyRoleDto companyRoleDto2 = new CompanyRoleDto(3l, "Administration");
-        ResponseEntity response2 = companyRoleService.updateCompanyRole(companyRoleDto2);
+        ResponseEntity response2 = companyRoleService.updateCompanyRole("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", companyRoleDto2);
 
         assertEquals(HttpStatus.BAD_REQUEST, response1.getStatusCode());
         assertEquals(response1.getStatusCode(), response2.getStatusCode());

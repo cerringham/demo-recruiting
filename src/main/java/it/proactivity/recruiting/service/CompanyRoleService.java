@@ -6,14 +6,17 @@ import it.proactivity.recruiting.model.CompanyRole;
 import it.proactivity.recruiting.model.dto.CompanyRoleDto;
 import it.proactivity.recruiting.repository.CompanyRoleRepository;
 import it.proactivity.recruiting.utility.CompanyRoleUtility;
+import it.proactivity.recruiting.utility.GlobalUtility;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CompanyRoleService {
@@ -27,7 +30,16 @@ public class CompanyRoleService {
     @Autowired
     CompanyRoleUtility companyRoleUtility;
 
-    public ResponseEntity<List<CompanyRoleDto>> getAll() {
+    @Autowired
+    GlobalUtility globalUtility;
+
+    public ResponseEntity<List<CompanyRoleDto>> getAll(String accessToken) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         List<CompanyRole> companyRoleList = companyRoleRepository.findByIsActive(true);
 
         List<CompanyRoleDto> dtoList = companyRoleList.stream()
@@ -37,7 +49,13 @@ public class CompanyRoleService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CompanyRoleDto> findById(Long id) {
+    public ResponseEntity<CompanyRoleDto> findById(String accessToken, Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         globalValidator.validateId(id);
 
         Optional<CompanyRole> companyRole = companyRoleRepository.findByIdAndIsActive(id, true);
@@ -50,7 +68,13 @@ public class CompanyRoleService {
                 companyRole.get().getIsActive()));
     }
 
-    public ResponseEntity insertCompanyRole(CompanyRoleDto companyRoleDto) {
+    public ResponseEntity insertCompanyRole(String accessToken, CompanyRoleDto companyRoleDto) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         String companyRoleName = companyRoleUtility.transformCompanyRoleName(companyRoleDto.getName());
         Optional<CompanyRole> companyRole = companyRoleRepository.findByName(companyRoleName);
         if (companyRole.isPresent()) {
@@ -64,7 +88,13 @@ public class CompanyRoleService {
         }
     }
 
-    public ResponseEntity updateCompanyRole(CompanyRoleDto companyRoleDto) {
+    public ResponseEntity updateCompanyRole(String accessToken, CompanyRoleDto companyRoleDto) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (!globalValidator.validateId(companyRoleDto.getId())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -83,7 +113,13 @@ public class CompanyRoleService {
        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    public ResponseEntity deleteCompanyRole(Long id) {
+    public ResponseEntity deleteCompanyRole(String accessToken, Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (!globalValidator.validateId(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

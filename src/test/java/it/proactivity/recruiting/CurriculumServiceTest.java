@@ -19,13 +19,13 @@ import static org.junit.Assert.assertTrue;
 
     @Test
     void getAllCurriculumTest() {
-        List<CurriculumDto> dtoList = curriculumService.getAll().getBody();
+        List<CurriculumDto> dtoList = curriculumService.getAll("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010").getBody();
         assertTrue(dtoList.size() != 0);
     }
 
     @Test
     void getCurriculumByIdTest() {
-        CurriculumDto curriculumDto = curriculumService.findById(1L).getBody();
+        CurriculumDto curriculumDto = curriculumService.findById("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",1L).getBody();
         assertNotNull(curriculumDto);
         System.out.println(curriculumDto);
     }

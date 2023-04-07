@@ -38,14 +38,16 @@ public class CandidateService {
     CandidateUtility candidateUtility;
 
     @Autowired
-    AccessTokenUtility accessTokenUtility;
-
-    @Autowired
     GlobalUtility globalUtility;
 
 
-    public ResponseEntity<Set<CandidateDto>> getAll() {
-
+    public ResponseEntity<Set<CandidateDto>> getAll(String accessToken) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         List<Candidate> candidateList = candidateRepository.findByIsActive(true);
 
         Set<CandidateDto> dtoList = candidateList.stream()
@@ -58,7 +60,13 @@ public class CandidateService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<CandidateDto> findById(Long id) {
+    public ResponseEntity<CandidateDto> findById(String accessToken, Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         globalValidator.validateId(id);
 
         Optional<Candidate> candidate = candidateRepository.findByIdAndIsActive(id, true);
@@ -130,7 +138,14 @@ public class CandidateService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity deleteCandidateById(Long id) {
+    public ResponseEntity deleteCandidateById(String accessToken, Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         globalValidator.validateId(id);
 
         Optional<Candidate> candidate = candidateRepository.findByIdAndIsActive(id, true);
@@ -143,8 +158,14 @@ public class CandidateService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity updateCandidate(CandidateInformationDto dto) {
+    public ResponseEntity updateCandidate(String accessToken, CandidateInformationDto dto) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
 
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (dto == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

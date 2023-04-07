@@ -17,27 +17,27 @@ public class JobInterviewController {
     JobInterviewService jobInterviewService;
 
     @GetMapping("/get-all-JobInterview")
-    public ResponseEntity<List<JobInterviewDto>> getAll() {
-        return jobInterviewService.getAll();
+    public ResponseEntity<List<JobInterviewDto>> getAll(@RequestHeader("Token") String accessToken) {
+        return jobInterviewService.getAll(accessToken);
     }
 
     @GetMapping("/get-JobInterview/{id}")
-    public ResponseEntity<JobInterviewDto> findById(@PathVariable Long id) {
-        return jobInterviewService.findById(id);
+    public ResponseEntity<JobInterviewDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return jobInterviewService.findById(accessToken, id);
     }
 
     @PostMapping("/create-job-interview")
-    public ResponseEntity createJobInterview(@RequestBody JobInterviewInsertionDto dto) {
-        return jobInterviewService.createJobInterview(dto);
+    public ResponseEntity createJobInterview(@RequestHeader("Token") String accessToken, @RequestBody JobInterviewInsertionDto dto) {
+        return jobInterviewService.createJobInterview(accessToken, dto);
     }
 
     @PostMapping("/update-job-interview")
-    public ResponseEntity updateJobInterview(@RequestBody JobInterviewUpdateDto dto) {
-        return jobInterviewService.updateJobInterview(dto);
+    public ResponseEntity updateJobInterview(@RequestHeader("Token") String accessToken, @RequestBody JobInterviewUpdateDto dto) {
+        return jobInterviewService.updateJobInterview(accessToken, dto);
     }
 
     @GetMapping("/delete-job-interview/{id}")
-    public ResponseEntity deleteJobInterview(@PathVariable Long id) {
-        return jobInterviewService.deleteJobInterview(id);
+    public ResponseEntity deleteJobInterview(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return jobInterviewService.deleteJobInterview(accessToken, id);
     }
 }

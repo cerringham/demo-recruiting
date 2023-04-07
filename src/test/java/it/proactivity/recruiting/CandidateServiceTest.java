@@ -78,7 +78,7 @@ class CandidateServiceTest {
     void deleteCandidatePositiveTest() {
         long numberOfCandidateBeforeDelete = candidateRepository.findByIsActive(true).size();
 
-        candidateService.deleteCandidateById(1L);
+        candidateService.deleteCandidateById("nzEnDpYUZEVv.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680794469011", 1L);
 
         long numberOfCandidateAfterDelete = candidateRepository.findByIsActive(true).size();
 
@@ -90,7 +90,7 @@ class CandidateServiceTest {
 
         ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        assertEquals(candidateService.deleteCandidateById(100L).getStatusCode(), response.getStatusCode());
+        assertEquals(candidateService.deleteCandidateById("nfEnDpYUZEVv.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680794469011", 100L).getStatusCode(), response.getStatusCode());
     }
 
     @Test
@@ -110,7 +110,7 @@ class CandidateServiceTest {
                 "paola.liconasti@gmail.com", "+39 3204567890", "f", "1992-05-04",
                 "Senior", skillLevelMap);
 
-        candidateService.updateCandidate(dto);
+        candidateService.updateCandidate("nzEnDpYUZEVv.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680794469011", dto);
 
 
     }

@@ -26,13 +26,13 @@ import static org.junit.Assert.*;
 
     @Test
     void getAllEmployeeTest() {
-        Set<EmployeeDto> dtoList = employeeService.getAll().getBody();
+        Set<EmployeeDto> dtoList = employeeService.getAll("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010").getBody();
         assertTrue(dtoList.size() != 0);
     }
 
     @Test
     void getEmployeeByIdTest() {
-        EmployeeDto employeeDto = employeeService.findById(1L).getBody();
+        EmployeeDto employeeDto = employeeService.findById("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",1L).getBody();
         assertNotNull(employeeDto);
         System.out.println(employeeDto);
     }
@@ -48,7 +48,7 @@ import static org.junit.Assert.*;
 
         long numberOfEmployeeBeforeInsert = employeeRepository.findByIsActive(true).size();
 
-        employeeService.insertEmployee(dto);
+        employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         long numberOfEmployeeAfterInsert = employeeRepository.findByIsActive(true).size();
 
@@ -58,7 +58,7 @@ import static org.junit.Assert.*;
 
     @Test
     void insertEmployeeNulldtoNegativeTest() {
-        ResponseEntity response = employeeService.insertEmployee(null);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",null);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -74,7 +74,7 @@ import static org.junit.Assert.*;
                 true, "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -90,7 +90,7 @@ import static org.junit.Assert.*;
                 true, "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -106,7 +106,7 @@ import static org.junit.Assert.*;
                 true, "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -122,7 +122,7 @@ import static org.junit.Assert.*;
                 "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -138,7 +138,7 @@ import static org.junit.Assert.*;
                 "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -154,7 +154,7 @@ import static org.junit.Assert.*;
                 "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -170,7 +170,7 @@ import static org.junit.Assert.*;
                 "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -186,7 +186,7 @@ import static org.junit.Assert.*;
                 "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -202,7 +202,7 @@ import static org.junit.Assert.*;
                 "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -218,7 +218,7 @@ import static org.junit.Assert.*;
                 true, "1995-12-09", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -234,7 +234,7 @@ import static org.junit.Assert.*;
                 true, null, "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -250,7 +250,7 @@ import static org.junit.Assert.*;
                 true, "", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -266,7 +266,7 @@ import static org.junit.Assert.*;
                 true, "12/12/1998", "junior", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -282,7 +282,7 @@ import static org.junit.Assert.*;
                 true, "1995-12-12", "junior", "fortitude", null);
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -298,7 +298,7 @@ import static org.junit.Assert.*;
                 true, "1995-12-12", "junior", "fortitude", "");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -314,7 +314,7 @@ import static org.junit.Assert.*;
                 true, "1995-12-12", "junior", "fortitude", "CEO");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -330,7 +330,7 @@ import static org.junit.Assert.*;
                 true, "1995-12-12", "junior", "proactivity", "COO");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -346,7 +346,7 @@ import static org.junit.Assert.*;
                 true, "1995-12-09", "fantastic", "fortitude", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -362,7 +362,7 @@ import static org.junit.Assert.*;
                 true, "1995-12-09", "junior", "fortitude2", "coo");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -378,7 +378,7 @@ import static org.junit.Assert.*;
                 true, "1995-12-09", "junior", "fortitude", "cio");
 
 
-        ResponseEntity response = employeeService.insertEmployee(dto);
+        ResponseEntity response = employeeService.insertEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -390,7 +390,7 @@ import static org.junit.Assert.*;
 
         long numberOfEmployeeBeforeDelete = employeeRepository.findByIsActive(true).size();
 
-        employeeService.deleteEmployee(3L);
+        employeeService.deleteEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",3L);
 
         long numberOfEmployeeAfterDelete = employeeRepository.findByIsActive(true).size();
 
@@ -400,7 +400,7 @@ import static org.junit.Assert.*;
     @Test
     void deleteEmployeeNegativeTestTest() {
 
-        ResponseEntity response = employeeService.deleteEmployee(null);
+        ResponseEntity response = employeeService.deleteEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",null);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
@@ -410,7 +410,7 @@ import static org.junit.Assert.*;
     @Test
     void deleteEmployeeNotFoundNegativeTestTest() {
 
-        ResponseEntity response = employeeService.deleteEmployee(100L);
+        ResponseEntity response = employeeService.deleteEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",100L);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -426,7 +426,7 @@ import static org.junit.Assert.*;
                 "+39 2229987654", "m", true, "1985-08-12", "junior",
                 "proactivity", "Software enginer");
 
-        employeeService.updateEmployee(dto);
+        employeeService.updateEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         Optional<Employee> employee = employeeRepository.findByIdAndIsActive(4L, true);
         employee.ifPresent(value -> assertTrue(value.getCompanyRole().getName().equals("Software engineer")));
@@ -440,7 +440,7 @@ import static org.junit.Assert.*;
                 "+39 2229987654", "m", true, "1985-08-12", "junior",
                 "proactivity", "coo");
 
-        employeeService.updateEmployee(dto);
+        employeeService.updateEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         Optional<Employee> employee = employeeRepository.findByIdAndIsActive(4L, true);
 
@@ -455,7 +455,7 @@ import static org.junit.Assert.*;
                 "+39 2229987654", "m", true, "1985-08-12", "junior",
                 "proactivity", "coo");
 
-        ResponseEntity response = employeeService.updateEmployee(dto);
+        ResponseEntity response = employeeService.updateEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -470,7 +470,7 @@ import static org.junit.Assert.*;
                 "+39 2229987654", "m", true, "1985-08-12", "fantastic",
                 "proactivity", "coo");
 
-        ResponseEntity response = employeeService.updateEmployee(dto);
+        ResponseEntity response = employeeService.updateEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -485,7 +485,7 @@ import static org.junit.Assert.*;
                 "+39 2229987654", "m", true, "1985-08-12", "junior",
                 "proactivity2", "coo");
 
-        ResponseEntity response = employeeService.updateEmployee(dto);
+        ResponseEntity response = employeeService.updateEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -500,7 +500,7 @@ import static org.junit.Assert.*;
                 "+39 2229987654", "m", true, "1985-08-12", "junior",
                 "proactivity2", "cooo");
 
-        ResponseEntity response = employeeService.updateEmployee(dto);
+        ResponseEntity response = employeeService.updateEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -515,7 +515,7 @@ import static org.junit.Assert.*;
                 "+39 2229987654", "m", true, "1985/08/12", "junior",
                 "proactivity", "coo");
 
-        ResponseEntity response = employeeService.updateEmployee(dto);
+        ResponseEntity response = employeeService.updateEmployee("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010",dto);
 
         ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 

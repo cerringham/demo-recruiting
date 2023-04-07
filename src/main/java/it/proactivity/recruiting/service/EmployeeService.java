@@ -9,16 +9,14 @@ import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.repository.CompanyRoleRepository;
 import it.proactivity.recruiting.repository.EmployeeRepository;
 import it.proactivity.recruiting.repository.ExpertiseRepository;
-import it.proactivity.recruiting.utility.EmployeeUtility;
-import it.proactivity.recruiting.utility.EmployeeValidator;
-import it.proactivity.recruiting.utility.GlobalValidator;
-import it.proactivity.recruiting.utility.ParsingUtility;
+import it.proactivity.recruiting.utility.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -51,7 +49,15 @@ public class EmployeeService {
     @Autowired
     CompanyRoleRepository companyRoleRepository;
 
-    public ResponseEntity<Set<EmployeeDto>> getAll() {
+    @Autowired
+    GlobalUtility globalUtility;
+
+    public ResponseEntity<Set<EmployeeDto>> getAll(String accessToken) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         List<Employee> employeeList = employeeRepository.findByIsActive(true);
 
         Set<EmployeeDto> dtoList = employeeList.stream()
@@ -65,7 +71,12 @@ public class EmployeeService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<EmployeeDto> findById(Long id) {
+    public ResponseEntity<EmployeeDto> findById(String accessToken, Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         globalValidator.validateId(id);
 
         Optional<Employee> employee = employeeRepository.findByIdAndIsActive(id, true);
@@ -83,7 +94,12 @@ public class EmployeeService {
                 employee.get().getCompany().getName(), employee.get().getCompanyRole().getName()));
     }
 
-    public ResponseEntity insertEmployee(EmployeeDto dto) {
+    public ResponseEntity insertEmployee(String accessToken, EmployeeDto dto) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (dto == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dto can't be null");
         }
@@ -130,7 +146,12 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity deleteEmployee(Long id) {
+    public ResponseEntity deleteEmployee(String accessToken, Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (id == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id can't be null");
         }
@@ -146,7 +167,12 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity updateEmployee(EmployeeDto dto) {
+    public ResponseEntity updateEmployee(String accessToken, EmployeeDto dto) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         if (dto == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dto can't be null");

@@ -29,13 +29,13 @@ import static org.junit.Assert.*;
 
     @Test
     void getAllCompanyTest() {
-        List<CompanyDto> dtoList = companyService.getAll().getBody();
+        List<CompanyDto> dtoList = companyService.getAll("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010").getBody();
         assertNotEquals(dtoList.size() , 0);
     }
 
     @Test
     void getCompanyByIdTest() {
-        CompanyDto companyDto = companyService.findById(1L).getBody();
+        CompanyDto companyDto = companyService.findById("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", 1L).getBody();
         assertNotNull(companyDto);
     }
 

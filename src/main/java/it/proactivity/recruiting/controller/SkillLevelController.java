@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -17,13 +18,13 @@ public class SkillLevelController {
     SkillLevelService skillLevelService;
 
     @GetMapping("/get-all-SkillLevel")
-    public ResponseEntity<List<SkillLevelDto>> getAll() {
-        return skillLevelService.getAll();
+    public ResponseEntity<List<SkillLevelDto>> getAll(@RequestHeader("Token") String accessToken) {
+        return skillLevelService.getAll(accessToken);
     }
 
     @GetMapping("/get-SkillLevel/{id}")
-    public ResponseEntity<SkillLevelDto> findById(@PathVariable Long id) {
-        return skillLevelService.findById(id);
+    public ResponseEntity<SkillLevelDto> findById(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
+        return skillLevelService.findById(accessToken, id);
     }
 
 

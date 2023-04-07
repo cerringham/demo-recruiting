@@ -4,6 +4,7 @@ package it.proactivity.recruiting.service;
 import it.proactivity.recruiting.model.Skill;
 import it.proactivity.recruiting.model.dto.SkillDto;
 import it.proactivity.recruiting.repository.SkillRepository;
+import it.proactivity.recruiting.utility.GlobalUtility;
 import it.proactivity.recruiting.utility.GlobalValidator;
 import it.proactivity.recruiting.utility.SkillUtility;
 import org.apache.commons.text.WordUtils;
@@ -12,8 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class SkillService {
@@ -27,7 +30,16 @@ public class SkillService {
     @Autowired
     SkillUtility skillUtility;
 
-    public ResponseEntity<List<SkillDto>> getAll() {
+    @Autowired
+    GlobalUtility globalUtility;
+
+    public ResponseEntity<List<SkillDto>> getAll(String accessToken) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         List<Skill> skillList = skillRepository.findByIsActive(true);
 
         List<SkillDto> dtoList = skillList.stream()
@@ -36,7 +48,13 @@ public class SkillService {
         return ResponseEntity.ok(dtoList);
     }
 
-    public ResponseEntity<SkillDto> findById(Long id) {
+    public ResponseEntity<SkillDto> findById(String accessToken, Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         globalValidator.validateId(id);
 
         Optional<Skill> skill = skillRepository.findByIdAndIsActive(id, true);
@@ -48,7 +66,13 @@ public class SkillService {
         return ResponseEntity.ok(skillUtility.createSkillDto(skill.get().getName(), skill.get().getIsActive()));
     }
 
-    public ResponseEntity insertSkill(SkillDto dto) {
+    public ResponseEntity insertSkill(String accessToken, SkillDto dto) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (dto == null) {
             throw new IllegalArgumentException("skill dto can't be null");
         }
@@ -65,7 +89,13 @@ public class SkillService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity deleteSkill(Long id) {
+    public ResponseEntity deleteSkill(String accessToken, Long id) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (id == null) {
             throw new IllegalArgumentException("Id can't be null");
         }
@@ -79,7 +109,13 @@ public class SkillService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ResponseEntity updateSkill(SkillDto dto) {
+    public ResponseEntity updateSkill(String accessToken, SkillDto dto) {
+        Set<String> authorizedRoleNames = new HashSet<>();
+        authorizedRoleNames.add("admin");
+        authorizedRoleNames.add("hr");
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (dto == null) {
             throw new IllegalArgumentException("Dto can't be null");
         }
