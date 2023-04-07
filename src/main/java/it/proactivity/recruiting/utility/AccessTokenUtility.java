@@ -68,34 +68,4 @@ public class AccessTokenUtility {
         }
         return false;
     }
-
-    public Boolean checkIfTokenIsActive(String tokenName) {
-        Optional<AccessToken> accessToken = accessTokenRepository.findByNameAndIsActive(tokenName, true);
-        if (accessToken.isPresent() && accessToken.get().getExpiration().isAfter(LocalTime.now())) {
-            return true;
-        }
-        return false;
-    }
-
-    public Account getAccountFromToken(String tokenName) {
-        Optional<AccessToken> accessToken = accessTokenRepository.findByName(tokenName);
-        if (accessToken.isEmpty()) {
-            return null;
-        }
-        Optional<Account> account = accountRepository.findById(accessToken.get().getAccount().getId());
-        if (account.isEmpty()) {
-            return null;
-        }
-        return account.get();
-    }
-
-    public Boolean checkIfRoleIsAuthorized(Account account, Set<String> authorizedRoles) {
-        if (account != null && !authorizedRoles.isEmpty()) {
-            if (authorizedRoles.contains(account.getRole().getName())) {
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
 }

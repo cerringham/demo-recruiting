@@ -40,6 +40,9 @@ public class CandidateService {
     @Autowired
     AccessTokenUtility accessTokenUtility;
 
+    @Autowired
+    GlobalUtility globalUtility;
+
 
     public ResponseEntity<Set<CandidateDto>> getAll() {
 
@@ -75,11 +78,11 @@ public class CandidateService {
         Set<String> authorizedRoleNames = new HashSet<>();
         authorizedRoleNames.add("admin");
         authorizedRoleNames.add("hr");
-        Account account = accessTokenUtility.getAccountFromToken(accessToken);
-        if (!accessTokenUtility.checkIfTokenIsActive(accessToken) &&
-                !accessTokenUtility.checkIfRoleIsAuthorized(account, authorizedRoleNames)) {
+
+        if (!globalUtility.checkIfTokenAndAccountAreValid(accessToken, authorizedRoleNames)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
         if (dto == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

@@ -1,10 +1,10 @@
 package it.proactivity.recruiting;
 
-import it.proactivity.recruiting.model.Account;
 import it.proactivity.recruiting.model.dto.AccessTokenDto;
 import it.proactivity.recruiting.model.dto.AccountDto;
 import it.proactivity.recruiting.service.AccessTokenService;
 import it.proactivity.recruiting.utility.AccessTokenUtility;
+import it.proactivity.recruiting.utility.GlobalUtility;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,59 +24,39 @@ public class AccessTokenServiceTest {
     AccessTokenService accessTokenService;
 
     @Autowired
-    AccessTokenUtility accessTokenUtility;
+    GlobalUtility globalUtility;
 
-    /*@Test
+    @Test
     void checkAccessTokenUnauthorizedTest() {
 
         AccountDto accountDto = new AccountDto("Veronica", "Zuniga", "veronicazuniga@gmail.com",
-                "veronicazuniga@gmail.com", "Vero90%", true);
+                "veronicazuniga@gmail.com", "Vero90%", true, 3l);
 
         AccessTokenDto accessTokenDto = new AccessTokenDto(2l, LocalTime.of(10,54), accountDto, true,
                 "ybQXpmgdhrhw.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680597872859");
         ResponseEntity response = accessTokenService.checkAccessToken(accessTokenDto);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-    }*/
+    }
 
-    /*@Test
+    @Test
     void checkAccessTokenPositiveTest() {
 
         AccountDto accountDto = new AccountDto("Veronica", "Zuniga", "veronicazuniga@gmail.com",
-                "veronicazuniga@gmail.com", "Vero90%", true);
+                "veronicazuniga@gmail.com", "Vero90%", true, 2l);
 
         AccessTokenDto accessTokenDto = new AccessTokenDto(4l, LocalTime.of(16,57), accountDto, true,
                 "adUlLPONvMdg.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680619670726");
         ResponseEntity response = accessTokenService.checkAccessToken(accessTokenDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-    }*/
-
-
-    @Test
-    void checkIfTokenIsActiveTest() {
-        assertTrue(accessTokenUtility.checkIfTokenIsActive("ZGnlAwlIYiEJ.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680791292595"));
-    }
-
-    @Test
-    void checkIfTokenIsActiveNegativeTest() {
-        assertFalse(accessTokenUtility.checkIfTokenIsActive("ZGnlAwlIYiEJ.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680791292595"));
-    }
-
-    @Test
-    void getAccountFromTokenTest() {
-        Account account = accessTokenUtility.getAccountFromToken("ZGnlAwlIYiEJ.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680791292595");
-
-        System.out.println(account.toString());
-        assertTrue(account != null);
     }
 
     @Test
     void checkIfRoleIsAuthorizedTest() {
-        Account account = accessTokenUtility.getAccountFromToken("ZGnlAwlIYiEJ.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680791292595");
         Set<String> authorizedRoleNames = new HashSet<>();
         authorizedRoleNames.add("admin");
         authorizedRoleNames.add("hr");
-        assertTrue(accessTokenUtility.checkIfRoleIsAuthorized(account, authorizedRoleNames));
+        assertTrue(globalUtility.checkIfTokenAndAccountAreValid("nuvhNSEgPFgr.dmVyb25pY2F6dW5pZ2FAZ21haWwuY29t.1680857782010", authorizedRoleNames));
     }
 }
