@@ -133,9 +133,18 @@ import static org.junit.Assert.*;
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
+    @Test
+    void mostSearchedJobPositionTest() {
+        ResponseEntity<JobPositionDto> response = jobPositionService.getMostSearchedJobPosition();
+        String actual = response.getBody().getArea();
+        String expected = "Sviluppo software";
+        assertEquals(expected, actual);
+    }
+
     private Optional<String> getToken(String accountUsername, String password) {
         LoginDto dto = new LoginDto(accountUsername, password);
         accountService.login(dto);
         return accessTokenRepository.findLatestTokenValueByUsername(accountUsername);
     }
+
 }

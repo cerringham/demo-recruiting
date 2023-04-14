@@ -160,4 +160,32 @@ public class JobInterviewService {
         jobInterviewRepository.deleteJobInterview(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-}
+
+    public ResponseEntity<String> getFailedJobInterviewPercentage() {
+        Long allJobInterview = jobInterviewRepository.count();
+        Long failedJobInterview = jobInterviewRepository.countAllFailedJobInterview();
+        return ResponseEntity.status(HttpStatus.OK).body((Float.parseFloat(String.valueOf(allJobInterview)) *
+                Float.parseFloat(String.valueOf(failedJobInterview))) / 100 + "%");
+    }
+
+    public ResponseEntity<String> getAvarageTimeJobInterview(Long candidateId) {
+        if (!globalValidator.validateId(candidateId)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        Optional<Candidate> candidate = candidateRepository.findByIdWithJobInterviewList(candidateId);
+
+        if (candidate.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        List<JobInterview> candidateJobInterviewList = candidate.get().getJobInterviewList();
+        if (candidateJobInterviewList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(candidateJobInterviewList.stream()
+                .mapToLong(j -> j.getDate().getDayOfMonth())
+                .average().toString());
+    }
+ }
+

@@ -17,6 +17,15 @@ public class JobInterviewValidator {
 
     private static final Integer NOTE_MAX_LENGTH = 250;
 
+    public boolean validateAllParametersForJobInterviewInsertionDto(JobInterviewInsertionDto dto) {
+        return dto != null && validateHour(dto.getHour()) && validateDate(dto.getDate()) && validatePlace(dto.getPlace());
+    }
+
+    public boolean validateAllParametersForJobInterviewUpdateDto(JobInterviewUpdateDto dto) {
+        return dto != null && validateHour(dto.getHour()) && validateDate(dto.getDate()) && validateNote(dto.getNote()) &&
+                validateRating(dto.getRating());
+    }
+
     private Boolean validateHour(String hour) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -57,14 +66,5 @@ public class JobInterviewValidator {
     private Boolean validateRating(String rating) {
 
         return StringUtils.isNumeric(rating);
-    }
-
-    public boolean validateAllParametersForJobInterviewInsertionDto(JobInterviewInsertionDto dto) {
-        return dto != null && validateHour(dto.getHour()) && validateDate(dto.getDate()) && validatePlace(dto.getPlace());
-    }
-
-    public boolean validateAllParametersForJobInterviewUpdateDto(JobInterviewUpdateDto dto) {
-        return dto != null && validateHour(dto.getHour()) && validateDate(dto.getDate()) && validateNote(dto.getNote()) &&
-                validateRating(dto.getRating());
     }
 }

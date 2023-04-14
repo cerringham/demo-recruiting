@@ -150,4 +150,35 @@ public class JobPositionService {
         }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    public ResponseEntity<JobPositionDto> getMostSearchedJobPosition() {
+        /*
+        List<Object[]> listOfObjectsWithMostJobInterview =
+                jobPositionRepository.findJobPositionWithMostInterviews();
+
+        Optional<Object[]> objectArrayContainsJobPositionAndNumberOfApplication =
+                listOfObjectsWithMostJobInterview.stream().findFirst();
+
+        if (objectArrayContainsJobPositionAndNumberOfApplication.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        JobPosition mostSearchedJobPosition = (JobPosition) objectArrayContainsJobPositionAndNumberOfApplication.get()[0];
+
+        JobPositionDto jobPositionDto = jobPositionUtility.createJobPositionDto(mostSearchedJobPosition.getTitle(),
+                mostSearchedJobPosition.getArea(), mostSearchedJobPosition.getDescription(),
+                mostSearchedJobPosition.getCity(), mostSearchedJobPosition.getRegion(), mostSearchedJobPosition.getCountry(),
+                mostSearchedJobPosition.getIsActive());
+
+        return ResponseEntity.status(HttpStatus.OK).body(jobPositionDto);
+
+         */
+        List<JobPosition> orderedJobPositionListByNumberOfJobInterview = jobPositionRepository.findJobPositionsOrderByJobInterviewListSizeDesc();
+        JobPosition mostAppliedJobPosition = orderedJobPositionListByNumberOfJobInterview.get(0);
+        JobPositionDto jobPositionDto = jobPositionUtility.createJobPositionDto(mostAppliedJobPosition.getTitle(),
+                mostAppliedJobPosition.getArea(), mostAppliedJobPosition.getDescription(), mostAppliedJobPosition.getCity(),
+                mostAppliedJobPosition.getRegion(), mostAppliedJobPosition.getCountry(), mostAppliedJobPosition.getIsActive());
+
+        return ResponseEntity.status(HttpStatus.OK).body(jobPositionDto);
+    }
 }

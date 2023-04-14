@@ -48,15 +48,12 @@ public class CandidateService {
 
         List<Candidate> candidateList = candidateRepository.findByIsActive(true);
 
-        Set<CandidateDto> dtoList = candidateList.stream()
-                .map(c -> candidateUtility.createCandidateDto(c.getFiscalCode(), c.getName(), c.getSurname(), c.getCityOfBirth(),
-                        c.getCountryOfBirth(), c.getCityOfResidence(), c.getStreetOfResidence(), c.getRegionOfResidence(),
-                        c.getCountryOfResidence(), c.getEmail(), c.getPhoneNumber(), c.getGender(), c.getIsActive(),
-                        parsingUtility.parseDateToString(c.getBirthDate())))
-                .collect(Collectors.toSet());
+        Set<CandidateDto> dtoList = candidateUtility.getCandidateDtos(candidateList);
 
         return ResponseEntity.ok(dtoList);
     }
+
+
 
     public ResponseEntity<CandidateDto> findById(String accessToken, Long id) {
 

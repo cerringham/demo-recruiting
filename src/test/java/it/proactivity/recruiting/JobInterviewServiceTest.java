@@ -54,8 +54,8 @@ class JobInterviewServiceTest {
 
     @Test
     void createJobInterviewPositiveTest() {
-        JobInterviewInsertionDto dto = new JobInterviewInsertionDto("12:00", "2023-03-25", "Milan",
-                "Failed", 4L, 5L, 1L);
+        JobInterviewInsertionDto dto = new JobInterviewInsertionDto("17:00", "2023-04-21", "Palermo",
+                "Success", 4L, 15L, 1L);
 
         Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
         ResponseEntity response = jobInterviewService.createJobInterview(token.get(), dto);
@@ -66,8 +66,8 @@ class JobInterviewServiceTest {
 
     @Test
     void updateJobInterviewPositiveTest() {
-        JobInterviewUpdateDto dto = new JobInterviewUpdateDto(31L, "2023-03-23", "17:00", "1", "Good candidate",
-                7L);
+        JobInterviewUpdateDto dto = new JobInterviewUpdateDto(31L, "2023-03-23", "17:00", "1",
+                "Good candidate", 7L);
 
         JobInterview jobInterviewBeforeUpdate = jobInterviewRepository.findById(31L).get();
         assertTrue(jobInterviewBeforeUpdate.getRating() == 10);
@@ -83,6 +83,13 @@ class JobInterviewServiceTest {
     }
 
     @Test
+    void getJobInterviewsAvarageTest() {
+        ResponseEntity<String> response = jobInterviewService.getAvarageTimeJobInterview(15L);
+
+        System.out.println(response.getBody());
+    }
+
+    @Test
     void deleteJobInterviewPositiveTest() {
         Optional<String> token = getToken("veronica.zuniga@proactivity.it", "Password2!");
         jobInterviewService.deleteJobInterview(token.get(), 31L);
@@ -90,6 +97,20 @@ class JobInterviewServiceTest {
         JobInterview jobInterview = jobInterviewRepository.findById(31L).get();
 
         assertFalse(jobInterview.getIsActive());
+    }
+
+    @Test
+    void percentageOfFailedJobInterviewTest() {
+        ResponseEntity<String> response = jobInterviewService.getFailedJobInterviewPercentage();
+        String expected = "0.8%";
+        String actual = response.getBody();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getAvarageTimeJobInterviewTest() {
+        ResponseEntity<String> response = jobInterviewService.getAvarageTimeJobInterview(15L);
+
     }
 
     private Optional<String> getToken(String accountUsername, String password) {

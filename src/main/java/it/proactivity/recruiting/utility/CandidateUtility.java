@@ -169,4 +169,13 @@ public class CandidateUtility {
         Set<Predicate<String>> predicateSet = accessTokenUtility.createPredicateSet(AUTHORIZED_ROLE);
         return accessTokenUtility.verifyAccountCredential(accessToken, predicateSet);
     }
+
+    public Set<CandidateDto> getCandidateDtos(List<Candidate> candidateList) {
+        return candidateList.stream()
+                .map(c -> createCandidateDto(c.getFiscalCode(), c.getName(), c.getSurname(), c.getCityOfBirth(),
+                        c.getCountryOfBirth(), c.getCityOfResidence(), c.getStreetOfResidence(), c.getRegionOfResidence(),
+                        c.getCountryOfResidence(), c.getEmail(), c.getPhoneNumber(), c.getGender(), c.getIsActive(),
+                        parsingUtility.parseDateToString(c.getBirthDate())))
+                .collect(Collectors.toSet());
+    }
 }

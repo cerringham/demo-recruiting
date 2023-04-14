@@ -75,6 +75,7 @@ public class CompanyService {
 
         List<Company> companies = companyRepository.findAll();
         List<String> companyNames = companies.stream().map(Company::getName).toList();
+        List<Company> companiesNotActive = companies.stream().filter(c -> c.getIsActive().equals(false)).toList();
 
         //Check if the companies are more than 4
         if (companies.size() > maxCompanies) {
@@ -102,8 +103,6 @@ public class CompanyService {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
 
-        //Retrieve any possible companies with flag false
-        List<Company> companiesNotActive = companies.stream().filter(c -> c.getIsActive().equals(false)).toList();
         /*
         If the companies are 4 and there are companies with the flag set to false , I set all the flag to true,
         else I return response ok
