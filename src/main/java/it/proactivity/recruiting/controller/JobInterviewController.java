@@ -40,4 +40,14 @@ public class JobInterviewController {
     public ResponseEntity deleteJobInterview(@RequestHeader("Token") String accessToken, @PathVariable Long id) {
         return jobInterviewService.deleteJobInterview(accessToken, id);
     }
+
+    @GetMapping("/get-failed-job-interviews")
+    public ResponseEntity<Integer> getFailedJobInterviews() {
+        return jobInterviewService.getFailedJobInterviews();
+    }
+
+    @GetMapping("/get-average-days-from-first-to-last-interview")
+    public ResponseEntity<Double> getAverageDaysFromFirstToLastInterview() {
+        return jobInterviewService.getAverageDaysFromFirstToLastInterview();
+    }
 }

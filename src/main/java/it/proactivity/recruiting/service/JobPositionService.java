@@ -2,12 +2,10 @@ package it.proactivity.recruiting.service;
 
 
 import it.proactivity.recruiting.builder.JobPositionBuilder;
-import it.proactivity.recruiting.model.Company;
-import it.proactivity.recruiting.model.JobPosition;
-import it.proactivity.recruiting.model.JobPositionStatus;
-import it.proactivity.recruiting.model.SkillLevel;
+import it.proactivity.recruiting.model.*;
 import it.proactivity.recruiting.model.dto.JobPositionDto;
 import it.proactivity.recruiting.model.dto.JobPositionWithSkillsDto;
+import it.proactivity.recruiting.repository.CandidateRepository;
 import it.proactivity.recruiting.repository.CompanyRepository;
 import it.proactivity.recruiting.repository.JobPositionRepository;
 import it.proactivity.recruiting.repository.JobPositionStatusRepository;
@@ -20,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,6 +46,9 @@ public class JobPositionService {
 
     @Autowired
     GlobalUtility globalUtility;
+
+    @Autowired
+    CandidateRepository candidateRepository;
 
     public ResponseEntity<List<JobPositionDto>> getAll(String accessToken) {
         Set<String> authorizedRoleNames = new HashSet<>();
@@ -150,5 +153,16 @@ public class JobPositionService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    public ResponseEntity<JobPositionDto> getMostAppliedJobPosition() {
+        Optional<JobPosition> jobPosition = jobPositionRepository.findMostAppliedJob();
+        if (jobPosition.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        JobPositionDto jobPositionDto = jobPositionUtility.createJobPositionDto(jobPosition.get().getTitle(),
+                jobPosition.get().getArea(), jobPosition.get().getDescription(), jobPosition.get().getCity(),
+                jobPosition.get().getRegion(), jobPosition.get().getCountry(), true);
+        return ResponseEntity.ok(jobPositionDto);
     }
 }

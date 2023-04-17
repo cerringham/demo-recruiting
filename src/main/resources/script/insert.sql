@@ -55,3 +55,23 @@ VALUES ('Kenneth', 'Foster', 'kennethfoster@gmail.com', 'kennethfoster@gmail.com
 INSERT INTO account (name, surname, email, username, password, is_active, role_id)
 VALUES ('Gloria', 'Adams', 'gloriadams@gmail.com', 'gloriadams@gmail.com', 'Gloglo33!' , true, 3);
 
+INSERT INTO job_interview_status(name, description, is_active)
+VALUES ('Failed', 'Interview failed', true);
+INSERT INTO job_interview_status(name, description, is_active)
+VALUES ('Hired', null, true);
+
+INSERT INTO job_interview (date, hour, place, candidate_id, employee_id, job_interview_type_id, job_position_id, rating, note, job_interview_status_id, is_active)
+VALUES ('2023-03-10', '09:30:00', 'Room A', 2, 5, 1, 7, 4, 'Good communication skills', 1, true);
+INSERT INTO job_interview (date, hour, place, candidate_id, employee_id, job_interview_type_id, job_position_id, rating, note, job_interview_status_id, is_active)
+VALUES ('2023-03-11', '14:00:00', 'Conference room', 2, 5, 1, 8, 3, 'Lacks experience', 2, true);
+INSERT INTO job_interview (date, hour, place, candidate_id, employee_id, job_interview_type_id, job_position_id, rating, note, job_interview_status_id, is_active)
+VALUES ('2023-03-12', '10:00:00', 'Remote', 2, 5, 1, 9, 5, 'Impressive portfolio', 1, true);
+INSERT INTO job_interview (date, hour, place, candidate_id, employee_id, job_interview_type_id, job_position_id, rating, note, job_interview_status_id, is_active)
+VALUES ('2023-03-13', '10:00:00', 'Remote', 2, 5, 1, 9, 5, 'Impressive portfolio', 5, true);
+
+INSERT INTO job_interview (date, hour, place, candidate_id, employee_id, job_interview_type_id, job_position_id, rating, note, job_interview_status_id, is_active)
+VALUES ('2023-04-10', '10:00:00', 'Remote', 4, 5, 1, 9, 5, 'Impressive portfolio', 2, true);
+INSERT INTO job_interview (date, hour, place, candidate_id, employee_id, job_interview_type_id, job_position_id, rating, note, job_interview_status_id, is_active)
+VALUES ('2023-04-12', '10:00:00', 'Remote', 4, 5, 1, 9, 5, 'Impressive portfolio', 2, true);
+INSERT INTO job_interview (date, hour, place, candidate_id, employee_id, job_interview_type_id, job_position_id, rating, note, job_interview_status_id, is_active)
+VALUES ('2023-04-13', '10:00:00', 'Remote', 4, 5, 1, 9, 5, 'Impressive portfolio', 5, true);

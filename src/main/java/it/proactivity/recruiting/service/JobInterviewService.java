@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -168,5 +170,32 @@ public class JobInterviewService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    public ResponseEntity<Integer> getFailedJobInterviews() {
+        List<JobInterview> allInterviews = jobInterviewRepository.findAll();
+        Optional<Integer> failedInterviews = jobInterviewRepository.findByJobInterviewStatusName("Failed");
+        if (failedInterviews.isPresent()) {
+            return ResponseEntity.ok((int) (failedInterviews.get() * 100.0 / allInterviews.size()));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 
+    public ResponseEntity<Double> getAverageDaysFromFirstToLastInterview() {
+        List<Candidate> candidates = candidateRepository.findByIsActive(true);
+        if (candidates.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        LocalDate first = candidates.stream().flatMap(c -> c.getJobInterviewList().stream())
+                .map(JobInterview::getDate)
+                .min(LocalDate::compareTo)
+                .orElseThrow();
+
+        LocalDate last = candidates.stream().flatMap(c -> c.getJobInterviewList().stream())
+                .map(JobInterview::getDate)
+                .max(LocalDate::compareTo)
+                .orElseThrow();
+
+        long between = ChronoUnit.DAYS.between(first, last);
+        double average = (double) between / candidates.size();
+        return ResponseEntity.status(HttpStatus.OK).body(average);
+    }
 }

@@ -26,4 +26,7 @@ public interface JobInterviewRepository extends JpaRepository<JobInterview, Long
     @Transactional
     @Query("UPDATE  JobInterview j SET j.isActive = false WHERE j.id = ?1")
     void deleteJobInterview(Long id);
+
+    @Query("SELECT count(j) FROM JobInterview j WHERE j.jobInterviewStatus.name = ?1")
+    Optional<Integer> findByJobInterviewStatusName(String name);
 }

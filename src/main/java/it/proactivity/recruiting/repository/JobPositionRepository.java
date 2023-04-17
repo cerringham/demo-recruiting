@@ -19,4 +19,8 @@ public interface JobPositionRepository extends JpaRepository<JobPosition, Long> 
     @Modifying
     @Query("UPDATE JobPosition j SET j.isActive = false WHERE j.id = ?1")
     int inactivateJobPositionById(Long id);
+
+    @Query("SELECT jp FROM JobPosition jp INNER JOIN FETCH jp.jobInterview ji GROUP BY jp ORDER BY COUNT(ji) DESC")
+    Optional<JobPosition> findMostAppliedJob();
+
 }

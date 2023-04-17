@@ -40,4 +40,9 @@ public class JobPositionController {
     public ResponseEntity deleteJobPosition(@RequestHeader("Token") String accessToken, @RequestParam Long id) {
         return jobPositionService.deleteJobPosition(accessToken, id);
     }
+
+    @GetMapping("/get-most-applied-job-position")
+    public ResponseEntity<JobPositionDto> getMostAppliedJobPosition() {
+        return jobPositionService.getMostAppliedJobPosition();
+    }
 }
